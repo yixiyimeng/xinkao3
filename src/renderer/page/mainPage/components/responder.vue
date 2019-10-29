@@ -68,8 +68,13 @@
 				this.$emit('returnback');
 			},
 			stopQuickAnswer() {
+				var $me = this;
 				this.$postAction(api.stopQuickAnswer).then(da => {
 					this.viewState = 2;
+					if ($me.timer) {
+						clearInterval($me.timer);
+						$me.timer = null;
+					}
 					this.$emit('stopQuickAnswer')
 				})
 			}

@@ -5,7 +5,12 @@
 		</div>
 		<!-- 切换菜单 -->
 		<div class="mainmenu">
-			<div class="set"></div>
+			<div class="setbtnlist">
+				<a href="javascript:;" @click="shownamelist" class="userlist">
+					
+				</a>
+			</div>
+			<!-- <div class="set"></div>
 			<div class="setbtnlist">
 				<i class="lefttop"></i>
 				<i class="righttop"></i>
@@ -16,7 +21,7 @@
 					<p>学生名单</p>
 				</a>
 
-			</div>
+			</div> -->
 		</div>
 		<!-- 返回 -->
 		<!-- <a href="javascript:;" class="reback" @click="returnback"></a> -->
@@ -25,7 +30,7 @@
 		<!-- 答题 -->
 		<start-answer ref="startAnswer" @startAnswer="startAnswer" @stopAnswer="stopAnswer" @returnback="returnback"></start-answer>
 		<!-- 进度条 -->
-		<load :isprogress="isAnswering" :rate="rate"></load>
+		<load :isprogress="isChoice" :rate="rate"></load>
 		<!-- 学生签到 -->
 		<singinlist ref="singinlist" @returnback="returnback"></singinlist>
 		<!-- 投票 -->
@@ -99,6 +104,7 @@
 				ws: null,
 				isShowClassMenu: true, //显示上课菜单
 				rate: 0, //作答进度
+				isChoice:false,//是否选择题
 				directBroadcastCode: '',
 			};
 		},
@@ -125,14 +131,16 @@
 				this.$refs.startAnswer.showAnswer();
 				this.isShowClassMenu = false;
 			},
-			startAnswer() {
+			startAnswer(isChoice) {
 				/* 开始答题 */
 				this.isAnswering = true;
+				this.isChoice=isChoice;
 				this.$refs.danmu.starDanmu();
 			},
 			stopAnswer() {
 				/* 结束答题 */
 				this.isAnswering = false;
+				this.isChoice=false;
 				/* 结束答题后，清空弹幕 */
 				this.$refs.danmu.clearDanmu();
 			},

@@ -121,7 +121,7 @@
 						if (da && da.ret == 'success') {
 							/* 开始答题 */
 							$me.isAnswering = true;
-							$me.$emit('startAnswer')
+							$me.$emit('startAnswer',true)
 						}
 					})
 				}

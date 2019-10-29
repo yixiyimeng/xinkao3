@@ -1,5 +1,5 @@
 {
-  "name": "xinkao",
+  "name": "teacher",
   "version": "0.0.1",
   "author": "zhangjing <zhangjing@huixiangtech.cn>",
   "description": "An electron-vue project",
@@ -17,7 +17,7 @@
     "postinstall": ""
   },
   "build": {
-    "productName": "test",
+    "productName": "teacher",
     "appId": "com.example.yourapp",
     "directories": {
       "output": "build"

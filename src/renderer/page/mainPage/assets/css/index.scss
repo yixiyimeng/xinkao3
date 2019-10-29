@@ -85,7 +85,7 @@
 		font-size: 14px;
 	}
 	.reback{
-		z-index: 999;
+		z-index: 9999;
 	}
 }
 .theme1 .bg {
@@ -404,7 +404,9 @@
 	text-align: center;
 	line-height: 35px;
 }
-.setbtnlist {
+.theme1,
+.theme2,
+.theme3{ .mainmenu .setbtnlist {
 		position: absolute;
 		right: 50px;
 		white-space: nowrap;
@@ -423,6 +425,7 @@
 				margin-bottom: 0;
 			}
 		}
+	}
 	}
 	.theme1 .mainmenu {
 		position: absolute;
@@ -639,6 +642,24 @@
 					&.icon5 {
 						background-image: url(assets/img/theme3/icon5.png);
 					}
+				}
+			}
+		}
+	}
+	.theme4 .mainmenu {
+		position: absolute;
+		z-index: 9999;
+		left:0;
+		top:20%;
+		.setbtnlist {
+			a {
+				display:block;
+				background: #2459a0 no-repeat center center;
+				height: 45px;
+				width: 45px;
+				border-radius: 100%;
+				&.userlist{
+					background-image: url(assets/img/theme4/user.png);
 				}
 			}
 		}
