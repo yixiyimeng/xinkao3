@@ -27,7 +27,7 @@ let removePending = (config) => {
 	}
 }
 const err = (error) => {
-	if (error.message.includes('timeout')) { // 判断请求异常信息中是否含有超时timeout字符串
+	if (error&&error.message&&error.message.includes('timeout')) { // 判断请求异常信息中是否含有超时timeout字符串
 		message.error('请求超时了');
 	}
 	return Promise.reject(error)

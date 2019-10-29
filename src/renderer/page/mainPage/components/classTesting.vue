@@ -4,12 +4,9 @@
 			<img src="../assets/img/gou.png" alt="" />
 			<span class="ml10">请选择试卷</span>
 		</div>
-		<div class="setbox mt20" ref="setbox">
+		<div class="tablelist mt20" ref="setbox">
 			<a-table style="height: 100%;" :columns="columns" :dataSource="data" :scroll="{ x: 700, y: scrolly }" size="middle"
 			 :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange ,type:'radio'}">
-				<!-- <template slot="action" slot-scope="text, record,index">
-					<a-checkbox @change="onChange(record,index,$event)" :checked="text.isChecked"></a-checkbox>
-				</template> -->
 			</a-table>
 		</div>
 		<div class="btnbar flex flex-pack-justify">
@@ -66,9 +63,9 @@
 		},
 		mounted() {
 			const that = this;
-			that.scrolly = that.$refs.modbox.offsetHeight -220;
+			that.scrolly = document.body.offsetHeight*.6 -220-260;
 			window.onresize = function() {
-				that.scrolly = that.$refs.modbox.offsetHeight - 220;
+				that.scrolly =  document.body.offsetHeight*.6 - 220-260;
 			};
 		},
 		destroyed() {

@@ -1,6 +1,6 @@
 <template>
 	<a-locale-provider :locale="locale">
-		<div id="app" class="theme1">
+		<div id="app" :class="theme">
 			<router-view></router-view>
 			<div class="timg"></div>
 		</div>
@@ -9,11 +9,18 @@
 
 <script>
 	import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN'
+	import {
+		mapState
+	} from 'vuex';
 	export default {
 		data() {
 			return {
-				locale: zhCN
+				locale: zhCN,
+				theme:'theme4'
 			}
+		},
+		computed: {
+			// ...mapState(['theme'])
 		},
 		created() {
 			// localStorage.setItem('theme', 'theme1');

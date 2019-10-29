@@ -1,7 +1,7 @@
 <template>
 	<div class="bg">
 		<div class="title">
-		<span v-for="item in className" :key="item">{{item}}</span>
+			<span v-for="item in title" :key="item">{{item}}</span>
 		</div>
 		<!-- 切换菜单 -->
 		<div class="mainmenu">
@@ -19,15 +19,23 @@
 			</div>
 		</div>
 		<!-- 返回 -->
-		<a href="javascript:;" class="reback" @click="returnback"></a>
+		<!-- <a href="javascript:;" class="reback" @click="returnback"></a> -->
 		<!-- 学生名单 -->
 		<namelist :isAnswering="isAnswering" ref="namelist"></namelist>
 		<!-- 答题 -->
-		<start-answer ref="startAnswer" @startAnswer="startAnswer" @stopAnswer="stopAnswer"></start-answer>
+		<start-answer ref="startAnswer" @startAnswer="startAnswer" @stopAnswer="stopAnswer" @returnback="returnback"></start-answer>
 		<!-- 进度条 -->
 		<load :isprogress="isAnswering" :rate="rate"></load>
+		<!-- 学生签到 -->
+		<singinlist ref="singinlist" @returnback="returnback"></singinlist>
+		<!-- 投票 -->
+		<vote ref="vote" @returnback="returnback" @startVote="startAnswer" @stopVote="stopAnswer"></vote>
+		<!-- 评分 -->
+		<score  ref="score" @returnback="returnback" @startScore="startAnswer" @stopScore="stopAnswer"></score>
+		<!-- 抢到 -->
+		<responder ref="quickAnswer" @returnback="returnback" @startQuickAnswer="startAnswer" @stopQuickAnswer="stopAnswer"></responder>
 		<!-- 弹幕 -->
-		<danmu ref="danmu"></danmu>
+		<danmu ref="danmu" :style="{zIndex:isAnswering?999:-1}"></danmu>
 		<div class="classbox" v-if="isShowClassMenu">
 			<div>
 				<div class="menu">
@@ -35,15 +43,15 @@
 						<i class="icon1 icon"></i>
 						<span>答题</span>
 					</a>
-					<router-link :to="'responder'">
+				<a href="javascript:;" @click="showQuickAnswer">
 						<i class="icon2 icon"></i>
 						<span>抢答</span>
-					</router-link>
-					<router-link :to="'vote'">
+					</a>
+					<a href="javascript:;" @click="showStartScore">
 						<i class="icon3 icon"></i>
 						<span>评分</span>
-					</router-link>
-					<a href="javascript:;">
+					</a>
+					<a href="javascript:;" @click="showStartVote">
 						<i class="icon4 icon"></i>
 						<span>投票</span>
 					</a>
@@ -56,8 +64,8 @@
 			</div>
 		</div>
 		<div class="btnlist">
-			<a href="javascript:;" class="signIn">签到</a>
-			<a href="javascript:;" class="offClass">下课</a>
+			<a href="javascript:;" class="signIn" v-if="isShowClassMenu" @click="showSingInlist">签到</a>
+			<a href="javascript:;" class="offClass" @click="endClass">下课</a>
 		</div>
 	</div>
 </template>
@@ -67,33 +75,40 @@
 	import startAnswer from '@/page/mainPage/components/startAnswer';
 	import load from '@/page/mainPage/components/load';
 	import danmu from '@/page/mainPage/components/danmu';
+	import singinlist from '@/page/mainPage/components/singinlist';
+	import vote from '@/page/mainPage/components/vote';
+	import score from '@/page/mainPage/components/score';
+	import responder from '@/page/mainPage/components/responder';
 	import api from '@/page/mainPage/api';
 	export default {
 		components: {
 			namelist,
 			startAnswer,
 			load,
-			danmu
+			danmu,
+			singinlist,
+			vote,
+			score,
+			responder
 		},
 		data() {
 			return {
 				sendInfo: {},
-				className: '',
+				title: '',
 				isAnswering: false, //是否正在答题
 				ws: null,
 				isShowClassMenu: true, //显示上课菜单
 				rate: 0, //作答进度
-				isprogress: true, //是否显示进度条
+				directBroadcastCode: '',
 			};
 		},
 		created() {
 			this.sendInfo = JSON.parse(this.$route.query.sendInfo);
-			this.className = this.sendInfo.className;
-
+			this.title = this.sendInfo.className;
+			this.directBroadcastCode = this.sendInfo.directBroadcastCode;
 		},
 		mounted() {
 			this.getWebSocket();
-			this.showStartAnswer();
 		},
 		destroyed() {
 			if (this.ws) {
@@ -113,10 +128,29 @@
 			startAnswer() {
 				/* 开始答题 */
 				this.isAnswering = true;
+				this.$refs.danmu.starDanmu();
 			},
 			stopAnswer() {
-				/* 结算答题 */
+				/* 结束答题 */
 				this.isAnswering = false;
+				/* 结束答题后，清空弹幕 */
+				this.$refs.danmu.clearDanmu();
+			},
+			
+			showStartVote(){
+				this.$refs.vote.show();
+				this.isShowClassMenu = false;
+				this.title='投票统计'
+			},
+			showStartScore(){
+				this.$refs.score.show();
+				this.isShowClassMenu = false;
+				this.title='评分统计'
+			},
+			showQuickAnswer(){
+				this.$refs.quickAnswer.show();
+				this.isShowClassMenu = false;
+				this.title='抢答'
 			},
 			returnback() {
 				/* 返回 */
@@ -126,8 +160,7 @@
 					this.$router.go(-1);
 				} else {
 					this.isShowClassMenu = true;
-					/* 关闭答题页面*/
-					this.$refs.startAnswer.hideAnswer();
+					this.title = this.sendInfo.className
 				}
 			},
 			getprogress() {
@@ -168,8 +201,15 @@
 												$me.$refs.namelist.getNamelist();
 											} else if (msg.urlPaths[i].method == 'getprogress') {
 												$me.getprogress();
+											} else if (msg.urlPaths[i].method == 'getAttendance') {
+												$me.$refs.singinlist.getAttendanceList();
 											}
 										}
+										break;
+									}
+									case 16:{
+										/* 显示抢答名单 */
+										$me.$refs.quickAnswer.setName(obj.stuName)
 										break;
 									}
 							}
@@ -180,21 +220,48 @@
 						$me.ws = null;
 					};
 				}
-			}
+			},
+			/* 开始签到 */
+			showSingInlist() {
+				this.title='学生签到';
+				this.$refs.singinlist.show();
+				this.isShowClassMenu = false;
+			},
+			/* 下课 */
+			endClass() {
+				const $me = this;
 
+				var param = {
+					code: this.directBroadcastCode
+				};
+				this.$loading('正在下课...');
+				$me.$postAction(api.endClass, param).then(da => {
+					if (da && da.ret == 'success') {
+
+					}
+				})
+				setTimeout(function() {
+					$me.$router.push({
+						//页面跳转
+						path: 'setClass',
+						query: {
+							sendInfo: JSON.stringify($me.sendInfo)
+						}
+					});
+					$me.$loading.close();
+				}, 5000);
+			}
 		}
 	};
 </script>
 
 <style scoped="scoped" lang="scss">
-	@import '../assets/css/set.scss';
-
 	.classbox {
 		z-index: 999;
 	}
 
 	.bg {
-		
+
 		.menu a {
 			.icon {
 				height: 42px;
@@ -237,6 +304,7 @@
 
 	.theme1 .bg {
 		background-image: url(../assets/img/theme1/setStubg.png);
+
 		.classbox {
 			position: absolute;
 			top: 145px;
@@ -245,31 +313,6 @@
 			bottom: 75px;
 			box-sizing: border-box;
 			font-family: 'hxfont';
-
-			.menu {
-				text-align: center;
-				width: 740px;
-				position: absolute;
-				top: 50%;
-				left: 50%;
-				transform: translate(-50%, -60%);
-
-				&>a {
-					display: inline-block;
-					width: 270px;
-					height: 95px;
-					background: url(../assets/img/theme1/menubg.png);
-					text-align: center;
-					line-height: 95px;
-					color: #6699cc;
-					font-size: 30px;
-					margin: 13px 45px;
-
-					span {
-						font-family: 'hxfont';
-					}
-				}
-			}
 		}
 
 		.btnlist {
@@ -514,6 +557,34 @@
 
 						&:hover {
 							color: #fff;
+
+							.icon {
+								&.icon1 {
+									background-image: url(../assets/img/theme4/sicon1.png);
+
+								}
+
+								&.icon2 {
+									background-image: url(../assets/img/theme4/sicon2.png);
+
+								}
+
+								&.icon3 {
+									background-image: url(../assets/img/theme4/sicon3.png);
+
+								}
+
+								&.icon4 {
+									background-image: url(../assets/img/theme4/sicon4.png);
+
+								}
+
+								&.icon5 {
+									background-image: url(../assets/img/theme4/sicon5.png);
+
+								}
+							}
+
 						}
 
 						&>span {
@@ -552,9 +623,11 @@
 							}
 
 							&.icon5 {
-								background-image: url(../assets/img/icon5.png);
+								background-image: url(../assets/img/theme4/icon5.png);
 
 							}
+
+
 						}
 					}
 
@@ -565,10 +638,11 @@
 		.btnlist {
 			position: absolute;
 			bottom: 35px;
-			right: 100px;
+			right: 35px;
 			z-index: 999;
 
-			a {
+			.offClass,
+			.signIn {
 				width: 116px;
 				height: 85px;
 				display: inline-block;

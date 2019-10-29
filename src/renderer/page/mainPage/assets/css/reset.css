@@ -180,6 +180,9 @@ body {
 	background: rgba(0, 0, 0, 0);
 	/* font-size: 20px; */
 }
+*{
+	box-sizing: border-box;
+}
 .mt15{
 	margin-top: 15px;
 }

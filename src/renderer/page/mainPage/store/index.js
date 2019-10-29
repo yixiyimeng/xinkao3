@@ -4,7 +4,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
 	state: {
-		theme: localStorage.getItem('theme') || 'theme4',
+		theme:'theme1',
 		isminimizeAppState: false, //最小化
 	},
 	getters: {

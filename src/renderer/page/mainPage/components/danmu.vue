@@ -16,12 +16,7 @@
 			};
 		},
 		mounted() {
-			$('#danmu').danmu('danmuStart');
-			$('#danmu').data('danmuList', {});
-			// const $me=this;
-			// setInterval(function() {
-			// 	$me.addDanmu({stuName:'jajaj'})
-			// }, 300)
+			// this.starDanmu();
 		},
 		methods: {
 			addDanmu(obj) {
@@ -37,6 +32,14 @@
 					position: 0,
 					time: time
 				}]);
+			},
+			clearDanmu() {
+				$('#danmu').data('danmuList', {});
+				$('#danmu').danmu('danmuStop');
+			},
+			starDanmu() {
+				$('#danmu').danmu('danmuStart');
+				$('#danmu').data('danmuList', {});
 			}
 		}
 	};
@@ -71,7 +74,7 @@
 		-webkit-transform: translateX(0);
 	}
 
-	
+
 	.danmaku .avatar {
 		display: inline-block;
 		height: 2.4em;

@@ -69,10 +69,9 @@
 
 <style scoped lang="scss">
 	.timecheckboxbar {
-		position: fixed;
-		right: 25px;
-		bottom: 100px;
-
+		position: absolute;
+		right: 0;
+		bottom: 0;
 		span {
 			line-height: 40px;
 			vertical-align: middle;

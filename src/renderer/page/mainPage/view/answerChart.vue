@@ -49,7 +49,7 @@
 			trigger: 'axis',
 			axisPointer: {
 				// 坐标轴指示器，坐标轴触发有效
-				type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+				type: '' // 默认为直线，可选为：'line' | 'shadow'
 			}
 		},
 		toolbox: {
@@ -167,6 +167,9 @@
 				questionType: '',
 				theme: 'theme1',
 				pieOptions: {
+					color: ['#c7615d', '#e0b088', '#176bab', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074',
+						'#546570', '#c4ccd3'
+					],
 					series: [{
 						name: '正确率',
 						type: 'pie',
@@ -468,8 +471,8 @@
 				const $me = this;
 				$me.$postAction(api.getEveryAnswerName, param).then(da => {
 					if (da && da.ret == 'success') {
-						$me.$refs.selectname.show();
 						$me.selectNamelist = da.data;
+						$me.$refs.selectname.show();
 					}
 				})
 
@@ -654,6 +657,39 @@
 
 		.chartbox {
 			padding-top: 120px;
+		}
+	}
+	.theme4 .bg{
+		.setbox {
+			left: 10%;
+			right:10%;
+			bottom: 10%;
+			top: 174px;
+			width: auto;
+			transform: translate(0,0);
+			
+		}
+		.resultbox {
+			background: url(../assets/img/theme1/chart.png) no-repeat left 8px;
+			padding-left: 35px;
+			color: #429ce2;
+			font-size: 24px;
+			line-height: 40px;
+			position: absolute;
+			right: 75px;
+		
+			p {
+				margin-bottom: 0;
+			}
+		
+			.num {
+				font-size: 30px;
+			}
+		
+			a {
+				font-size: 18px;
+				color: #429ce2;
+			}
 		}
 	}
 </style>

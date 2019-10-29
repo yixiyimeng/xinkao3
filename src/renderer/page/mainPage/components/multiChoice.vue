@@ -6,7 +6,7 @@
 				<span>字母A</span>
 			</div>
 			<span class="line"></span>
-			<a-select class="select flex-1" size="large">
+			<a-select class="select flex-1" size="large" v-model="range">
 				<a-icon type="caret-down" slot="suffixIcon" />
 				<a-select-option value="B">B</a-select-option>
 				<a-select-option value="C">C</a-select-option>
@@ -14,67 +14,30 @@
 				<a-select-option value="F">F</a-select-option>
 			</a-select>
 		</div>
-		<div class="flex flex-align-center" style="width: 3.6rem; margin: 10px auto 0;">
+		<!-- <div class="flex flex-align-center" style="width: 3.6rem; margin: 10px auto 0;">
 			<label class="mr10">正确答案</label>
 			<a-input placeholder="请输入正确答案" v-model="trueAnswer" type="password" class="flex-1" />
-		</div>
-		<div class="btnbar">
+		</div> -->
+		<!-- <div class="btnbar">
 			<a href="javascript:;" class="startClass" @click="gotopage">开始答题</a>
 			
 			<count-down ref="countdown"></count-down>
-		</div>
+		</div> -->
 	</div>
 </template>
 
 <script>
-	import CountDown from '@/page/mainPage/components/CountDown';
 	export default {
 		data() {
 			return {
-				isCountdown: false,
-				type: 0,
-				answer: '',
-				settime: '',
-				iscountDown: false,
-				showcountDown: false,
-				countDownTime:0
+				range:'D'
 			};
-		},
-		components:{
-			CountDown
 		},
 		mounted() {},
 		methods: {
-			// gotopage() {
-			// 	this.$router.push({
-			// 		path: 'answer',
-			// 		query: {
-			// 			settime: this.settime
-			// 		}
-			// 	});
-			// },
-			checkcountDown() {
-				if (this.isAnswering) {
-					return false;
-				}
-				this.countDownTime == 0;
-				if (this.iscountDown) {
-					this.iscountDown = false;
-					this.showcountDown = false;
-					if (this.timer) {
-						clearInterval(this.timer);
-					}
-				} else {
-					this.iscountDown = true;
-					this.showcountDown = true;
-				}
-			},
-			checkshowcountDown() {
-				if (this.isAnswering) {
-					return false;
-				}
-				this.showcountDown = !this.showcountDown;
-			},
+			getRange(){
+				return 'A-'+this.range
+			}
 		}
 	};
 </script>

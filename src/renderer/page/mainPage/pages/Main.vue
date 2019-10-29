@@ -80,11 +80,12 @@
 
 			/* 监听页面刷新的时候，存储store */
 			window.addEventListener('beforeunload', () => {
-				localStorage.setItem('messageStore', JSON.stringify(this.$store.state));
+				sessionStorage.setItem('messageStore', JSON.stringify(this.$store.state));
+				
 			});
 			//在页面加载时读取localStorage里的状态信息
-			localStorage.getItem('messageStore') && this.$store.replaceState(Object.assign(this.$store.state, JSON.parse(
-				localStorage.getItem('messageStore'))));
+			sessionStorage.getItem('messageStore') && this.$store.replaceState(Object.assign(this.$store.state, JSON.parse(
+				sessionStorage.getItem('messageStore'))));
 		}
 	};
 </script>

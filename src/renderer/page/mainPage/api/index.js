@@ -24,6 +24,16 @@ const api = {
 	getFalseAnswerName:'/answer/statistics/getFalseAnswerName',//查询错误作答人名称
 	startVote:'/vote/start',//投票
 	stopVote:'/vote/stop',//停止投票
+	getVoteResult:'/vote/getVoteResult',//获取投票结果
+	startScore:'/score/start',//评分
+	stopScore:'/score/stop',//停止评分
+	getScoreResult:'/score/getScoreResult',//获取评分结果
+	startSingIn:'/attendance/start',//开始签到
+	stopSingIn:'/attendance/stop',//结束签到
+	getAttendanceList:'/attendance/getAttendanceList',//获取签到列表
+	endClass:'common/endClass',//下课
+	startQuickAnswer:'/quickAnswer/start',//抢答开始
+	stopQuickAnswer:'/quickAnswer/stop',//停止抢答
 }
 export default api
 export function postAction(url, parameter,obj={}) {

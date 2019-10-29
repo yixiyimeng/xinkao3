@@ -105,22 +105,22 @@ export default new Router({
 								title: '开始随堂检测'
 							}
 						},
-						{
-							path: '/responder',
-							name: 'responder',
-							component: require('@/page/mainPage/view/responder').default,
-							meta: {
-								title: '抢答'
-							}
-						},
-						{
-							path: '/vote',
-							name: 'vote',
-							component: require('@/page/mainPage/view/vote').default,
-							meta: {
-								title: '投票统计'
-							}
-						},
+						// {
+						// 	path: '/responder',
+						// 	name: 'responder',
+						// 	component: require('@/page/mainPage/view/responder').default,
+						// 	meta: {
+						// 		title: '抢答'
+						// 	}
+						// },
+						// {
+						// 	path: '/vote',
+						// 	name: 'vote',
+						// 	component: require('@/page/mainPage/view/vote').default,
+						// 	meta: {
+						// 		title: '投票统计'
+						// 	}
+						// },
 						{
 							path: '/voteChart',
 							name: 'voteChart',
@@ -128,7 +128,15 @@ export default new Router({
 							meta: {
 								title: '投票统计'
 							}
-						}
+						},
+						// {
+						// 	path: '/singinlist',
+						// 	name: 'singinlist',
+						// 	component: require('@/page/mainPage/view/singinlist').default,
+						// 	meta: {
+						// 		title: '学生签到'
+						// 	}
+						// }
 					]
 				},
 
