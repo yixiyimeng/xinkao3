@@ -134,6 +134,7 @@
 				/* 开始答题 */
 				this.isAnswering = true;
 				this.isChoice=isChoice;
+				this.title='';
 				this.$refs.danmu.starDanmu();
 			},
 			stopAnswer() {

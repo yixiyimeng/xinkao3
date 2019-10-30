@@ -1,7 +1,8 @@
 <template>
 	<div class="startAnswer" v-if="isShowAnswer">
-		<a href="javascript:;" class="reback" @click="returnback" v-if="!isAnswering"></a>
-		<div class="thememodbox" v-if="!isAnswering">
+		<a href="javascript:;" class="reback" @click="returnback" v-if="viewState!=1"></a>
+		<div class="titleName" v-if="viewState!=0">{{titleName}}</div>
+		<div class="thememodbox" v-if="viewState==0">
 			<div>
 				<ul class="tablink clearfix">
 					<li :class="{active:type==0}" @click="type=0"><a href="javascript:;">单题单选</a></li>
@@ -13,18 +14,20 @@
 					<multi-choice v-if="type==1" ref="multileChoice"></multi-choice>
 					<class-testing v-if="type==2"></class-testing>
 				</div>
-				<div class="flex flex-align-center" style="width: 360px; margin: 25px auto 0;" v-if="type!=2">
+				<div class="flex flex-align-center inputtxt" v-if="type!=2">
 					<label class="mr10">正确答案</label>
 					<a-input placeholder="请输入正确答案" v-model="trueAnswer" type="password" class="flex-1" />
 				</div>
 			</div>
 
 		</div>
+		<answer-chart ref="answerChart"></answer-chart>
 		<div class="btnbar">
-			<a href="javascript:;" class="startClass" @click="startAnswer" v-if="!isAnswering">开始答题</a>
-			<a href="javascript:;" class="startClass" @click="stopAnswer" v-if="isAnswering">结束答题</a>
-			<count-down ref="countdown"></count-down>
+			<a href="javascript:;" class="startClass" @click="startAnswer" v-if="viewState==0">开始答题</a>
+			<a href="javascript:;" class="startClass" @click="stopAnswer" v-if="viewState==1">结束答题</a>
+			<count-down ref="countdown" v-if="viewState==0"></count-down>
 		</div>
+
 	</div>
 </template>
 
@@ -32,6 +35,7 @@
 	import singleChoice from '@/page/mainPage/components/singleChoice';
 	import multiChoice from '@/page/mainPage/components/multiChoice';
 	import classTesting from '@/page/mainPage/components/classTesting';
+	import answerChart from '@/page/mainPage/components/answerChart';
 	import CountDown from '@/page/mainPage/components/CountDown';
 	import api from '@/page/mainPage/api';
 	export default {
@@ -39,7 +43,8 @@
 			singleChoice,
 			multiChoice,
 			classTesting,
-			CountDown
+			CountDown,
+			answerChart
 		},
 		data() {
 			return {
@@ -50,11 +55,16 @@
 				trueAnswer: '',
 				questionType: '1',
 				isAnswering: false, //是否开始答题
+				viewState: '0', //0未开始 1开始  2 统计
+				titleName: '', //题目类型
+
 			};
 		},
+
 		methods: {
 			showAnswer() {
-				this.isShowAnswer = true
+				this.isShowAnswer = true;
+				this.viewState = 0;
 			},
 			hideAnswer() {
 				this.isShowAnswer = false
@@ -65,14 +75,19 @@
 					if (da && da.ret == 'success') {
 						/*结束答题 */
 						$me.isAnswering = false;
-						$me.$emit('stopAnswer')
-						$me.$router.push({
-							path: '/answerChart',
-							query: {
-								trueAnswer: $me.trueAnswer,
-								questionType: $me.questionType
-							}
-						});
+						$me.viewState = 2;
+						$me.$emit('stopAnswer');
+						$me.$refs.answerChart.show({
+							trueAnswer: $me.trueAnswer,
+							questionType: $me.questionType
+						})
+						// $me.$router.push({
+						// 	path: '/answerChart',
+						// 	query: {
+						// 		trueAnswer: $me.trueAnswer,
+						// 		questionType: $me.questionType
+						// 	}
+						// });
 					}
 				})
 			},
@@ -88,15 +103,18 @@
 				if ($me.questionType == 1) {
 					answerreg = /^[A-D]{1}$/;
 					$me.range = 'A-D';
+					$me.titleName = '单题单选-字母题';
 				} else if ($me.questionType == 2) {
 					answerreg = /^[E-F]{1}$/;
-
+					$me.titleName = '单题单选-数字题';
 				} else if ($me.questionType == 3) {
 					answerreg = /^[1-9]\d*$/;
 					$me.range = '0-9';
+					$me.titleName = '单题单选-判断题';
 				} else {
 					$me.range = this.$refs.multileChoice.getRange()
-					answerreg = /^(?!.*([A-F]).*\1)[A-F]{2,4}$/
+					answerreg = /^(?!.*([A-F]).*\1)[A-F]{2,4}$/;
+					$me.titleName = '单题多选';
 				}
 				if (!$me.trueAnswer || !answerreg.test($me.trueAnswer)) {
 					$me.$message.error('请输入正确答案');
@@ -121,15 +139,22 @@
 						if (da && da.ret == 'success') {
 							/* 开始答题 */
 							$me.isAnswering = true;
-							$me.$emit('startAnswer',true)
+							$me.viewState = 1;
+							$me.$emit('startAnswer', true)
 						}
 					})
 				}
 			},
 			returnback() {
-				this.hideAnswer();
-				this.$emit('returnback')
-			}
+				if (this.viewState == 2) {
+					this.viewState = 0;
+					this.$refs.answerChart.hide();
+				} else {
+					this.hideAnswer();
+					this.$emit('returnback')
+				}
+			},
+
 		}
 	};
 </script>
@@ -165,6 +190,11 @@
 
 				}
 			}
+		}
+
+		.inputtxt {
+			width: 360px;
+			margin: 25px auto 0;
 		}
 
 		.startClass {
@@ -223,92 +253,5 @@
 			}
 		}
 
-	}
-
-	.theme4 .bg {
-		>.startAnswer .thememodbox {
-			width: 1227px;
-			background: #fff;
-			padding: 18px;
-			border: 2px solid #1e569e;
-			transform: translate(-50%, 0);
-			top: 0;
-			left: 50%;
-			position: absolute;
-			bottom: auto;
-
-			&:before {
-				display: block;
-				content: '';
-				height: 91px;
-				width: 549px;
-				background: url(../assets/img/theme4/bg.png);
-				position: absolute;
-				top: -5px;
-				left: 50%;
-				transform: translateX(-50%);
-			}
-
-			&>div {
-				border: 2px solid #df8487;
-				background: url(../assets/img/theme4/bg2.png);
-				padding-bottom: 25px;
-			}
-
-			.tablink {
-				border-bottom: 1px solid #2459a0;
-				padding-top: 95px;
-				margin: 0 60px;
-
-				&>li {
-					float: left;
-					width: 33.33%;
-					text-align: center;
-
-					&.active a {
-						border-bottom: 4px solid #2459a0;
-					}
-
-					a {
-						display: inline-block;
-						color: #fff;
-						font-size: 25px;
-						color: #333;
-						padding: 15px 5px;
-
-					}
-				}
-			}
-
-			.tabpanel {
-				margin: 30px 40px 0;
-			}
-		}
-
-		.btnbar {
-			position: fixed;
-			bottom: 40px;
-			left: 50%;
-			transform: translate(-50%, 0);
-			width: 1227px;
-
-			a {
-				display: block;
-				margin: 0 auto;
-				width: 500px;
-			}
-
-			.startClass {
-				background: #ffd941;
-				color: #fff;
-				font-size: 14px;
-				font-size: 24px;
-				color: #333;
-				line-height: 56px;
-				height: 56px;
-				box-shadow: 0 2px 5px rgba(0, 0, 0, .6);
-				border-radius: 5px;
-			}
-		}
 	}
 </style>

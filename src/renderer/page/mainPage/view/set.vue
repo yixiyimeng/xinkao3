@@ -5,28 +5,28 @@
 		<reback></reback>
 		<div class="setbox">
 			<div>
-				<div>
+				<div class="inputtxt flex flex-align-center">
 					<label>系统信道设置</label>
-					<a-select class="select">
-						<a-select-option value="jack">Jack</a-select-option>
-						<a-select-option value="lucy">Lucy</a-select-option>
-						<a-select-option value="disabled" disabled>Disabled</a-select-option>
-						<a-select-option value="Yiminghe">yiminghe</a-select-option>
+					<a-select class="select flex-1" size="large"  v-model="ch">
+						<a-icon type="caret-down" slot="suffixIcon" class="caret"/>
+						<a-select-option :value="item.ch" v-for="(item,index) in channels" :key="index">{{item.chName}}</a-select-option>
 					</a-select>
 				</div>
-				<div class="mt15">
+				<div class="mt15 inputtxt flex flex-align-center">
 					<label>答题器发送功率</label>
-					<a-select class="select">
-						<a-select-option value="jack">Jack</a-select-option>
-						<a-select-option value="lucy">Lucy</a-select-option>
-						<a-select-option value="disabled" disabled>Disabled</a-select-option>
-						<a-select-option value="Yiminghe">yiminghe</a-select-option>
+					<a-select class="select flex-1" size="large" v-model="power">
+						<a-icon type="caret-down" slot="suffixIcon" class="caret"/>
+						<a-select-option :value="1">1</a-select-option>
+						<a-select-option :value="2">2</a-select-option>
+						<a-select-option :value="3">3</a-select-option>
+						<a-select-option :value="4">4</a-select-option>
+						<a-select-option :value="5">5</a-select-option>
 					</a-select>
 				</div>
-				<div class="linklist">
-					<a href="">读取</a>
-					<a href="">设置</a>
-					<a href="">设为默认值</a>
+				<div class="linklist flex flex-pack-justify">
+					<!-- <a href="javascript:;" @click="readChannel">读取</a> -->
+					<a href="javascript:;" @click="setChannel">设置</a>
+					<a href="javascript:;" @click="defaultSet">设为默认值</a>
 				</div>
 			</div>
 			<!-- <div class="btnlist">
@@ -39,22 +39,59 @@
 
 <script>
 	import reback from '@/page/mainPage/components/reback';
+	import api from '@/page/mainPage/api';
 	export default {
 		components: {
 			reback
 		},
 		data() {
 			return {
-				reftitletypelist: ['123', '345566'],
-				product: {
-					label: 'foo',
-					value: 'Foo'
-				}
+				channels:[],
+				ch:'',
+				power:''
 			};
+		},
+		created() {
+			this.getChannels();
+			this.readChannel();
 		},
 		methods: {
 			returnback() {
 				this.$router.go(-1);
+			},
+			readChannel() {
+				this.$postAction(api.readChannel).then(da => {
+					if (da && da.ret == 'success') {
+						this.ch=da.data.rf_ch;
+						this.power=da.data.tx_power
+					}
+				})
+			},
+			setChannel(){
+				this.$postAction(api.setChannel,{
+					ch:this.ch,
+					power:this.power
+				}).then(da => {
+					if (da && da.ret == 'success') {
+						this.$toast.center('设置成功');
+					}
+				})
+			},
+			defaultSet(){
+				this.$postAction(api.defaultSet).then(da => {
+					if (da && da.ret == 'success') {
+						this.$toast.center('设为默认值成功');
+						this.readChannel();
+					}
+				})
+			},
+			getChannels(){
+			/* 获取通道列表 */
+				this.$postAction(api.getChannels).then(da => {
+					if (da && da.ret == 'success') {
+						this.channels=da.data
+					}
+				})
 			}
 		}
 	};
@@ -153,6 +190,20 @@
 		.setbox {
 			width: 780px;
 			text-align: center;
+
+			label {
+				text-align: left;
+				padding-left: 20px;
+				color: #333;
+				font-size: 28px;width: 8em;
+			}
+
+			.linklist {
+				width: 547px;
+				margin-left: auto;
+				margin-right: auto;
+			}
+
 			.linklist a {
 				color: #333;
 				font-size: 20px;
@@ -161,6 +212,32 @@
 				border-radius: 5px;
 				line-height: 40px;
 				padding: 0 25px;
+			}
+
+			.inputtxt {
+				background: #fff;
+				width: 547px;
+				line-height: 50px;
+				border-radius: 5px;
+				border: 1px solid #333;
+				margin-left: auto;
+				margin-right: auto;
+			}
+			/deep/ .ant-select .ant-select-selection{
+				background: none;
+				border:none;
+				box-shadow: none;
+				font-size:24px;
+				color:#333;
+				&:focus{
+					border: none;
+					box-shadow: none;
+				}
+			}
+			.caret{
+				font-size: 24px;
+				color: #2459a0;
+				margin-top: -6px;
 			}
 		}
 	}

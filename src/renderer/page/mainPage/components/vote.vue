@@ -441,6 +441,10 @@
 				border-color: #fff !important;
 				padding-left: 20px;
 				color: #fff;
+				box-shadow: none;
+				&:focus{
+					box-shadow: none;
+				}
 			}
 
 			/deep/ .textarea.ant-input {

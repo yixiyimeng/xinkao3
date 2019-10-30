@@ -1,7 +1,7 @@
-export const urlPath = 'http://192.168.10.108:8080/teacher-client';
-export const urlwsPath = 'ws://192.168.10.108:8080/teacher-client';
-// export const urlPath = 'http://localhost:8080/teacher-client';
-// export const urlwsPath = 'ws://localhost:8080/teacher-client';
+// export const urlPath = 'http://192.168.10.108:8080/teacher-client';
+// export const urlwsPath = 'ws://192.168.10.108:8080/teacher-client';
+export const urlPath = 'http://localhost:8080/teacher-client';
+export const urlwsPath = 'ws://localhost:8080/teacher-client';
 /*正则*/
 /*两位小数*/
 export const reg = {

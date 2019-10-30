@@ -89,14 +89,14 @@ export default new Router({
 								title: '答题中'
 							}
 						},
-						{
-							path: '/answerChart',
-							name: 'answerChart',
-							component: require('@/page/mainPage/view/answerChart').default,
-							meta: {
-								title: '答题统计'
-							}
-						},
+						// {
+						// 	path: '/answerChart',
+						// 	name: 'answerChart',
+						// 	component: require('@/page/mainPage/view/answerChart').default,
+						// 	meta: {
+						// 		title: '答题统计'
+						// 	}
+						// },
 						{
 							path: '/startClassTesting',
 							name: 'startClassTesting',
@@ -121,14 +121,14 @@ export default new Router({
 						// 		title: '投票统计'
 						// 	}
 						// },
-						{
-							path: '/voteChart',
-							name: 'voteChart',
-							component: require('@/page/mainPage/view/voteChart').default,
-							meta: {
-								title: '投票统计'
-							}
-						},
+						// {
+						// 	path: '/voteChart',
+						// 	name: 'voteChart',
+						// 	component: require('@/page/mainPage/view/voteChart').default,
+						// 	meta: {
+						// 		title: '投票统计'
+						// 	}
+						// },
 						// {
 						// 	path: '/singinlist',
 						// 	name: 'singinlist',

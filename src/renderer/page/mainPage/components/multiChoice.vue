@@ -2,7 +2,8 @@
 	<div>
 		<div class="modbox">
 			<div class="icon">
-				<img src="../assets/img/menu1.png" alt="" />
+				<img src="../assets/img/menu1.png" alt="" v-if="theme!='theme4'"/>
+				<img src="../assets/img/theme4/smenuicon1.png" alt="" v-if="theme=='theme4'"/>
 				<span>字母A</span>
 			</div>
 			<span class="line"></span>
@@ -27,6 +28,9 @@
 </template>
 
 <script>
+	import {
+		mapState
+	} from 'vuex';
 	export default {
 		data() {
 			return {
@@ -34,6 +38,9 @@
 			};
 		},
 		mounted() {},
+		computed: {
+			...mapState(['theme'])
+		},
 		methods: {
 			getRange(){
 				return 'A-'+this.range
@@ -46,7 +53,7 @@
 	.modbox {
 		color: #fff;
 		text-align: center;
-		padding-top: 50px;
+		padding-top: 0;
 		margin-bottom:20px;
 
 		.line {

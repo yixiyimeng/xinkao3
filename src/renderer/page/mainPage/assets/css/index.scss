@@ -175,7 +175,7 @@
 		&>span{
 			height: 80px;
 			width: 80px;
-			background: url(assets/img/theme4/titlebg.png);
+			background: url(assets/img/theme4/titlebg.png) #fff;
 			display: inline-block;
 			font-size: 64px;
 			color: #2459a0;
@@ -226,7 +226,133 @@
 			// height: 100%;
 		}
 	}
+.startAnswer .thememodbox {
+			width: 1227px;
+			background: #fff;
+			padding: 18px;
+			border: 2px solid #1e569e;
+			transform: translate(-50%, 0);
+			top: 0;
+			left: 50%;
+			position: absolute;
+			bottom: auto;
 
+			&:before {
+				display: block;
+				content: '';
+				height: 91px;
+				width: 549px;
+				background: url(assets/img/theme4/bg.png);
+				position: absolute;
+				top: -5px;
+				left: 50%;
+				transform: translateX(-50%);
+			}
+
+			&>div {
+				border: 2px solid #df8487;
+				background: url(assets/img/theme4/bg2.png);
+				padding-bottom: 25px;
+			}
+
+			.tablink {
+				border-bottom: 1px solid #2459a0;
+				padding-top: 95px;
+				margin: 0 60px;
+
+				&>li {
+					float: left;
+					width: 33.33%;
+					text-align: center;
+
+					&.active a {
+						border-bottom: 4px solid #2459a0;
+					}
+
+					a {
+						display: inline-block;
+						color: #fff;
+						font-size: 25px;
+						color: #333;
+						padding: 15px 5px;
+
+					}
+				}
+			}
+
+			.tabpanel {
+				margin: 30px 40px 0;
+			}
+
+			.inputtxt {
+				background: url(assets/img/theme4/txtbg4.png) no-repeat center center;
+				width: 377px;
+				height: 49px;
+				padding: 0 20px;
+				color: #fff;
+
+				/deep/ .ant-input {
+					background: none;
+					border: none;
+					color: #fff;
+
+					&:focus {
+						border: none;
+						box-shadow: none
+					}
+				}
+			}
+
+		}
+
+		.titleName {
+			background: url(assets/img/theme4/title.png) no-repeat center center;
+			width: 408px;
+			height: 89px;
+			position: fixed;
+			color: #fff;
+			font-size: 30px;
+			top: 60px;
+			left: 60px;
+			line-height: 89px;
+			text-align: center;
+			&.trueAnswer{
+				right: 60px;
+				left: auto;
+				.red{
+					color: #eaadaf;
+					font-size: 50px;
+					vertical-align: middle;
+				}
+			}
+		}
+
+		.btnbar {
+			position: fixed;
+			bottom: 40px;
+			left: 50%;
+			transform: translate(-50%, 0);
+			width: 1227px;
+
+			a {
+				display: block;
+				margin: 0 auto;
+				width: 500px;
+			}
+
+			.startClass {
+				background: #ffd941;
+				color: #fff;
+				font-size: 14px;
+				font-size: 24px;
+				color: #333;
+				line-height: 56px;
+				height: 56px;
+				box-shadow: 0 2px 5px rgba(0, 0, 0, .6);
+				border-radius: 5px;
+			}
+		}
+	
 }
 .btnbar {
 		position: fixed;

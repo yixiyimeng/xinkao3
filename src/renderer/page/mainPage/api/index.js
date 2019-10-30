@@ -34,6 +34,10 @@ const api = {
 	endClass:'common/endClass',//下课
 	startQuickAnswer:'/quickAnswer/start',//抢答开始
 	stopQuickAnswer:'/quickAnswer/stop',//停止抢答
+	readChannel:'/set/readChannel',//读取信道信息
+	setChannel:'/set/setChannel',//设置
+	defaultSet:'/set/defaultSet',//设置默认值
+	getChannels:'/set/getChannels'
 }
 export default api
 export function postAction(url, parameter,obj={}) {
