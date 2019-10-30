@@ -1,7 +1,7 @@
 <template>
 	<div v-if="showVote" class="bg">
-		<a href="javascript:;" class="reback" @click="returnback"></a>
-		<div class="setbox" v-if="!isAnswering">
+		<a href="javascript:;" class="reback" @click="returnback" v-if="viewState!=1"></a>
+		<div class="setbox" v-if="viewState==0">
 			<div>
 				<a-form :form="form">
 					<a-form-item label="评分主题" :label-col="{ span: 4}" :wrapper-col="{ span: 20 }">
@@ -25,7 +25,7 @@
 
 			</div>
 		</div>
-		<div class="voteChart flex flex-align-center" v-if="isAnswering">
+		<div class="voteChart flex flex-align-center" v-if="viewState!=0">
 			<div class="voteInfo">
 				<div class="flex"><label>评分主题:</label><span class="flex-1">{{voteInfo.titleName}}</span></div>
 				<div class="flex"><label>评分对象:</label>
@@ -34,12 +34,12 @@
 				<div class="flex"><label>评分描述:</label><span class="flex-1">{{voteInfo.describe}}</span></div>
 			</div>
 			<div class="flex-1" v-if="isChart">
-				<v-chart :options="polar" autoresize class="chartbox" ></v-chart>
+				<v-chart :options="polar" autoresize class="chartbox"></v-chart>
 			</div>
 		</div>
 		<div class="btnbar">
-			<a href="javascript:;" class="startClass" @click="startScore" v-if="!isAnswering">开始评分</a>
-			<a href="javascript:;" class="startClass" @click="stopScore" v-if="isAnswering">结束评分</a>
+			<a href="javascript:;" class="startClass" @click="startScore" v-if="viewState==0">开始评分</a>
+			<a href="javascript:;" class="startClass" @click="stopScore" v-if="viewState==1">结束评分</a>
 		</div>
 	</div>
 </template>
@@ -68,6 +68,7 @@
 				isAnswering: false,
 				isChart: false,
 				voteInfo: {},
+				viewState: 0,
 				theme: 'theme1',
 				selectNamelist: [],
 				polar: {
@@ -154,7 +155,7 @@
 			};
 		},
 		created() {
-			
+
 
 		},
 		methods: {
@@ -175,9 +176,9 @@
 			},
 			show() {
 				this.isChart = false;
-				this.isAnswering=false;
-				maxId=0;
-				this.objlist=[0];
+				this.isAnswering = false;
+				maxId = 0;
+				this.objlist = [0];
 				this.showVote = true;
 			},
 			hide() {
@@ -207,7 +208,7 @@
 				const $me = this;
 				$me.$postAction(api.stopScore).then(da => {
 					if (da && da.ret == 'success') {
-						
+
 						$me.getScoreResult();
 
 						$me.$emit('stopScore')
@@ -224,8 +225,8 @@
 						// $me.isAnswering = false;
 						var data = da.data;
 						this.chartlist = data;
-						var objtitle = [];//投票对象
-						var title = ['总分', '人数', '平均分'];//x轴标题
+						var objtitle = []; //投票对象
+						var title = ['总分', '人数', '平均分']; //x轴标题
 						var serieslist = [];
 						for (var i = 0; i < data.length; i++) {
 							var item = data[i];
@@ -247,22 +248,22 @@
 									barBorderRadius: [5, 5, 0, 0]
 								},
 								barWidth: '40',
-								data:[item.totalScore,item.number,item.averageScore]
+								data: [item.totalScore, item.number, item.averageScore]
 							}
 							serieslist.push(seriesitem)
 						}
-						
-						
+
+
 						var polar = Object.assign({}, this.polar);
 						polar.series = serieslist;
 						polar.legend.data = objtitle;
-						polar.xAxis.data=title;
+						polar.xAxis.data = title;
 						this.polar = Object.assign({}, polar);
-						
+
 					}
 				})
 			},
-		
+
 		}
 
 	};

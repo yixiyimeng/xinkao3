@@ -1,6 +1,6 @@
 <template>
 	<div class="startAnswer" v-if="isShowAnswer">
-		<a href="javascript:;" class="reback" @click="returnback"></a>
+		<a href="javascript:;" class="reback" @click="returnback" v-if="!isAnswering"></a>
 		<div class="thememodbox" v-if="!isAnswering">
 			<div>
 				<ul class="tablink clearfix">

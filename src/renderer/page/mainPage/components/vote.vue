@@ -1,5 +1,6 @@
 <template>
 	<div v-if="showVote" class="bg">
+		
 		<a href="javascript:;" class="reback" @click="returnback" v-if="viewState!=1"></a>
 		<div class="setbox" v-if="viewState==0">
 			<div>
@@ -29,7 +30,7 @@
 			<div class="voteInfo">
 				<div class="flex"><label>投票主题:</label><span class="flex-1">{{voteInfo.titleName}}</span></div>
 				<div class="flex"><label>投票对象:</label>
-					<div class="flex-1"><span v-for="(item,index) in voteInfos.obj" :key="index">{{item}}</span></div>
+					<div class="flex-1"><span v-for="(item,index) in voteInfo.objs" :key="index">{{item}}</span></div>
 				</div>
 				<div class="flex"><label>投票描述:</label><span class="flex-1">{{voteInfo.describe}}</span></div>
 			</div>
@@ -195,7 +196,7 @@
 							if (da && da.ret == 'success') {
 								/* 开始答题 */
 								$me.voteInfo = values;
-								this.viewState = 1;
+								$me.viewState = 1;
 								$me.$emit('startVote')
 							}
 						})
