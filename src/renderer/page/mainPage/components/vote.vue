@@ -5,7 +5,7 @@
 			<div>
 				<a-form :form="form">
 					<a-form-item label="投票主题" :label-col="{ span: 4}" :wrapper-col="{ span: 20 }">
-						<a-input class="lginput" v-decorator="['title', { rules: [{ required: true, message: '请输入投票主题!' }] }]"
+						<a-input class="lginput" v-decorator="['titleName', { rules: [{ required: true, message: '请输入投票主题!' }] }]"
 						 placeholder="请输入投票主题" allowClear size="large" />
 					</a-form-item>
 					<a-form-item label="投票描述" :label-col="{ span: 4}" :wrapper-col="{ span: 20 }">
@@ -13,7 +13,7 @@
 					</a-form-item>
 					<a-form-item label="投票对象" :label-col="{ span: 4 }" :wrapper-col="{ span:20 }">
 						<div v-for="item in objlist" :key="item" class="objitem">
-							<a-input v-decorator="['obj['+item+']', { rules: [{ required: true, message: '请输入投票对象!' }] }]" placeholder="投票对象"
+							<a-input v-decorator="['objs['+item+']', { rules: [{ required: true, message: '请输入投票对象!' }] }]" placeholder="投票对象"
 							 allowClear size="large" class="sminput" />
 							<a-icon type="minus-circle" @click="delObj(item)" v-if="objlist.length>1" />
 						</div>
@@ -27,9 +27,9 @@
 		</div>
 		<div class="voteChart flex flex-align-center" v-if="viewState!=0">
 			<div class="voteInfo">
-				<div class="flex"><label>投票主题:</label><span class="flex-1">{{voteInfo.title}}</span></div>
+				<div class="flex"><label>投票主题:</label><span class="flex-1">{{voteInfo.titleName}}</span></div>
 				<div class="flex"><label>投票对象:</label>
-					<div class="flex-1"><span v-for="(item,index) in voteInfo.obj" :key="index">{{item}}</span></div>
+					<div class="flex-1"><span v-for="(item,index) in voteInfos.obj" :key="index">{{item}}</span></div>
 				</div>
 				<div class="flex"><label>投票描述:</label><span class="flex-1">{{voteInfo.describe}}</span></div>
 			</div>
@@ -175,6 +175,8 @@
 			show() {
 				this.isChart = false;
 				this.viewState = 0;
+				maxId=0;
+				this.objlist=[0];
 				this.showVote = true;
 			},
 			hide() {

@@ -1,6 +1,7 @@
 <template>
 	<div class="bg">
-		<div class="title"><span>检</span><span>测</span></div>
+		<div class="title"><span v-for="item in title" :key="item">{{item}}</span></div>
+		<a href="javascript:;" class="reback" @click="returnback" ></a>
 		<div class="setbox">
 			<div>
 				<ul class="userlist clearfix">
@@ -24,10 +25,15 @@
 		components: {},
 		data() {
 			return {
+				title:'随堂检测',
 				list: new Array(100)
 			};
 		},
-		methods: {}
+		methods: {
+			returnback(){
+				this.$router.go(-1);
+			}
+		}
 	};
 </script>
 

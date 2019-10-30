@@ -13,14 +13,14 @@
 					<multi-choice v-if="type==1" ref="multileChoice"></multi-choice>
 					<class-testing v-if="type==2"></class-testing>
 				</div>
-				<div class="flex flex-align-center" style="width: 360px; margin: 0 auto;" v-if="type!=2">
+				<div class="flex flex-align-center" style="width: 360px; margin: 25px auto 0;" v-if="type!=2">
 					<label class="mr10">正确答案</label>
 					<a-input placeholder="请输入正确答案" v-model="trueAnswer" type="password" class="flex-1" />
 				</div>
 			</div>
 
 		</div>
-		<div class="btnbar" v-if="type!=2">
+		<div class="btnbar">
 			<a href="javascript:;" class="startClass" @click="startAnswer" v-if="!isAnswering">开始答题</a>
 			<a href="javascript:;" class="startClass" @click="stopAnswer" v-if="isAnswering">结束答题</a>
 			<count-down ref="countdown"></count-down>
@@ -281,7 +281,7 @@
 			}
 
 			.tabpanel {
-				margin: 30px 40px 25px;
+				margin: 30px 40px 0;
 			}
 		}
 

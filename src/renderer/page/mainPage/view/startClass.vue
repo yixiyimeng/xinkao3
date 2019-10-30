@@ -1,14 +1,13 @@
 <template>
 	<div class="bg">
 		<div class="title">
-			<span v-for="item in title" :key="item">{{item}}</span>
+			<span v-for="(item,index) in title" :key="index">{{item}}</span>
 		</div>
 		<!-- 切换菜单 -->
 		<div class="mainmenu">
 			<div class="setbtnlist">
-				<a href="javascript:;" @click="shownamelist" class="userlist">
-					
-				</a>
+				<a href="javascript:;" @click="shownamelist" class="userlist"></a>
+				 <router-link :to="'set'" class="set"></router-link>
 			</div>
 			<!-- <div class="set"></div>
 			<div class="setbtnlist">
@@ -502,8 +501,8 @@
 			padding: 11px;
 			position: relative;
 			border: 2px solid #1e569e;
-			transform: translate(-50%, -50%);
-			top: 50%;
+			transform: translate(-50%,0);
+			top: 160px;
 			left: 50%;
 			position: absolute;
 

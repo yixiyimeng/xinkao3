@@ -9,11 +9,11 @@
 			 :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange ,type:'radio'}">
 			</a-table>
 		</div>
-		<div class="btnbar flex flex-pack-justify">
+		<!-- <div class="btnbar flex flex-pack-justify">
 			<a href="javascript:;" @click="gotopage">开始答题</a>
 			<a href="javascript:;">主观题记分</a>
 			<a href="javascript:;">上传服务</a>
-		</div>
+		</div> -->
 	</div>
 </template>
 
@@ -63,9 +63,9 @@
 		},
 		mounted() {
 			const that = this;
-			that.scrolly = document.body.offsetHeight*.6 -220-260;
+			that.scrolly = document.body.offsetHeight*.6 -380;
 			window.onresize = function() {
-				that.scrolly =  document.body.offsetHeight*.6 - 220-260;
+				that.scrolly =  document.body.offsetHeight*.6 - 380;
 			};
 		},
 		destroyed() {

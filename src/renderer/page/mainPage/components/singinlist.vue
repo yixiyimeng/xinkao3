@@ -102,6 +102,7 @@
 	.singlist ul {
 		height: 100%;
 		overflow: auto;
+		margin-bottom: 0;
 	}
 
 	.singlist ul>li {

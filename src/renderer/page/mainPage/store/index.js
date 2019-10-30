@@ -4,7 +4,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
 	state: {
-		theme:'theme1',
+		theme:'theme4',
 		isminimizeAppState: false, //最小化
 	},
 	getters: {

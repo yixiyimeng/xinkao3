@@ -16,11 +16,11 @@
 		data() {
 			return {
 				locale: zhCN,
-				theme:'theme4'
+				// theme:'theme4'
 			}
 		},
 		computed: {
-			// ...mapState(['theme'])
+			...mapState(['theme'])
 		},
 		created() {
 			// localStorage.setItem('theme', 'theme1');

@@ -661,6 +661,12 @@
 				&.userlist{
 					background-image: url(assets/img/theme4/user.png);
 				}
+				&.set{
+					background-image: url(assets/img/set.png);
+				}
+				&+a{
+					margin-top: 10px;
+				}
 			}
 		}
 	}

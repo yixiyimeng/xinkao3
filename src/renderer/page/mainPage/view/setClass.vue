@@ -1,7 +1,8 @@
 <template>
 	<div class="bg">
 		<div class="title"><span v-for="item in title" :key="item">{{item}}</span></div>
-		<reback></reback>
+		<!-- <reback></reback> -->
+		<a href="javascript:;" class="reback" @click="returnback" ></a>
 		<div class="classbox">
 			<div>
 				<div class="form-group">
@@ -22,7 +23,8 @@
 					<div class="input-row mt10  flex flex-align-center">
 						<label>课程名</label>
 						<a-input class="flex-1 inputtxt" size="large" v-model="formData.topicName" @input="changrTopic"></a-input>
-						<a-dropdown :trigger="['click']" placement="bottomRight" class="dropdown" :overlayStyle="{'width': theme=='theme4'?'400px':'200px'}" v-if="TopicTitleList.length>0"  >
+						<a-dropdown :trigger="['click']" placement="bottomRight" class="dropdown" :overlayStyle="{'width': theme=='theme4'?'400px':'200px'}"
+						 v-if="TopicTitleList.length>0">
 							<span>
 								<a-icon type="caret-down" />
 							</span>
@@ -70,7 +72,7 @@
 		},
 		data() {
 			return {
-				title:'课程设置',
+				title: '课程设置',
 				isClearquestion: false,
 				schoolCode: '', //学校code
 				sendInfo: {}, //发送数据 
@@ -217,7 +219,7 @@
 										code: item.titleCode
 									};
 								});
-									$me.testpaperList.unshift({
+								$me.testpaperList.unshift({
 									name: '不选',
 									code: ''
 								});
@@ -294,6 +296,9 @@
 					$me.loading = false;
 				});
 
+			},
+			returnback() {
+				this.$router.push('/login');
 			}
 		}
 	};
@@ -327,7 +332,7 @@
 						margin-right: 10px;
 						color: #333;
 						line-height: 40px;
-						
+
 					}
 
 					& /deep/ .ant-checkbox-wrapper {
@@ -452,9 +457,10 @@
 
 		}
 	}
-	.theme4{
-		.bg{
-			.classbox{
+
+	.theme4 {
+		.bg {
+			.classbox {
 				width: 716px;
 				background: #fff;
 				padding: 18px;
@@ -463,7 +469,8 @@
 				transform: translate(-50%, -50%);
 				top: 50%;
 				left: 50%;
-				position:absolute;
+				position: absolute;
+
 				&:before {
 					display: block;
 					content: '';
@@ -475,11 +482,12 @@
 					left: 50%;
 					transform: translateX(-50%);
 				}
-				
+
 				&>div {
 					border: 2px solid #df8487;
 					background: url(../assets/img/theme4/bg2.png);
 					padding: 70px 85px 45px 40px;
+
 					.form-group .input-row {
 						label {
 							font-size: 24px;
@@ -489,48 +497,66 @@
 							text-align: right;
 							margin-right: 20px;
 						}
-						.inputtxt /deep/ .ant-input-lg,/deep/ .ant-select-lg .ant-select-selection--single{
+
+						/deep/ .inputtxt.ant-input-lg {
+							line-height: 48px;
+							height: 48px;
+						}
+
+						/deep/ .ant-select-lg .ant-select-selection--single {
 							// border: 1px solid #333;
 							line-height: 50px;
 							height: 50px;
 						}
-						/deep/ .ant-select-selection__rendered{
+
+						/deep/ .ant-select-selection__rendered {
 							line-height: 48px;
 						}
-						.select /deep/  .anticon,.dropdown /deep/ .anticon{
+
+						.select /deep/ .anticon,
+						.dropdown /deep/ .anticon {
 							font-size: 20px;
-						}.dropdown /deep/ .anticon{
-							margin-top: 20px;
-						}.select /deep/  .anticon{
+						}
+
+						.dropdown /deep/ .anticon {
+							margin-top: 16px;
+						}
+
+						.select /deep/ .anticon {
 							margin-top: -3px;
 						}
-						.dropdown{
-							line-height: 50px;
+
+						.dropdown {
+							line-height: 40px;
 						}
-						
+
 					}
 				}
-				.seltime{
+
+				.seltime {
 					left: 7.4em;
-					}
+				}
+
 				.startClass {
 					display: block;
 					width: 100%;
-					background:#ffd941;
+					background: #ffd941;
 					color: #fff;
 					font-size: 14px;
 					font-size: 24px;
 					color: #333;
 					line-height: 60px;
 					height: 60px;
-					box-shadow: 0 2px 5px rgba(0,0,0,.6);
+					box-shadow: 0 2px 5px rgba(0, 0, 0, .6);
 					border-radius: 5px;
 					margin-top: 35px;
-					&:hover,&:active{
+
+					&:hover,
+					&:active {
 						border: none;
 					}
 				}
-				
+
 			}
 		}
 	}

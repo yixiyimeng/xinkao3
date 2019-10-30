@@ -26,25 +26,21 @@ function createWindow() {
 	 * Initial window options
 	 */
 	mainWindow = new BrowserWindow({
-		height: 600,
+		height: 1080,
 		useContentSize: true,
-		width: 920,
+		width: 1920,
 		titleBarStyle: 'hidden-inset',
- 		//frame: false,
-// 		transparent: true,
-		show: true,
-		fullscreenable: true,
- 		//fullscreen: true,
-		simpleFullscreen: true,
-		resizable: true,
+		frame: false,
+		transparent: true,
+		resizable: false,
 		hasShadow: false,
 		webPreferences: {
-			webSecurity: false,
-			devTools: true //关闭调试工具
+			webSecurity: false
 		}
 	})
 
 	mainWindow.loadURL(winURL)
+	mainWindow.maximize();
 	//mainWindow.setFullScreen(true); //设置全屏
 	mainWindow.on('closed', () => {
 		mainWindow = null
@@ -54,6 +50,7 @@ function createWindow() {
 		e.preventDefault();
 		if (mainWindow.isMinimized()) {
 			mainWindow.show();
+			mainWindow.maximize();
 			//mainWindow.setFullScreen(true);
 		}
 		mainWindow.webContents.send('isexitApp');
@@ -119,6 +116,18 @@ function createSuspensionWindow() {
 	});
 
 
+}
+/* 防止软件重复打开 */
+const isSecondInstance = app.makeSingleInstance((commandLine, workingDirectory) => {
+  // Someone tried to run a second instance, we should focus our window.
+  if (mainWindow) {
+    if (mainWindow.isMinimized()) mainWindow.restore()//将窗口从最小化状态恢复到以前的状态。
+    // mainWindow.focus()
+  }
+})
+
+if (isSecondInstance) {
+  app.exit()
 }
 app.on('ready', () => {
 	/* 创建窗口 */
