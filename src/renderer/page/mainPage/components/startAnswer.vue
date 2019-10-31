@@ -1,7 +1,7 @@
 <template>
 	<div class="startAnswer" v-if="isShowAnswer">
 		<a href="javascript:;" class="reback" @click="returnback" v-if="viewState!=1"></a>
-		<div class="titleName" v-if="viewState!=0">{{titleName}}</div>
+		<div class="titleName" v-if="viewState!=0&&type!=2">{{titleName}}</div>
 		<div class="thememodbox" v-if="viewState==0">
 			<div>
 				<ul class="tablink clearfix">
@@ -12,7 +12,7 @@
 				<div class="tabpanel">
 					<single-choice v-if="type==0" ref="singleChoice"></single-choice>
 					<multi-choice v-if="type==1" ref="multileChoice"></multi-choice>
-					<class-testing v-if="type==2"></class-testing>
+					<class-testing v-if="type==2" ref="classTest"></class-testing>
 				</div>
 				<div class="flex flex-align-center inputtxt" v-if="type!=2">
 					<label class="mr10">正确答案</label>
@@ -21,11 +21,14 @@
 			</div>
 
 		</div>
+		<!-- 选择题的统计 -->
 		<answer-chart ref="answerChart"></answer-chart>
+		<!-- 随堂检测统计 -->
+		<start-class-testing ref="startClassTesting"></start-class-testing>
 		<div class="btnbar">
 			<a href="javascript:;" class="startClass" @click="startAnswer" v-if="viewState==0">开始答题</a>
-			<a href="javascript:;" class="startClass" @click="stopAnswer" v-if="viewState==1">结束答题</a>
-			<count-down ref="countdown" v-if="viewState==0"></count-down>
+			<a href="javascript:;" class="startClass" @click="stopAnswer" v-if="viewState==1">{{type==2?'收取试卷':'结束答题'}} </a>
+			<count-down ref="countdown" v-if="viewState==0" @stopCountDown="stopCountDown"></count-down>
 		</div>
 
 	</div>
@@ -37,6 +40,7 @@
 	import classTesting from '@/page/mainPage/components/classTesting';
 	import answerChart from '@/page/mainPage/components/answerChart';
 	import CountDown from '@/page/mainPage/components/CountDown';
+	import startClassTesting from '@/page/mainPage/components/startClassTesting';
 	import api from '@/page/mainPage/api';
 	export default {
 		components: {
@@ -44,7 +48,8 @@
 			multiChoice,
 			classTesting,
 			CountDown,
-			answerChart
+			answerChart,
+			startClassTesting
 		},
 		data() {
 			return {
@@ -57,10 +62,16 @@
 				isAnswering: false, //是否开始答题
 				viewState: '0', //0未开始 1开始  2 统计
 				titleName: '', //题目类型
+				timer: null,
 
 			};
 		},
-
+		destroyed() {
+			if (this.timer) {
+				clearInterval(this.timer)
+				this.timer = null;
+			}
+		},
 		methods: {
 			showAnswer() {
 				this.isShowAnswer = true;
@@ -71,34 +82,56 @@
 			},
 			stopAnswer() {
 				const $me = this;
-				$me.$postAction(api.stopAnswer).then(da => {
-					if (da && da.ret == 'success') {
-						/*结束答题 */
-						$me.isAnswering = false;
-						$me.viewState = 2;
-						$me.$emit('stopAnswer');
-						$me.$refs.answerChart.show({
-							trueAnswer: $me.trueAnswer,
-							questionType: $me.questionType
-						})
-						// $me.$router.push({
-						// 	path: '/answerChart',
-						// 	query: {
-						// 		trueAnswer: $me.trueAnswer,
-						// 		questionType: $me.questionType
-						// 	}
-						// });
-					}
-				})
+				if ($me.type == 2) {
+					$me.$postAction(api.stopRandomDetection).then(da => {
+						if (da && da.ret == 'success') {
+							/*收取试卷 */
+							$me.isAnswering = false;
+							$me.viewState = 2;
+							$me.$emit('stopAnswer');
+							clearInterval($me.timer);
+							$me.timer = null;
+						}
+					})
+				} else {
+					$me.$postAction(api.stopAnswer).then(da => {
+						if (da && da.ret == 'success') {
+							/*结束答题 */
+							$me.isAnswering = false;
+							$me.viewState = 2;
+							$me.$emit('stopAnswer');
+							$me.$refs.answerChart.show({
+								trueAnswer: $me.trueAnswer,
+								questionType: $me.questionType
+							})
+
+						}
+					})
+				}
 			},
 			startAnswer() {
 				const $me = this;
-				let answerreg = '';
-				if (this.type == 0) {
-					$me.questionType = $me.$refs.singleChoice.getQuestionType()
-				} else if (this.type == 1) {
-					$me.questionType = 4
+				if (this.type == 2) {
+					var titleCode = $me.$refs.classTest.getTitleCode();
+					if (titleCode == '') {
+						$me.$message.error('请选择一套试卷下发');
+						return false
+					}
+					this.startTest(titleCode);
+				} else {
+					if (this.type == 0) {
+						$me.questionType = $me.$refs.singleChoice.getQuestionType()
+					} else if (this.type == 1) {
+						$me.questionType = 4
+					}
+					this.startChoice()
 				}
+
+			},
+			/* 开始选择题 */
+			startChoice() {
+				const $me = this;
+				let answerreg = '';
 				$me.trueAnswer = $me.trueAnswer.toLocaleUpperCase()
 				if ($me.questionType == 1) {
 					answerreg = /^[A-D]{1}$/;
@@ -111,57 +144,91 @@
 					answerreg = /^[1-9]\d*$/;
 					$me.range = '0-9';
 					$me.titleName = '单题单选-判断题';
-				} else {
-					$me.range = this.$refs.multileChoice.getRange()
-					answerreg = /^(?!.*([A-F]).*\1)[A-F]{2,4}$/;
+				} else if ($me.questionType == 4) {
+					$me.range = this.$refs.multileChoice.getRange();
+					var str = "/^(?!.*([" + $me.range + "]).*\\1)[" + $me.range + "]{2,4}$/";
+
+					answerreg = eval(str);
+					//answerreg=/^(?!.*([A-D]).*\1)[A-D]{2,4}$/;
 					$me.titleName = '单题多选';
 				}
-				if (!$me.trueAnswer || !answerreg.test($me.trueAnswer)) {
+				if ($me.trueAnswer && !answerreg.test($me.trueAnswer)) {
 					$me.$message.error('请输入正确答案');
 					$me.trueAnswer = '';
 					return false;
 				}
-				if (this.$refs.countdown) {
-					var {
-						isCountdown,
-						countDownTime
-					} = this.$refs.countdown.getTime();
-
-					var param = {
-						questionType: $me.questionType,
-						isImpromptu: $me.isImpromptu,
-						trueAnswer: $me.trueAnswer
-					};
-					if ($me.questionType != 2) {
-						param.range = $me.range
-					}
-					$me.$postAction(api.startSingleAnswer, param).then(da => {
-						if (da && da.ret == 'success') {
-							/* 开始答题 */
-							$me.isAnswering = true;
-							$me.viewState = 1;
-							$me.$emit('startAnswer', true)
-						}
-					})
+				
+				var param = {
+					questionType: $me.questionType,
+					isImpromptu: $me.isImpromptu,
+					trueAnswer: $me.trueAnswer
+				};
+				if ($me.questionType != 2) {
+					param.range = $me.range
 				}
+				$me.$postAction(api.startSingleAnswer, param).then(da => {
+					if (da && da.ret == 'success') {
+						/* 开始答题 */
+						if (this.$refs.countdown) {
+							var {
+								isCountdown,
+								countDownTime
+							} = this.$refs.countdown.getTime();
+							if (isCountdown && countDownTime > 0) {
+								$me.$refs.countdown.startCountDown();
+							}
+						}
+						$me.isAnswering = true;
+						$me.viewState = 1;
+						$me.$emit('startAnswer', true)
+					}
+				})
+
+			},
+			/* 开始随堂测验 */
+			startTest(titleCode) {
+				const $me = this;
+				$me.$postAction(api.startRandomDetection + titleCode).then(da => {
+					if (da && da.ret == 'success') {
+						$me.isAnswering = true;
+						$me.viewState = 1;
+						$me.$emit('startAnswer', false);
+						$me.$refs.startClassTesting.show();
+						$me.timer = setInterval(function() {
+							$me.answerPercent()
+						}, 1000)
+					}
+				})
+			},
+			/* 更新随堂检测进度 */
+			answerPercent() {
+				const $me = this;
+				$me.$postAction(api.answerPercent).then(da => {
+					if (da && da.ret == 'success') {
+						$me.$refs.startClassTesting.setList(da.data);
+					}
+				})
 			},
 			returnback() {
 				if (this.viewState == 2) {
 					this.viewState = 0;
+					this.trueAnswer = '';
 					this.$refs.answerChart.hide();
+					this.$refs.startClassTesting.hide();
 				} else {
 					this.hideAnswer();
 					this.$emit('returnback')
 				}
 			},
-
+			stopCountDown() {
+				/* 倒计时结束事件 */
+				this.stopAnswer();
+			}
 		}
 	};
 </script>
 
 <style scoped="scoped" lang="scss">
-	@import '../assets/css/set.scss';
-
 	.bg>div {
 		position: absolute;
 		top: 20%;
@@ -194,7 +261,7 @@
 
 		.inputtxt {
 			width: 360px;
-			margin: 25px auto 0;
+			margin: 0 auto;
 		}
 
 		.startClass {

@@ -2,7 +2,7 @@
 	<div class="bg">
 		<div class="title"><span v-for="item in title" :key="item">{{item}}</span></div>
 		<!-- <reback></reback> -->
-		<a href="javascript:;" class="reback" @click="returnback" ></a>
+		<a href="javascript:;" class="reback" @click="returnback"></a>
 		<div class="classbox">
 			<div>
 				<div class="form-group">
@@ -550,6 +550,7 @@
 					box-shadow: 0 2px 5px rgba(0, 0, 0, .6);
 					border-radius: 5px;
 					margin-top: 35px;
+					border: none;
 
 					&:hover,
 					&:active {

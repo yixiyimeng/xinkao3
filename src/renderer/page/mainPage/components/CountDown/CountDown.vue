@@ -19,9 +19,10 @@
 		},
 		data() {
 			return {
-				isCountdown: false,//是否倒计时
-				showcountDown: false,//是否显示设置倒计时
-				countDownTime: ''
+				isCountdown: false, //是否倒计时
+				showcountDown: false, //是否显示设置倒计时
+				countDownTime: '',
+				timer: null
 			};
 		},
 		methods: {
@@ -29,6 +30,7 @@
 			countDown(time) {
 				this.countDownTime = time;
 				this.showcountDown = false;
+
 			},
 			//* 取消设置倒计时 */
 			cancelcountDown() {
@@ -42,9 +44,30 @@
 			checkshowcountDown() {
 				this.showcountDown = !this.showcountDown;
 			},
-			getTime(){
+			startCountDown() {
+				if (this.timer) {
+					return;
+				}
+				this.timer = setInterval(() => {
+					if (this.countDownTime > 0) {
+						this.countDownTime--;
+						if (this.countDownTime == 0) {
+							this.stopCountDown();
+							this.$emit('stopCountDown')
+						}
+					}
+				}, 1000)
+			},
+			stopCountDown() {
+				if (this.timer) {
+					clearInterval(this.timer);
+					this.timer = null;
+				}
+			},
+			getTime() {
 				return {
-					isCountdown:this.isCountdown,countDownTime:this.countDownTime
+					isCountdown: this.isCountdown,
+					countDownTime: this.countDownTime
 				}
 			}
 		},
@@ -72,6 +95,7 @@
 		position: absolute;
 		right: 0;
 		bottom: 0;
+
 		span {
 			line-height: 40px;
 			vertical-align: middle;

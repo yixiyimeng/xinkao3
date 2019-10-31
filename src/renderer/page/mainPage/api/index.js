@@ -22,6 +22,7 @@ const api = {
 	getEveryAnswerNum:'/answer/statistics/getEveryAnswerNum',//查询作答人数
 	getEveryAnswerName:'/answer/statistics/getEveryAnswerName',//查询作答人名称
 	getFalseAnswerName:'/answer/statistics/getFalseAnswerName',//查询错误作答人名称
+	getAnswerName:'/answer/statistics/getAnswerName',//查询全部作答人名称
 	startVote:'/vote/start',//投票
 	stopVote:'/vote/stop',//停止投票
 	getVoteResult:'/vote/getVoteResult',//获取投票结果
@@ -39,7 +40,10 @@ const api = {
 	defaultSet:'/set/defaultSet',//设置默认值
 	getChannels:'/set/getChannels',
 	exit:'/common/exit',//退出
-	listPaper:'/randomDetection/listPaper/'
+	listPaper:'/randomDetection/listPaper/',
+	startRandomDetection:'/randomDetection/start/',//开始随堂检测
+	stopRandomDetection:'/randomDetection/stop/',//停止随堂检测
+	answerPercent:'/randomDetection/answerPercent'//更新随堂检测进度
 }
 export default api
 export function postAction(url, parameter,obj={}) {

@@ -5,8 +5,12 @@
 			<span class="ml10">请选择试卷</span>
 		</div>
 		<div class="tablelist mt20" ref="setbox">
-			<a-table style="height: 100%;" :columns="columns" :dataSource="data" :scroll="{ x: 700, y: scrolly }" size="middle"
-			 :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange ,type:'radio'}">
+			<a-table style="height: 100%;" rowKey="titleCode" :columns="columns" :dataSource="dataSource" :scroll="{ x: 700, y: scrolly }"
+			 size="middle" :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange ,type:'radio'}"
+			 :pagination="pagination" @change="handleTableChange">
+				<span slot="serial" slot-scope="text, record, index">
+					{{ index + 1 }}
+				</span>
 			</a-table>
 		</div>
 		<!-- <div class="btnbar flex flex-pack-justify">
@@ -22,16 +26,19 @@
 	const columns = [{
 			title: '序号',
 			dataIndex: 'num',
-			width: 100
+			width: 100,
+			scopedSlots: {
+				customRender: 'serial'
+			},
 		},
 		{
 			title: '试卷名称',
-			dataIndex: 'name',
+			dataIndex: 'titleName',
 			width: 200
 		},
 		{
 			title: '试卷描述',
-			dataIndex: 'subject'
+			dataIndex: 'titleCode'
 		},
 		// 	{
 		// 		title: '操作',
@@ -50,26 +57,28 @@
 			name: `Edward King ${i}`,
 			mark: `London, Park Lane no. ${i}`,
 			isChecked: false,
-			selectedRowKeys: []
+			selectedRowKeys: [],
+
 		});
 	}
 	export default {
 		data() {
 			return {
-				data,
+				dataSource: [],
 				columns,
 				selectedRowKeys: [],
-				scrolly: 100
+				scrolly: 100,
+				pagination: {},
 			};
 		},
 		created() {
-			this.getlistPaper();
+			this.getlistPaper(0,10);
 		},
 		mounted() {
 			const that = this;
-			that.scrolly = document.body.offsetHeight*.6 -380;
+			that.scrolly = document.body.offsetHeight * .6 - 380;
 			window.onresize = function() {
-				that.scrolly =  document.body.offsetHeight*.6 - 380;
+				that.scrolly = document.body.offsetHeight * .6 - 380;
 			};
 		},
 		destroyed() {
@@ -83,26 +92,46 @@
 			},
 			onSelectChange(selectedRowKeys) {
 				this.selectedRowKeys = selectedRowKeys;
+				console.log(selectedRowKeys)
 			},
 			onChange(record, index, e) {
 				console.log(`checked = ${e.target.checked}`);
-				if (e.target.checked) {
-					if (this.data.length > 0) {
-						this.data.forEach(item => {
-							item.isChecked = false;
-							return item
-						})
-					}
-					this.data[index].isChecked = true;
-				} else {
-					this.data[index].isChecked = false;
-				}
+				// if (e.target.checked) {
+				// 	if (this.dataSource.length > 0) {
+				// 		this.dataSource.forEach(item => {
+				// 			item.isChecked = false;
+				// 			return item
+				// 		})
+				// 	}
+				// 	this.dataSource[index].isChecked = true;
+				// } else {
+				// 	this.dataSource[index].isChecked = false;
+				// }
 			},
-			getlistPaper(){
-				var url=api.listPaper+'1/10';
-				this.$postAction(url).then(da=>{
-					console.log(da)
+			handleTableChange(pagination) {
+				const pager = { ...this.pagination
+				};
+				pager.current = pagination.current;
+				this.pagination = pager;
+				let offset=(pager.current-1)*pagination.pageSize;
+				this.getlistPaper(offset,pageSize)
+			},
+			getlistPaper(offset,pageSize) {
+				const $me = this;
+				var url = api.listPaper + offset+'/'+pageSize;
+				this.$postAction(url).then(da => {
+					if (da && da.ret == 'success') {
+						console.log(da);
+						$me.dataSource = da.data;
+						const pagination = { ...this.pagination
+						};
+						pagination.total = da.total;
+						this.pagination = pagination;
+					}
 				})
+			},
+			getTitleCode(){
+				return this.selectedRowKeys 
 			}
 		}
 	};
@@ -110,7 +139,7 @@
 
 <style scoped="scoped" lang="scss">
 	.theme1 {
-		.modbox{
+		.modbox {
 			position: absolute;
 			top: 80px;
 			left: 0;
@@ -118,7 +147,7 @@
 			bottom: 0;
 		}
 	}
-	
+
 	.subtitle {
 		color: #fff;
 		font-size: 24px;

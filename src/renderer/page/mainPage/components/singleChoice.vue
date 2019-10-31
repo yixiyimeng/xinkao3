@@ -20,7 +20,7 @@
 				</a>
 			</li>
 		</ul>
-
+		<div class="c-red">{{tiplist[questionType-1]}}</div>
 	</div>
 </template>
 
@@ -30,7 +30,8 @@
 			return {
 				questionType: 1,
 				settime: 2,
-				// isAnswering: false
+				tip: '',
+				tiplist: ['请输入A-D的一位字母', '请输入E(正确)，F(错误)一位字母', '请输入1-9的一位数字']
 			};
 		},
 		mounted() {},
@@ -235,5 +236,12 @@
 
 			}
 		}
+	}
+
+	.c-red {
+		color: #f00;
+		width: 377px;
+		margin: 20px auto 10px;
+		font-size: 18px;
 	}
 </style>

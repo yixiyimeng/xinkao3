@@ -2,13 +2,15 @@
 	<div v-if="isShow">
 		<div class="titleName trueAnswer">正确答案<span class="red">{{trueAnswertxt}}</span></div>
 		<div class="thememodbox">
+			<div style="height: 100%;">
 			<div class="resultbox" v-if="questionType==4">
 				<a-checkbox-group :options="titleOptions" v-model="checkedList" style="vertical-align: middle;" />
 				<a href="javascript:;" style="position: relative; z-index: 99;" @click="getEveryAnswerName({answer:checkedList.join('')})">查看详情</a>
 			</div>
 			<div class="flex" style="height: 100%;">
-				<v-chart :options="pieOptions" autoresize class="chartbox" style="width: 30%;" @click="handpie"></v-chart>
+				<v-chart :options="pieOptions" autoresize class="chartbox" style="width: 30%;" @click="handpie" v-if="trueAnswer"></v-chart>
 				<v-chart :options="barOptions" autoresize class="chartbox flex-1" @click="handbar"></v-chart>
+			</div>
 			</div>
 		</div>
 		<select-namelist :namelist="selectNamelist" ref="selectname"></select-namelist>
@@ -346,7 +348,9 @@
 				this.trueAnswertxt = param.trueAnswer == 'E' ? '√' : (param.trueAnswer == 'F' ? '×' : param.trueAnswer);
 				this.questionType = param.questionType;
 				this.getEveryAnswerNum();
-				this.getAnswerAccuracy();
+				if(this.trueAnswer){
+					this.getAnswerAccuracy();
+				}
 				this.isShow = true;
 			},
 			hide(){
@@ -495,17 +499,21 @@
 				}
 
 			},
-			handpie(param) {
-
+			getAnswerName(type){
 				const $me = this;
-				if ($me.title[param.dataIndex] == '正确') {
-					$me.getEveryAnswerName({
-						answer: $me.trueAnswer
-					});
+				$me.$postAction(api.getAnswerName, {answer:$me.trueAnswer}).then(da => {
+					if (da && da.ret == 'success') {
+						$me.$refs.selectname.show();
+						$me.selectNamelist = da.data[type];
+					}
+				});
+			},
+			handpie(param) {
+				const $me = this;
+				if (param.name == '正确') {
+					$me.getAnswerName('T');
 				} else {
-					$me.getFalseAnswerName({
-						answer: $me.trueAnswer
-					});
+					$me.getAnswerName('F');
 				}
 			}
 		}

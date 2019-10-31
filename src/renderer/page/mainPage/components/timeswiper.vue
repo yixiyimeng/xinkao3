@@ -19,7 +19,7 @@
 				<swiper-slide v-for="(item, index) in seclist" :key="index">{{ item }}</swiper-slide>
 			</swiper>
 		</div>
-		<div class="btnlist clearfix">
+		<div class="timebtnlist clearfix">
 			<a href="javascript:;" @click="cancelcountDown">取消</a>
 			<a href="javascript:;" @click="getTime">确定</a>
 		</div>
@@ -100,6 +100,8 @@
 			cancelcountDown() {
 				this.$emit('cancelcountDown')
 			}
+			
+			
 		}
 	};
 </script>
@@ -185,15 +187,15 @@
 		border-left: 1px solid #d1d1d1;
 	}
 
-	.btnlist {
+	.timebtnlist {
 		border-bottom-left-radius: 10px;
 		border-bottom-right-radius: 10px;
 		overflow: hidden;
 	}
 
-	.btnlist>a {
+	.timebtnlist>a {
 		display: block;
-		width: 50%;
+		width: 50% !important;
 		line-height: 51px;
 		float: left;
 		text-align: center;

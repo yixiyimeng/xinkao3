@@ -3,7 +3,6 @@
 		<a href="javascript:;" class="reback" @click="returnback"></a>
 		<div class="singInbox">
 			<div class="singlist">
-				<div class="singtitle">接收器编号：</div>
 				<ul class="clearfix">
 					<li v-for="(item, index) in namelist" :class="{ active: item.checked }">
 						<i :class="item.state == 0 ? 'warn' : 'success'" @click="checkOneStu(item)"></i>
@@ -99,20 +98,12 @@
 			height: 100%;
 		}
 	}
-.singlist .singtitle {
-		font-size: 30px;
-		line-height: 60px;
-		text-align: center;
-		position: absolute;
-		left: 0;
-		right: 0;
-		
-	}
+
 	.singlist ul {
 		height: 100%;
 		overflow: auto;
 		margin-bottom: 0;
-		padding-top: 60px;
+		
 	}
 
 	.singlist ul>li {
@@ -143,6 +134,4 @@
 	.singlist ul li i.warn {
 		background-color: #f5222d;
 	}
-
-	
 </style>

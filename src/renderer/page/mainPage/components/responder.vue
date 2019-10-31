@@ -8,7 +8,7 @@
 			</div>
 		</div>
 		<div class="btnbar">
-			<a href="javascript:;" class="startClass" @click="startQuickAnswer" v-if="viewState==0">开始抢答</a>
+			<!-- <a href="javascript:;" class="startClass" @click="startQuickAnswer" v-if="viewState==0">开始抢答</a> -->
 			<a href="javascript:;" class="startClass" @click="stopQuickAnswer" v-if="viewState==1">停止抢答</a>
 		</div>
 	</div>
@@ -31,6 +31,7 @@
 		methods: {
 			show() {
 				this.isShow = true;
+				this.startQuickAnswer();
 			},
 			setName(name){
 				this.username=name;
@@ -74,6 +75,9 @@
 					if ($me.timer) {
 						clearInterval($me.timer);
 						$me.timer = null;
+					}
+					if($me.username=='抢答中……'){
+						$me.username='抢答结束'
 					}
 					this.$emit('stopQuickAnswer')
 				})

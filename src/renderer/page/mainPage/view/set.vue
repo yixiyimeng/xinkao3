@@ -7,15 +7,15 @@
 			<div>
 				<div class="inputtxt flex flex-align-center">
 					<label>系统信道设置</label>
-					<a-select class="select flex-1" size="large"  v-model="ch">
-						<a-icon type="caret-down" slot="suffixIcon" class="caret"/>
+					<a-select class="select flex-1" size="large" v-model="ch">
+						<a-icon type="caret-down" slot="suffixIcon" class="caret" />
 						<a-select-option :value="item.ch" v-for="(item,index) in channels" :key="index">{{item.chName}}</a-select-option>
 					</a-select>
 				</div>
 				<div class="mt15 inputtxt flex flex-align-center">
 					<label>答题器发送功率</label>
 					<a-select class="select flex-1" size="large" v-model="power">
-						<a-icon type="caret-down" slot="suffixIcon" class="caret"/>
+						<a-icon type="caret-down" slot="suffixIcon" class="caret" />
 						<a-select-option :value="1">1</a-select-option>
 						<a-select-option :value="2">2</a-select-option>
 						<a-select-option :value="3">3</a-select-option>
@@ -46,9 +46,9 @@
 		},
 		data() {
 			return {
-				channels:[],
-				ch:'',
-				power:''
+				channels: [],
+				ch: '',
+				power: ''
 			};
 		},
 		created() {
@@ -62,34 +62,57 @@
 			readChannel() {
 				this.$postAction(api.readChannel).then(da => {
 					if (da && da.ret == 'success') {
-						this.ch=da.data.rf_ch;
-						this.power=da.data.tx_power
+						this.ch = da.data.rf_ch;
+						this.power = da.data.tx_power
 					}
 				})
 			},
-			setChannel(){
-				this.$postAction(api.setChannel,{
-					ch:this.ch,
-					power:this.power
-				}).then(da => {
-					if (da && da.ret == 'success') {
-						this.$toast.center('设置成功');
-					}
-				})
+			setChannel() {
+				const $me=this;
+				this.$confirm({
+					title: '提示',
+					content: '设置信道将解绑全部学生，你确定设置吗？',
+					onOk() {
+						$me.$postAction(api.setChannel, {
+							ch: $me.ch,
+							power: $me.power
+						}).then(da => {
+							if (da && da.ret == 'success') {
+								$me.$toast.center('设置成功');
+							}
+						})
+					},
+					onCancel() {
+						console.log('Cancel');
+					},
+				});
+
 			},
-			defaultSet(){
-				this.$postAction(api.defaultSet).then(da => {
-					if (da && da.ret == 'success') {
-						this.$toast.center('设为默认值成功');
-						this.readChannel();
-					}
-				})
+			defaultSet() {
+				const $me=this;
+				this.$confirm({
+					title: '提示',
+					content: '设置信道将解绑全部学生，你确定设置吗？',
+					onOk() {
+						$me.$postAction(api.defaultSet).then(da => {
+							if (da && da.ret == 'success') {
+								$me.$toast.center('设为默认值成功');
+								$me.readChannel();
+							}
+						})
+					},
+					onCancel() {
+						console.log('Cancel');
+					},
+				});
+				
+				
 			},
-			getChannels(){
-			/* 获取通道列表 */
+			getChannels() {
+				/* 获取通道列表 */
 				this.$postAction(api.getChannels).then(da => {
 					if (da && da.ret == 'success') {
-						this.channels=da.data
+						this.channels = da.data
 					}
 				})
 			}
@@ -195,7 +218,8 @@
 				text-align: left;
 				padding-left: 20px;
 				color: #333;
-				font-size: 28px;width: 8em;
+				font-size: 28px;
+				width: 8em;
 			}
 
 			.linklist {
@@ -219,22 +243,25 @@
 				width: 547px;
 				line-height: 50px;
 				border-radius: 5px;
-				border: 1px solid #333;
+				border: 1px solid #ccc;
 				margin-left: auto;
 				margin-right: auto;
 			}
-			/deep/ .ant-select .ant-select-selection{
+
+			/deep/ .ant-select .ant-select-selection {
 				background: none;
-				border:none;
+				border: none;
 				box-shadow: none;
-				font-size:24px;
-				color:#333;
-				&:focus{
+				font-size: 24px;
+				color: #333;
+
+				&:focus {
 					border: none;
 					box-shadow: none;
 				}
 			}
-			.caret{
+
+			.caret {
 				font-size: 24px;
 				color: #2459a0;
 				margin-top: -6px;

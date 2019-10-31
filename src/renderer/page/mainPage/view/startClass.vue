@@ -134,13 +134,14 @@
 				/* 开始答题 */
 				this.isAnswering = true;
 				this.isChoice=isChoice;
-				this.title='';
+				this.title=isChoice?'':'随堂检测';
 				this.$refs.danmu.starDanmu();
 			},
 			stopAnswer() {
 				/* 结束答题 */
 				this.isAnswering = false;
 				this.isChoice=false;
+				this.rate=0;//清空进度条数据
 				/* 结束答题后，清空弹幕 */
 				this.$refs.danmu.clearDanmu();
 			},
@@ -168,7 +169,8 @@
 					this.$router.go(-1);
 				} else {
 					this.isShowClassMenu = true;
-					this.title = this.sendInfo.className
+					this.title = this.sendInfo.className;
+					
 				}
 			},
 			getprogress() {
@@ -218,6 +220,11 @@
 									case 16:{
 										/* 显示抢答名单 */
 										$me.$refs.quickAnswer.setName(obj.stuName)
+										break;
+									}
+									case 17:{
+										/* 接收器编号 */
+										$me.$refs.namelist.setCode(obj)
 										break;
 									}
 							}

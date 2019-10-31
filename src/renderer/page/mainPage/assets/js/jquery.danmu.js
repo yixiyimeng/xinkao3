@@ -260,7 +260,8 @@ var cyntax = {
 			"left": this.options.left,
 			"top": this.options.top,
 			"width": this.options.width,
-			"height": this.options.height,
+			"bottom": this.options.bottom,
+			// "height": this.options.height,
 			"z-index": this.options.zindex,
 			"color": options.defaultFontColor,
 			"overflow": "hidden"
@@ -494,6 +495,7 @@ var cyntax = {
 		left: 0,
 		top: '10%',
 		height: '80%',
+		bottom:'120px',
 		width: '100%',
 		zindex: -1,
 		speed: 8000,

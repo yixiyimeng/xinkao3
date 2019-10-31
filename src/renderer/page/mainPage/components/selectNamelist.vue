@@ -6,7 +6,7 @@
 				<a href="javascript:;" class="close" @click="closeNamelist">×</a>
 				<ul class="clearfix">
 					<li v-for="(item, index) in namelist" :key="index">
-						<span>{{ item.stuName }}</span>
+						<span>{{ item.stuName }}({{item.answer|filterAnswer}})</span>
 					</li>
 				</ul>
 	
@@ -37,6 +37,17 @@
 			},
 			closeNamelist(){
 				this.isshowNamelist=false
+			}
+		},
+		filters:{
+			filterAnswer(value){
+				if(value=='false'){
+					return '×'
+				}else if(value=='true'){
+					return '√'
+				}else{
+					return value
+				}
 			}
 		}
 	};

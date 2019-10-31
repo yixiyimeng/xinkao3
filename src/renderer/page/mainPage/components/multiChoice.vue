@@ -15,15 +15,7 @@
 				<a-select-option value="F">F</a-select-option>
 			</a-select>
 		</div>
-		<!-- <div class="flex flex-align-center" style="width: 3.6rem; margin: 10px auto 0;">
-			<label class="mr10">正确答案</label>
-			<a-input placeholder="请输入正确答案" v-model="trueAnswer" type="password" class="flex-1" />
-		</div> -->
-		<!-- <div class="btnbar">
-			<a href="javascript:;" class="startClass" @click="gotopage">开始答题</a>
-			
-			<count-down ref="countdown"></count-down>
-		</div> -->
+		<div class="c-red">请输入A-{{range}}多位字母</div>
 	</div>
 </template>
 
@@ -132,5 +124,11 @@
 			background: url(../assets/img/theme3/endBtn.png) no-repeat center center;
 			border-radius: 0;
 		}
+	}
+	.c-red {
+		color: #f00;
+		width: 377px;
+		margin: 20px auto 10px;
+		font-size: 18px;
 	}
 </style>

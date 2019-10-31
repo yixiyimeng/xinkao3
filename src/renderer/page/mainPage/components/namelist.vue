@@ -4,12 +4,13 @@
 			<div class="mask" @click.stop="closeNamelist"></div>
 			<div class="namelistbox-bd">
 				<a href="javascript:;" class="close" @click="closeNamelist">×</a>
+				<div class="singtitle">接收器编号：{{code}}</div>
 				<ul class="clearfix">
 					<li v-for="(item, index) in namelist" :class="{ active: item.checked }">
 						<i :class="item.state == 0 ? 'warn' : 'success'" @click="checkOneStu(item)"></i>
 						<span @click="checkOneStu(item)">{{ item.stuName }}</span>
 						<img src="../assets/img/jiebang1.png" alt="" v-if="item.state == 1" @click="isUnBindStu('one',item)" style="opacity: .6;" />
-						<img src="../assets/img/pwd2.png" alt="" v-if="item.state == 0" @click="BindOneStu(item)"  />
+						<img src="../assets/img/pwd2.png" alt="" v-if="item.state == 0" @click="BindOneStu(item)" />
 						<!-- <img src="../assets/img/pwd2.png" alt="" v-if="item.state == 0" @click="cancelBindOneStu(item)"  /> -->
 					</li>
 				</ul>
@@ -34,6 +35,7 @@
 				isshowNamelist: false,
 				namelist: [],
 				sendInfo: {},
+				code: ''
 			};
 		},
 		props: {
@@ -54,7 +56,7 @@
 		created() {
 			try {
 				this.sendInfo = JSON.parse(sessionStorage.getItem('sendInfo'));
-				this.getNamelist();
+
 			} catch (e) {
 				//TODO handle the exception
 			}
@@ -63,9 +65,12 @@
 		methods: {
 			shownamelist() {
 				this.isshowNamelist = true;
+				this.code = '';
+				this.namelist = [];
+				this.getNamelist();
 				this.startBind();
 			},
-			closeNamelist(){
+			closeNamelist() {
 				this.isshowNamelist = false;
 				this.stopBind();
 			},
@@ -78,7 +83,7 @@
 							item.checked = false;
 							return item
 						});
-					}else{
+					} else {
 						$me.namelist = [];
 					}
 				})
@@ -147,24 +152,28 @@
 					}
 				});
 			},
-			BindOneStu(item){
+			BindOneStu(item) {
 				/* 单独绑定某个学生 */
 				const $me = this;
-				$me.$postAction(api.BindOneStu, {stuCode:item.stuCode}).then(da => {
+				$me.$postAction(api.BindOneStu, {
+					stuCode: item.stuCode
+				}).then(da => {
 					if (da && da.ret == 'success') {
 						// $me.$toast.center('绑定成功');
 						// $me.getNamelist();
-					} 
+					}
 				})
 			},
-			cancelBindOneStu(item){
+			cancelBindOneStu(item) {
 				/* 单独取消绑定某个学生 */
 				const $me = this;
-				$me.$postAction(api.cancelBindOneStu, {stuCode:item.stuCode}).then(da => {
+				$me.$postAction(api.cancelBindOneStu, {
+					stuCode: item.stuCode
+				}).then(da => {
 					if (da && da.ret == 'success') {
 						// $me.$toast.center('绑定成功');
 						// $me.getNamelist();
-					} 
+					}
 				})
 			},
 			/* 选中一个学生 */
@@ -198,15 +207,33 @@
 				}
 			},
 			/* 开始绑定学生 */
-			startBind(){
-				this.$postAction(api.startBind)
+			startBind() {
+				this.$postAction(api.startBind).then(da => {
+					if (da && da.ret == 'success') {
+						this.code = da.data.pin;
+					}
+
+				})
 			},
-			stopBind(){
+			stopBind() {
 				this.$postAction(api.stopBind)
+			},
+			setCode(code) {
+				this.code = code.pin;
 			}
 		}
 	};
 </script>
 
-<style>
+<style scoped="scoped">
+	.singtitle {
+		font-size: 30px;
+		line-height: 40px;
+		text-align: center;
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+
+	}
 </style>
