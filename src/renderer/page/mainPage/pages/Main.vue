@@ -34,6 +34,7 @@
 	import {
 		mapState
 	} from 'vuex';
+	import api from '@/page/mainPage/api';
 	export default {
 		data() {
 			return {
@@ -48,6 +49,7 @@
 			exitApp: function() {
 				const _this = this;
 				this.$loading('正在退出软件...');
+				this.$postAction(api.exit);
 				setTimeout(function() {
 					_this.$loading.close();
 					_this.$electron.ipcRenderer.send('exitApp');

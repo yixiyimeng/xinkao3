@@ -2,7 +2,8 @@ import {
 	app,
 	BrowserWindow,
 	screen,
-	ipcMain
+	ipcMain,
+	globalShortcut
 } from 'electron'
 
 /**
@@ -42,6 +43,8 @@ function createWindow() {
 	mainWindow.loadURL(winURL)
 	mainWindow.maximize();
 	//mainWindow.setFullScreen(true); //设置全屏
+	/* 创建悬浮窗 */
+	createSuspensionWindow()
 	mainWindow.on('closed', () => {
 		mainWindow = null
 	})
@@ -61,6 +64,7 @@ function createWindow() {
 		win.webContents.send('isminimizeAppsub', true);
 
 	});
+	
 	/* 在窗口从最小化恢复的时候触发,通知页面 */
 	mainWindow.on('restore', (e) => {
 		//mainWindow.setFullScreen(true);
@@ -68,8 +72,26 @@ function createWindow() {
 		win.webContents.send('isminimizeAppsub', false);
 
 	});
-	/* 创建悬浮窗 */
-	createSuspensionWindow()
+	/* 调试 */
+	globalShortcut.register('CTRL+T', () => {
+		//mainWindow.setFullScreen(false);
+		mainWindow.webContents.openDevTools({
+			mode: 'bottom'
+		})
+	})
+	globalShortcut.register('SHIFT+Q', () => {
+		//mainWindow.setFullScreen(false);
+		//mainWindow.webContents.openDevTools({mode:'bottom'})
+		mainWindow.minimize()
+	})
+	globalShortcut.register('SHIFT+M', () => {
+		mainWindow.show();
+		// mainWindow.setFullScreen(true);
+		mainWindow.maximize();
+		win.moveTop()
+		//mainWindow.webContents.openDevTools({mode:'bottom'})
+	})
+	
 }
 
 /**
