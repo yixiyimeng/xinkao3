@@ -197,6 +197,7 @@
 								/* 开始答题 */
 								$me.voteInfo = values;
 								$me.isAnswering = true;
+								$me.viewState = 1;
 								$me.$emit('startScore')
 							}
 						})
@@ -208,9 +209,7 @@
 				const $me = this;
 				$me.$postAction(api.stopScore).then(da => {
 					if (da && da.ret == 'success') {
-
 						$me.getScoreResult();
-
 						$me.$emit('stopScore')
 					}
 				})
@@ -222,6 +221,7 @@
 					if (da && da.ret == 'success') {
 						/* 投票结果 */
 						$me.isChart = true;
+						$me.viewState = 2;
 						// $me.isAnswering = false;
 						var data = da.data;
 						this.chartlist = data;
@@ -437,7 +437,8 @@
 				padding-left: 20px;
 				color: #fff;
 				box-shadow: none;
-				&:focus{
+
+				&:focus {
 					box-shadow: none;
 				}
 			}

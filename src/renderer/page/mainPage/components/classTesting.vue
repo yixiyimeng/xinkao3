@@ -18,6 +18,7 @@
 </template>
 
 <script>
+	import api from '@/page/mainPage/api';
 	const columns = [{
 			title: '序号',
 			dataIndex: 'num',
@@ -61,6 +62,9 @@
 				scrolly: 100
 			};
 		},
+		created() {
+			this.getlistPaper();
+		},
 		mounted() {
 			const that = this;
 			that.scrolly = document.body.offsetHeight*.6 -380;
@@ -93,6 +97,12 @@
 				} else {
 					this.data[index].isChecked = false;
 				}
+			},
+			getlistPaper(){
+				var url=api.listPaper+'1/10';
+				this.$postAction(url).then(da=>{
+					console.log(da)
+				})
 			}
 		}
 	};

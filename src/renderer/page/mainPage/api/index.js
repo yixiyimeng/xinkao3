@@ -39,6 +39,7 @@ const api = {
 	defaultSet:'/set/defaultSet',//设置默认值
 	getChannels:'/set/getChannels',
 	exit:'/common/exit',//退出
+	listPaper:'/randomDetection/listPaper/'
 }
 export default api
 export function postAction(url, parameter,obj={}) {
