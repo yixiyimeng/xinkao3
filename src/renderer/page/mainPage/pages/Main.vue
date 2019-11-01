@@ -50,10 +50,10 @@
 				const _this = this;
 				this.$loading('正在退出软件...');
 				this.$postAction(api.exit);
-				setTimeout(function() {
-					_this.$loading.close();
-					_this.$electron.ipcRenderer.send('exitApp');
-				}, 100);
+				// setTimeout(function() {
+				// 	_this.$loading.close();
+				// 	_this.$electron.ipcRenderer.send('exitApp');
+				// }, 100);
 			}
 		},
 		watch: {
