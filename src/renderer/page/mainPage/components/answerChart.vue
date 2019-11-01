@@ -1,16 +1,22 @@
 <template>
 	<div v-if="isShow">
-		<div class="titleName trueAnswer">正确答案<span class="red">{{trueAnswertxt}}</span></div>
-		<div class="thememodbox">
+		<div class="titleName trueAnswer"><span>正确答案</span><span class="red">{{trueAnswertxt}}</span></div>
+		<div class="rank top">
+			<div class="rankitem bounceIn animated" v-for="(item, index) in ranklist">
+				<p>{{ item.stuName }}</p>
+				<!-- <p class="score">{{ item.score }}</p> -->
+			</div>
+		</div>
+		<div class="thememodbox" :style="{top:ranklist.length>0?'230px':'170px'}">
 			<div style="height: 100%;">
-			<div class="resultbox" v-if="questionType==4">
-				<a-checkbox-group :options="titleOptions" v-model="checkedList" style="vertical-align: middle;" />
-				<a href="javascript:;" style="position: relative; z-index: 99;" @click="getEveryAnswerName({answer:checkedList.join('')})">查看详情</a>
-			</div>
-			<div class="flex" style="height: 100%;">
-				<v-chart :options="pieOptions" autoresize class="chartbox" style="width: 30%;" @click="handpie" v-if="trueAnswer"></v-chart>
-				<v-chart :options="barOptions" autoresize class="chartbox flex-1" @click="handbar"></v-chart>
-			</div>
+				<div class="resultbox" v-if="questionType==4">
+					<a-checkbox-group :options="titleOptions" v-model="checkedList" style="vertical-align: middle;" />
+					<a href="javascript:;" style="position: relative; z-index: 99;" @click="getEveryAnswerName({answer:checkedList.join('')})">查看详情</a>
+				</div>
+				<div class="flex" style="height: 100%;">
+					<v-chart :options="pieOptions" autoresize class="chartbox" style="width: 30%;" @click="handpie" v-if="trueAnswer"></v-chart>
+					<v-chart :options="barOptions" autoresize class="chartbox flex-1" @click="handbar" ref="barChart"></v-chart>
+				</div>
 			</div>
 		</div>
 		<select-namelist :namelist="selectNamelist" ref="selectname"></select-namelist>
@@ -116,6 +122,22 @@
 			min: 0,
 
 		},
+		color: [{
+			type: 'linear',
+			x: 0,
+			y: 0,
+			x2: 0,
+			y2: 1,
+			colorStops: [{
+					offset: 0, //颜色的开始位置
+					color: '#0380db' // 0% 处的颜色
+				},
+				{
+					offset: 1, //颜色的结束位置
+					color: '#2459a0' // 100% 处的颜色
+				}
+			]
+		}],
 		series: [{
 			name: '答题人数',
 			type: 'bar',
@@ -130,22 +152,10 @@
 				}
 			},
 			itemStyle: {
-				barBorderRadius: [80, 80, 0, 0],
-				color: function(params) {
-					if (theme == 'theme1') {
-						return {
-							colorStops: [{
-									offset: 0, //颜色的开始位置
-									color: '#429ce2' // 0% 处的颜色
-								},
-								{
-									offset: 1, //颜色的结束位置
-									color: '#b9e1ff' // 100% 处的颜色
-								}
-							]
-						};
-					} else {
-						return '#fff';
+				normal: {
+					barBorderRadius: [10, 10, 0, 0],
+					color: function(params) {
+						return colorList[params.dataIndex];
 					}
 				}
 			},
@@ -153,6 +163,38 @@
 			data: []
 		}]
 	};
+	var defaultcolor = [{
+		type: 'linear',
+		x: 0,
+		y: 0,
+		x2: 0,
+		y2: 1,
+		colorStops: [{
+				offset: 0, //颜色的开始位置
+				color: '#0380db' // 0% 处的颜色
+			},
+			{
+				offset: 1, //颜色的结束位置
+				color: '#2459a0' // 100% 处的颜色
+			}
+		]
+	}, {
+		type: 'linear',
+		x: 0,
+		y: 0,
+		x2: 0,
+		y2: 1,
+		colorStops: [{
+				offset: 0, //颜色的开始位置
+				color: '#fed601' // 0% 处的颜色
+			},
+			{
+				offset: 1, //颜色的结束位置
+				color: '#fc9701' // 100% 处的颜色
+			}
+		]
+	}];
+	var colorList = [];
 	export default {
 		components: {
 			'v-chart': ECharts,
@@ -166,9 +208,10 @@
 				titleOptions: [],
 				checkedList: [],
 				trueAnswer: '', //正确答案
-				trueAnswertxt:'',
+				trueAnswertxt: '',
 				questionType: '',
 				isShow: false,
+				ranklist:[],
 				pieOptions: {
 					color: ['#c7615d', '#e0b088', '#176bab', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074',
 						'#546570', '#c4ccd3'
@@ -348,14 +391,15 @@
 				this.trueAnswertxt = param.trueAnswer == 'E' ? '√' : (param.trueAnswer == 'F' ? '×' : param.trueAnswer);
 				this.questionType = param.questionType;
 				this.getEveryAnswerNum();
-				if(this.trueAnswer){
+				this.getSpeedKingList();
+				if (this.trueAnswer) {
 					this.getAnswerAccuracy();
 				}
 				this.isShow = true;
 			},
-			hide(){
+			hide() {
 				this.isShow = false;
-				this.trueAnswertxt='';
+				this.trueAnswertxt = '';
 			},
 			/* 查询作答人数 */
 			getEveryAnswerNum() {
@@ -394,23 +438,20 @@
 					.map(item => {
 						return item
 					});
-				$me.colorList = [];
+
 				if (title && title.length > 0) {
-					$me.colorList = title.map((item, i) => {
-						// if ($me.subjecttitle == 4) {
-						// 	return defaultcolor[i];
-						// } else {
-						// 	if (title[i] == ($me.trueAnswer == 'F' ? '×' : $me.trueAnswer == 'E' ? '√' : $me.trueAnswer) && ($me.subjecttitle ==
-						// 			1 || $me.subjecttitle == 2)) {
-						// 		return '#ff999a';
-						// 	}
-						// 	if (item == '未作答') {
-						// 		return '#AF89D6';
-						// 	}
-						// 	return '#59ADF3';
-						// }
+					colorList = title.map((item, i) => {
+						console.log(122);
+						if (title[i] == ($me.trueAnswer == 'false' ? '×' : $me.trueAnswer == 'true' ? '√' : $me.trueAnswer)) {
+							return defaultcolor[1];
+						} else {
+							return defaultcolor[0];
+						}
+
 					});
 				}
+				console.log(colorList);
+
 				option.xAxis.data = title;
 				$me.title = title;
 				option.series[0].data = mydata;
@@ -485,11 +526,13 @@
 					} else {
 						if ($me.checkedList.indexOf(param.name) > -1) {
 							$me.checkedList = $me.checkedList.filter(item => item != param.name).sort()
-
+                            colorList[param.dataIndex]=defaultcolor[0]
 						} else {
 							$me.checkedList.push(param.name);
 							$me.checkedList = $me.checkedList.sort();
+							colorList[param.dataIndex]=defaultcolor[1]
 						}
+						$me.$refs.barChart.resize();
 					}
 				} else {
 					this.getEveryAnswerName({
@@ -499,9 +542,11 @@
 				}
 
 			},
-			getAnswerName(type){
+			getAnswerName(type) {
 				const $me = this;
-				$me.$postAction(api.getAnswerName, {answer:$me.trueAnswer}).then(da => {
+				$me.$postAction(api.getAnswerName, {
+					answer: $me.trueAnswer
+				}).then(da => {
 					if (da && da.ret == 'success') {
 						$me.$refs.selectname.show();
 						$me.selectNamelist = da.data[type];
@@ -515,7 +560,17 @@
 				} else {
 					$me.getAnswerName('F');
 				}
-			}
+			},
+			getSpeedKingList(){
+				const $me = this;
+				$me.$postAction(api.getSpeedKingList).then(da => {
+					if (da && da.ret == 'success') {
+						var list=da.data;
+						$me.ranklist = list.length > 5 ? list.slice(0, 5) : list;
+					}
+				});
+				}
+				
 		}
 	};
 </script>
@@ -681,5 +736,9 @@
 				color: #429ce2;
 			}
 		}
+	}
+
+	.trueAnswer span {
+		vertical-align: middle;
 	}
 </style>

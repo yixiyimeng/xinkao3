@@ -93,7 +93,7 @@
 		&>div {
 			border: 2px solid #df8487;
 			background: url(../assets/img/theme4/bg2.png);
-			padding: 70px 35px 45px;
+			padding: 70px 35px 15px;
 			overflow: auto;
 			height: 100%;
 		}
@@ -115,6 +115,7 @@
 		box-sizing: border-box;
 		line-height: 20px;
 		cursor: pointer;
+		font-size: 18px;
 	}
 
 	.singlist ul li i {

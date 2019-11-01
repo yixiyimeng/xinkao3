@@ -76,6 +76,7 @@
 						clearInterval($me.timer);
 						$me.timer = null;
 					}
+					this.count = 0;
 					if($me.username=='抢答中……'){
 						$me.username='抢答结束'
 					}

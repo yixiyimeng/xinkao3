@@ -42,8 +42,9 @@ const api = {
 	exit:'/common/exit',//退出
 	listPaper:'/randomDetection/listPaper/',
 	startRandomDetection:'/randomDetection/start/',//开始随堂检测
-	stopRandomDetection:'/randomDetection/stop/',//停止随堂检测
-	answerPercent:'/randomDetection/answerPercent'//更新随堂检测进度
+	stopRandomDetection:'/randomDetection/stop',//停止随堂检测
+	answerPercent:'/randomDetection/answerPercent',//更新随堂检测进度
+	getSpeedKingList:'/answer/statistics/getSpeedKingList',//答题速度王
 }
 export default api
 export function postAction(url, parameter,obj={}) {

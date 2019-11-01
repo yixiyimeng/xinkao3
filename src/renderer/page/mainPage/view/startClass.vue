@@ -7,7 +7,7 @@
 		<div class="mainmenu">
 			<div class="setbtnlist">
 				<a href="javascript:;" @click="shownamelist" class="userlist"></a>
-				 <router-link :to="'set'" class="set"></router-link>
+				<router-link :to="'set'" class="set"></router-link>
 			</div>
 			<!-- <div class="set"></div>
 			<div class="setbtnlist">
@@ -35,11 +35,11 @@
 		<!-- 投票 -->
 		<vote ref="vote" @returnback="returnback" @startVote="startAnswer" @stopVote="stopAnswer"></vote>
 		<!-- 评分 -->
-		<score  ref="score" @returnback="returnback" @startScore="startAnswer" @stopScore="stopAnswer"></score>
+		<score ref="score" @returnback="returnback" @startScore="startAnswer" @stopScore="stopAnswer"></score>
 		<!-- 抢到 -->
 		<responder ref="quickAnswer" @returnback="returnback" @startQuickAnswer="startAnswer" @stopQuickAnswer="stopAnswer"></responder>
 		<!-- 弹幕 -->
-		<danmu ref="danmu" :style="{zIndex:isAnswering?999:-1}"></danmu>
+		<danmu ref="danmu" :style="{zIndex:isAnswering?999:-1}" v-show="isDanmu"></danmu>
 		<div class="classbox" v-if="isShowClassMenu">
 			<div>
 				<div class="menu">
@@ -47,7 +47,7 @@
 						<i class="icon1 icon"></i>
 						<span>答题</span>
 					</a>
-				<a href="javascript:;" @click="showQuickAnswer">
+					<a href="javascript:;" @click="showQuickAnswer">
 						<i class="icon2 icon"></i>
 						<span>抢答</span>
 					</a>
@@ -84,6 +84,9 @@
 	import score from '@/page/mainPage/components/score';
 	import responder from '@/page/mainPage/components/responder';
 	import api from '@/page/mainPage/api';
+	import {
+		mapState
+	} from 'vuex';
 	export default {
 		components: {
 			namelist,
@@ -103,9 +106,12 @@
 				ws: null,
 				isShowClassMenu: true, //显示上课菜单
 				rate: 0, //作答进度
-				isChoice:false,//是否选择题
+				isChoice: false, //是否选择题
 				directBroadcastCode: '',
 			};
+		},
+		computed: {
+			...mapState(['isDanmu'])
 		},
 		created() {
 			this.sendInfo = JSON.parse(this.$route.query.sendInfo);
@@ -133,33 +139,39 @@
 			startAnswer(isChoice) {
 				/* 开始答题 */
 				this.isAnswering = true;
-				this.isChoice=isChoice;
-				this.title=isChoice?'':'随堂检测';
+				this.isChoice = isChoice == 1;
+				if (isChoice == 1) {
+					this.title = ''
+				} else if (isChoice == 0) {
+					this.title = '随堂检测';
+				}
 				this.$refs.danmu.starDanmu();
+
 			},
 			stopAnswer() {
 				/* 结束答题 */
 				this.isAnswering = false;
-				this.isChoice=false;
-				this.rate=0;//清空进度条数据
+				this.isChoice = false;
+				this.rate = 0; //清空进度条数据
 				/* 结束答题后，清空弹幕 */
 				this.$refs.danmu.clearDanmu();
+
 			},
-			
-			showStartVote(){
+
+			showStartVote() {
 				this.$refs.vote.show();
 				this.isShowClassMenu = false;
-				this.title='投票统计'
+				this.title = '投票统计'
 			},
-			showStartScore(){
+			showStartScore() {
 				this.$refs.score.show();
 				this.isShowClassMenu = false;
-				this.title='评分统计'
+				this.title = '评分统计'
 			},
-			showQuickAnswer(){
+			showQuickAnswer() {
 				this.$refs.quickAnswer.show();
 				this.isShowClassMenu = false;
-				this.title='抢答'
+				this.title = '抢答'
 			},
 			returnback() {
 				/* 返回 */
@@ -170,7 +182,7 @@
 				} else {
 					this.isShowClassMenu = true;
 					this.title = this.sendInfo.className;
-					
+
 				}
 			},
 			getprogress() {
@@ -201,7 +213,10 @@
 							switch (msg.reqType) {
 								case 0:
 									{
-										$me.$refs.danmu.addDanmu(obj)
+										if ($me.isDanmu) {
+											$me.$refs.danmu.addDanmu(obj)
+										}
+
 										break;
 									}
 								case 1:
@@ -213,16 +228,20 @@
 												$me.getprogress();
 											} else if (msg.urlPaths[i].method == 'getAttendance') {
 												$me.$refs.singinlist.getAttendanceList();
+											}else if(msg.urlPaths[i].method =='randomDetectionAnswerPercent'){
+												$me.$refs.startAnswer.answerPercent();
 											}
 										}
 										break;
 									}
-									case 16:{
+								case 16:
+									{
 										/* 显示抢答名单 */
 										$me.$refs.quickAnswer.setName(obj.stuName)
 										break;
 									}
-									case 17:{
+								case 17:
+									{
 										/* 接收器编号 */
 										$me.$refs.namelist.setCode(obj)
 										break;
@@ -238,7 +257,7 @@
 			},
 			/* 开始签到 */
 			showSingInlist() {
-				this.title='学生签到';
+				this.title = '学生签到';
 				this.$refs.singinlist.show();
 				this.isShowClassMenu = false;
 			},
@@ -509,7 +528,7 @@
 			padding: 11px;
 			position: relative;
 			border: 2px solid #1e569e;
-			transform: translate(-50%,0);
+			transform: translate(-50%, 0);
 			top: 160px;
 			left: 50%;
 			position: absolute;

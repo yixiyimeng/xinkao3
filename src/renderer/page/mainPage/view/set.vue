@@ -28,7 +28,22 @@
 					<a href="javascript:;" @click="setChannel">设置</a>
 					<a href="javascript:;" @click="defaultSet">设为默认值</a>
 				</div>
+				<div class="mt15 inputtxt flex flex-align-center flex-pack-justify pr20">
+					<label>弹幕模式</label>
+					<a-switch v-model="isCheck" @change="onChange" />
+				</div>
+				<div class="mt15 inputtxt flex flex-align-center">
+					<label>主题</label>
+					<a-select class="select flex-1" size="large" v-model="defaulttheme" @change="changeTheme">
+						<a-icon type="caret-down" slot="suffixIcon" class="caret" />
+						<a-select-option value="theme1">主题一</a-select-option>
+						<a-select-option value="theme2">主题二</a-select-option>
+						<a-select-option value="theme3">主题三</a-select-option>
+						<a-select-option value="theme4">主题四</a-select-option>
+					</a-select>
+				</div>
 			</div>
+			
 			<!-- <div class="btnlist">
 				<router-link :to="'setStu'">学生管理</router-link>
 				<router-link :to="'setTest'">试卷管理</router-link>
@@ -40,6 +55,9 @@
 <script>
 	import reback from '@/page/mainPage/components/reback';
 	import api from '@/page/mainPage/api';
+	import {
+		mapState
+	} from 'vuex';
 	export default {
 		components: {
 			reback
@@ -48,12 +66,19 @@
 			return {
 				channels: [],
 				ch: '',
-				power: ''
+				power: '',
+				isCheck:true,
+				defaulttheme:''
 			};
+		},
+		computed: {
+			...mapState(['theme','isDanmu'])
 		},
 		created() {
 			this.getChannels();
 			this.readChannel();
+			this.defaulttheme=this.theme;
+			this.isCheck=this.isDanmu;
 		},
 		methods: {
 			returnback() {
@@ -115,6 +140,14 @@
 						this.channels = da.data
 					}
 				})
+			},
+			onChange(value){
+				/* 是否显示弹幕 */
+				this.$store.commit('SET_danmu', value);
+			},
+			changeTheme(value){
+				/* 切换主题 */
+				this.$store.commit('SET_theme', value);
 			}
 		}
 	};
@@ -136,6 +169,9 @@
 		.setbox {
 			top: 174px;
 			background: rgba($color: #fff, $alpha: 0.7);
+			>div{
+				width: 500px;
+			}
 		}
 	}
 
@@ -315,5 +351,8 @@
 
 	.select {
 		width: 200px;
+	}
+	.pr20{
+		padding-right: 20px;
 	}
 </style>

@@ -72,10 +72,14 @@
 				this.timer = null;
 			}
 		},
+		mounted() {
+			
+		},
 		methods: {
 			showAnswer() {
 				this.isShowAnswer = true;
 				this.viewState = 0;
+				
 			},
 			hideAnswer() {
 				this.isShowAnswer = false
@@ -89,8 +93,9 @@
 							$me.isAnswering = false;
 							$me.viewState = 2;
 							$me.$emit('stopAnswer');
-							clearInterval($me.timer);
-							$me.timer = null;
+							$me.$refs.startClassTesting.setDetailslist(da.data)
+							// clearInterval($me.timer);
+							// $me.timer = null;
 						}
 					})
 				} else {
@@ -113,10 +118,10 @@
 				const $me = this;
 				if (this.type == 2) {
 					var titleCode = $me.$refs.classTest.getTitleCode();
-					if (titleCode == '') {
-						$me.$message.error('请选择一套试卷下发');
-						return false
-					}
+					// if (titleCode == '') {
+					// 	$me.$message.error('请选择一套试卷下发');
+					// 	return false
+					// }
 					this.startTest(titleCode);
 				} else {
 					if (this.type == 0) {
@@ -139,11 +144,11 @@
 					$me.titleName = '单题单选-字母题';
 				} else if ($me.questionType == 2) {
 					answerreg = /^[E-F]{1}$/;
-					$me.titleName = '单题单选-数字题';
+					$me.titleName = '单题单选-判断题';
 				} else if ($me.questionType == 3) {
 					answerreg = /^[1-9]\d*$/;
 					$me.range = '0-9';
-					$me.titleName = '单题单选-判断题';
+					$me.titleName = '单题单选-数字题';
 				} else if ($me.questionType == 4) {
 					$me.range = this.$refs.multileChoice.getRange();
 					var str = "/^(?!.*([" + $me.range + "]).*\\1)[" + $me.range + "]{2,4}$/";
@@ -180,7 +185,7 @@
 						}
 						$me.isAnswering = true;
 						$me.viewState = 1;
-						$me.$emit('startAnswer', true)
+						$me.$emit('startAnswer', 1)
 					}
 				})
 
@@ -188,15 +193,16 @@
 			/* 开始随堂测验 */
 			startTest(titleCode) {
 				const $me = this;
+				
 				$me.$postAction(api.startRandomDetection + titleCode).then(da => {
 					if (da && da.ret == 'success') {
 						$me.isAnswering = true;
 						$me.viewState = 1;
-						$me.$emit('startAnswer', false);
+						$me.$emit('startAnswer', 0);
 						$me.$refs.startClassTesting.show();
-						$me.timer = setInterval(function() {
-							$me.answerPercent()
-						}, 1000)
+						// $me.timer = setInterval(function() {
+						// 	$me.answerPercent()
+						// }, 1000)
 					}
 				})
 			},

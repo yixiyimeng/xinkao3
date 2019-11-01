@@ -49,18 +49,6 @@
 		// 	}
 	];
 
-	const data = [];
-	for (let i = 0; i < 46; i++) {
-		data.push({
-			key: i,
-			num: i + 1,
-			name: `Edward King ${i}`,
-			mark: `London, Park Lane no. ${i}`,
-			isChecked: false,
-			selectedRowKeys: [],
-
-		});
-	}
 	export default {
 		data() {
 			return {

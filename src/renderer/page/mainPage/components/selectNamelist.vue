@@ -6,7 +6,8 @@
 				<a href="javascript:;" class="close" @click="closeNamelist">×</a>
 				<ul class="clearfix">
 					<li v-for="(item, index) in namelist" :key="index">
-						<span>{{ item.stuName }}({{item.answer|filterAnswer}})</span>
+						<span>{{ item.stuName }}</span>
+						<span v-if="item.answer">({{item.answer|filterAnswer}})</span>
 					</li>
 				</ul>
 	
