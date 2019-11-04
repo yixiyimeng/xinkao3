@@ -200,6 +200,7 @@
 						$me.viewState = 1;
 						$me.$emit('startAnswer', 0);
 						$me.$refs.startClassTesting.show();
+						$me.answerPercent();
 						// $me.timer = setInterval(function() {
 						// 	$me.answerPercent()
 						// }, 1000)
