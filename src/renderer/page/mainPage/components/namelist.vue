@@ -14,12 +14,18 @@
 						<!-- <img src="../assets/img/pwd2.png" alt="" v-if="item.state == 0" @click="cancelBindOneStu(item)"  /> -->
 					</li>
 				</ul>
-
 				<div class="tag">
+					<a href="javascript:;" @click="startBind" v-if="isBind!=1">开始绑卡</a>
+					<a href="javascript:;" @click="stopBind" v-if="isBind==1">停止绑卡</a>
+					<a href="javascript:;" @click="nameStart" v-if="isBind==2&&isrebackFill==0">开始回显</a>
+					<a href="javascript:;" @click="nameStop" v-if="isBind==2&&isrebackFill==1">停止回显</a>
+				</div>
+				<div class="tag" style="left: auto; right: 100px;">
 					<span>已选择{{ checkbindStu }}个学生</span>
 					<a href="javascript:;" @click="isUnBindStu('some')">解绑选中学生</a>
 					<a href="javascript:;" @click="checkAll">全选</a>
 					<a href="javascript:;" @click="uncheckAll">全不选</a>
+
 				</div>
 				<div @click="isUnBindStu('all')" class="unbindAllStu" title="一键解绑"><img src="../assets/img/jiebang.png" alt="" /></div>
 			</div>
@@ -35,7 +41,9 @@
 				isshowNamelist: false,
 				namelist: [],
 				sendInfo: {},
-				code: ''
+				code: '',
+				isBind: 0, //是否绑定状态 0，没有下发状态，1 开始绑定状态， 2 停止状态
+				isrebackFill: 0, //回显状态 0 ，没有开始， 1开始
 			};
 		},
 		props: {
@@ -68,11 +76,11 @@
 				this.code = '';
 				this.namelist = [];
 				this.getNamelist();
-				this.startBind();
+				// this.startBind();
 			},
 			closeNamelist() {
 				this.isshowNamelist = false;
-				this.stopBind();
+				// this.stopBind();
 			},
 			/* 获取学生名单 */
 			getNamelist() {
@@ -211,15 +219,40 @@
 				this.$postAction(api.startBind).then(da => {
 					if (da && da.ret == 'success') {
 						this.code = da.data.pin;
+						this.isBind = 1;
 					}
 
 				})
 			},
 			stopBind() {
-				this.$postAction(api.stopBind)
+				this.$postAction(api.stopBind).then(da => {
+					if (da && da.ret == 'success') {
+						this.isBind = 2;
+					}
+
+				})
+
 			},
 			setCode(code) {
 				this.code = code.pin;
+			},
+			nameStart() {
+				this.$postAction(api.nameStart).then(da => {
+					if (da && da.ret == 'success') {
+						this.isrebackFill = 1;
+					}
+
+				})
+
+			},
+			nameStop() {
+				this.$postAction(api.nameStop).then(da => {
+					if (da && da.ret == 'success') {
+						this.isrebackFill = 0;
+					}
+
+				})
+
 			}
 		}
 	};

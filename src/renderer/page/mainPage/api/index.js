@@ -45,6 +45,8 @@ const api = {
 	stopRandomDetection:'/randomDetection/stop',//停止随堂检测
 	answerPercent:'/randomDetection/answerPercent',//更新随堂检测进度
 	getSpeedKingList:'/answer/statistics/getSpeedKingList',//答题速度王
+	nameStart:'/bindingCard/nameStart',
+	nameStop:'/bindingCard/nameStop'
 }
 export default api
 export function postAction(url, parameter,obj={}) {

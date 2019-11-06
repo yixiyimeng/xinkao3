@@ -7,21 +7,21 @@
 			<div>
 				<div class="form-group">
 					<div class="input-row flex flex-align-center">
-						<label>班级</label>
+						<label><i class="red">*</i>班级</label>
 						<a-select class="select flex-1" size="large" v-model="formData.classCode" @change="handleChange">
 							<a-icon type="caret-down" slot="suffixIcon" />
 							<a-select-option :value="item.code" v-for="(item,index) in classList" :key="index">{{item.name}}</a-select-option>
 						</a-select>
 					</div>
 					<div class="input-row mt10  flex flex-align-center">
-						<label>科目</label>
+						<label><i class="red">*</i>科目</label>
 						<a-select class="select flex-1" size="large" v-model="formData.subjectCode" @change="handleChange">
 							<a-icon type="caret-down" slot="suffixIcon" />
 							<a-select-option :value="item.code" v-for="(item,index) in subjectList" :key="index">{{item.name}}</a-select-option>
 						</a-select>
 					</div>
 					<div class="input-row mt10  flex flex-align-center">
-						<label>课程名</label>
+						<label><i class="red">*</i>主题</label>
 						<a-input class="flex-1 inputtxt" size="large" v-model="formData.topicName" @input="changrTopic"></a-input>
 						<a-dropdown :trigger="['click']" placement="bottomRight" class="dropdown" :overlayStyle="{'width': theme=='theme4'?'400px':'200px'}"
 						 v-if="TopicTitleList.length>0">
@@ -179,7 +179,8 @@
 			getTopicTitle() {
 				const $me = this;
 				this.$postAction(api.getTopicTitle, {
-					teacherCode: $me.sendInfo.teacAssistantCode
+					// teacherCode: $me.sendInfo.teacAssistantCode,
+					classCode: this.formData.classCode,
 				}).then(da => {
 					if (da && da.ret == 'success') {
 						var list = da.data;
@@ -248,6 +249,10 @@
 					return false;
 				}
 				if ($me.formData.classCode && $me.formData.subjectCode && $me.formData.topicName) {
+					if($me.formData.topicName.length>20){
+						this.$toast.center('主题长度最大为20个字节  ');
+						return false
+					}
 					$me.formData.className = $me.classList.find(item => item.code == $me.formData.classCode).name;
 					$me.formData.subjectName = $me.subjectList.find(item => item.code == $me.formData.subjectCode).name;
 					if ($me.formData.topicCode) {
@@ -256,7 +261,7 @@
 						$me.formData.tempQuestionId = $me.isClearquestion ? null : $me.formData.tempQuestionId;
 					}
 				} else {
-					this.$toast.center(!$me.classCode ? '请选择班级' : (!$me.subjectCode ? '请选择科目' : '请输入或者选择一个课程名'));
+					this.$toast.center(!$me.formData.classCode ? '请选择班级' : (!$me.formData.subjectCode ? '请选择科目' : '请输入或者选择一个主题'));
 					return false;
 				}
 				$me.loading = true;

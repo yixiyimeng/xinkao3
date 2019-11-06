@@ -4,28 +4,31 @@
 			<div>
 				<a href="javascript:;" class="logo"></a>
 				<div class="input-group">
-					<div class="input-row flex flex-align-center">
-						<i class="user icon"></i>
-						<input type="text" class="flex-1" v-model.trim="username" placeholder="请输入用户名" />
-						<a-dropdown :trigger="['click']" placement="bottomRight" class="dropdown" :overlayStyle="{'width': '200px'}">
-							<span>
-								<a-icon type="caret-down" /></span>
-							<a-menu slot="overlay">
-								<a-menu-item key="0" @click="setUserName(item)" v-for="(item,index) in loginInfolist" :key="index">{{item.username}}</a-menu-item>
+					<a-form  @submit="login" autocomplete="off">
+						<div class="input-row flex flex-align-center">
+							<i class="user icon"></i>
+							<input type="text" class="flex-1" v-model.trim="username" placeholder="请输入用户名" />
+							<a-dropdown :trigger="['click']" placement="bottomRight" class="dropdown" :overlayStyle="{'width': '200px'}">
+								<span>
+									<a-icon type="caret-down" /></span>
+								<a-menu slot="overlay">
+									<a-menu-item key="0" @click="setUserName(item)" v-for="(item,index) in loginInfolist" :key="index">{{item.username}}</a-menu-item>
 
-							</a-menu>
-						</a-dropdown>
-					</div>
-					<div class="input-row flex flex-align-center">
-						<i class="pwd icon"></i>
-						<input type="password" class="flex-1" placeholder="请输入密码" v-model.trim="password" />
-					</div>
-					<div class="mt10">
-						<a-checkbox v-model="isRemeber">
-							记住密码
-						</a-checkbox>
-					</div>
-					<a href="javascript:;" class="loginBtn" @click="login">立即登录</a>
+								</a-menu>
+							</a-dropdown>
+						</div>
+						<div class="input-row flex flex-align-center">
+							<i class="pwd icon"></i>
+							<input type="password" class="flex-1" placeholder="请输入密码" v-model.trim="password" />
+						</div>
+						<div class="mt10">
+							<a-checkbox v-model="isRemeber">
+								记住密码
+							</a-checkbox>
+						</div>
+						<!-- <a href="javascript:;" class="loginBtn" @click="login" @keyup.enter="login">立即登录</a> -->
+						<a-button type="primary" html-type="submit" class="loginBtn">立即登录</a-button>
+					</a-form>
 				</div>
 			</div>
 		</div>
@@ -218,6 +221,8 @@
 				color: #fff;
 				line-height: 40px;
 				margin-top: 20px;
+				width: 100%;
+				border: none;
 			}
 		}
 	}
@@ -368,27 +373,31 @@
 					margin-right: 25px;
 				}
 			}
+
 			.input-row+.input-row {
 				margin-top: 25px;
 			}
 
 		}
+
 		.loginBtn {
-			background:#ffd941;
+			background: #ffd941;
 			color: #fff;
 			font-size: 14px;
 			font-size: 24px;
 			color: #333;
 			line-height: 65px;
 			height: 65px;
-			box-shadow: 0 2px 5px rgba(0,0,0,.6);
+			box-shadow: 0 2px 5px rgba(0, 0, 0, .6);
 			border-radius: 5px;
 		}
-		.dropdown{
-		line-height: 60px;
-		.anticon {
-			font-size: 20px;
-		}
+
+		.dropdown {
+			line-height: 60px;
+
+			.anticon {
+				font-size: 20px;
+			}
 		}
 	}
 </style>

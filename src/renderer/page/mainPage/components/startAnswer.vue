@@ -137,7 +137,9 @@
 			startChoice() {
 				const $me = this;
 				let answerreg = '';
-				$me.trueAnswer = $me.trueAnswer.toLocaleUpperCase()
+				$me.trueAnswer = $me.trueAnswer.toLocaleUpperCase().split('')
+						.sort()
+						.join('');
 				if ($me.questionType == 1) {
 					answerreg = /^[A-D]{1}$/;
 					$me.range = 'A-D';
@@ -146,7 +148,7 @@
 					answerreg = /^[E-F]{1}$/;
 					$me.titleName = '单题单选-判断题';
 				} else if ($me.questionType == 3) {
-					answerreg = /^[1-9]\d*$/;
+					answerreg = /^[0-9]{1}$/;
 					$me.range = '0-9';
 					$me.titleName = '单题单选-数字题';
 				} else if ($me.questionType == 4) {

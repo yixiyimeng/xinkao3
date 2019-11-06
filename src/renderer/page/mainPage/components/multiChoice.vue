@@ -12,6 +12,7 @@
 				<a-select-option value="B">B</a-select-option>
 				<a-select-option value="C">C</a-select-option>
 				<a-select-option value="D">D</a-select-option>
+				<a-select-option value="E">E</a-select-option>
 				<a-select-option value="F">F</a-select-option>
 			</a-select>
 		</div>

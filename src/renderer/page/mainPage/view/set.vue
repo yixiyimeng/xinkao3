@@ -185,7 +185,7 @@
 			left: 153px;
 			top: 83px;
 			background: url(../assets/img/theme2/titlebg.png);
-			width: 112px;
+			// width: 112px;
 			height: 50px;
 			text-align: right;
 			padding-top: 15px;
@@ -195,6 +195,9 @@
 			top: 150px;
 			background: #fff;
 			bottom: 40px;
+			>div{
+				width: 500px;
+			} 
 		}
 
 		.setbox:after {

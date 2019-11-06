@@ -115,7 +115,7 @@
 		},
 		created() {
 			this.sendInfo = JSON.parse(this.$route.query.sendInfo);
-			this.title = this.sendInfo.className;
+			this.title = this.sendInfo.className.trim();
 			this.directBroadcastCode = this.sendInfo.directBroadcastCode;
 		},
 		mounted() {
@@ -228,7 +228,7 @@
 												$me.getprogress();
 											} else if (msg.urlPaths[i].method == 'getAttendance') {
 												$me.$refs.singinlist.getAttendanceList();
-											}else if(msg.urlPaths[i].method =='randomDetectionAnswerPercent'){
+											} else if (msg.urlPaths[i].method == 'randomDetectionAnswerPercent') {
 												$me.$refs.startAnswer.answerPercent();
 											}
 										}
@@ -337,7 +337,8 @@
 	}
 
 	.theme1 .bg {
-		background-image: url(../assets/img/theme1/setStubg.png);
+		background: url(../assets/img/theme1/setStubg.png) no-repeat center top;
+		height: 100%;
 
 		.classbox {
 			position: absolute;
@@ -347,10 +348,43 @@
 			bottom: 75px;
 			box-sizing: border-box;
 			font-family: 'hxfont';
+
+			.menu {
+				text-align: center;
+				width: 740px;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -40%);
+
+				&>a {
+					display: inline-block;
+					width: 270px;
+					height: 95px;
+					background: url(../assets/img/theme1/menubg.png);
+					text-align: center;
+					// line-height: 95px;
+					color: #6699cc;
+					font-size: 30px;
+					margin: 13px 45px;
+					position: relative;
+					line-height: 95px;
+
+					&>span,
+					&>img {
+						vertical-align: middle;
+
+					}
+				}
+			}
 		}
 
 		.btnlist {
 			text-align: right;
+			position: absolute;
+			bottom: 35px;
+			right: 35px;
+			z-index: 999;
 
 			a {
 				height: 56px;
@@ -378,9 +412,10 @@
 	}
 
 	.theme2 .bg {
-		background-image: url(../assets/img/theme2/kssk.png);
+		height: 100%;
+		background: url(../assets/img/theme2/kssk.png) no-repeat left bottom;
 		// background-size:100% auto;
-		background-position: left bottom;
+		// background-position: left bottom;
 
 		.classbox {
 			position: absolute;
@@ -410,7 +445,7 @@
 					font-size: 30px;
 					margin: 13px 20px;
 					position: relative;
-					padding-top: 50px;
+					padding-top: 35px;
 
 					span {
 						display: block;
@@ -428,6 +463,11 @@
 
 		.btnlist {
 			text-align: right;
+			text-align: right;
+			position: absolute;
+			bottom: 35px;
+			right: 35px;
+			z-index: 999;
 
 			a {
 				width: 100px;

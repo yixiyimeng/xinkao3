@@ -1,7 +1,8 @@
 <template>
 	<div class="modbox" ref="modbox">
 		<div class="subtitle">
-			<img src="../assets/img/gou.png" alt="" />
+			<img src="../assets/img/gou.png" alt="" v-if="theme!='theme4'"/>
+			<img src="../assets/img/gou2.png" alt=""  v-if="theme=='theme4'"/>
 			<span class="ml10">请选择试卷</span>
 		</div>
 		<div class="tablelist mt20" ref="setbox">
@@ -22,6 +23,9 @@
 </template>
 
 <script>
+	import {
+		mapState
+	} from 'vuex';
 	import api from '@/page/mainPage/api';
 	const columns = [{
 			title: '序号',
@@ -58,6 +62,9 @@
 				scrolly: 100,
 				pagination: {},
 			};
+		},
+		computed: {
+			...mapState(['theme'])
 		},
 		created() {
 			this.getlistPaper(0,10);
@@ -170,4 +177,7 @@
 			border-radius: 0;
 		}
 	}
+	.theme4 .subtitle{
+		color: #2459a0;
+		}
 </style>
