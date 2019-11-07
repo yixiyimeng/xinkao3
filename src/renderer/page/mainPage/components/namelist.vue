@@ -4,7 +4,7 @@
 			<div class="mask" @click.stop="closeNamelist"></div>
 			<div class="namelistbox-bd">
 				<a href="javascript:;" class="close" @click="closeNamelist">×</a>
-				<div class="singtitle">接收器编号：{{code}}</div>
+				<div class="singtitle" v-if="isBind==1">接收器编号：{{code}}</div>
 				<ul class="clearfix">
 					<li v-for="(item, index) in namelist" :class="{ active: item.checked }">
 						<i :class="item.state == 0 ? 'warn' : 'success'" @click="checkOneStu(item)"></i>
@@ -81,13 +81,13 @@
 				// this.startBind();
 			},
 			closeNamelist() {
-				this.isshowNamelist = false;
 				if(this.isBind==1){
 					this.stopBind();
 				}
 				if(this.isrebackFill==1){
 					this.nameStop()
 				}
+				this.isshowNamelist = false;
 			},
 			/* 获取学生名单 */
 			getNamelist() {

@@ -49,10 +49,13 @@
 			startSingIn() {
 				this.$postAction(api.startSingIn).then(da=>{
 					this.getAttendanceList();
+					this.$emit('startAnswer')
 				})
 			},
 			stopSingIn() {
-				this.$postAction(api.stopSingIn)
+				this.$postAction(api.stopSingIn).then(da=>{
+					this.$emit('stopAnswer')
+				})
 			},
 			/* 获取签到列表 */
 			getAttendanceList() {

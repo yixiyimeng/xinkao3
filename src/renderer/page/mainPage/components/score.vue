@@ -5,7 +5,7 @@
 			<div>
 				<a-form :form="form">
 					<a-form-item label="评分主题" :label-col="{ span: 4}" :wrapper-col="{ span: 20 }">
-						<a-input class="lginput" v-decorator="['titleName', { rules: [{ required: true,whitespace: true, message: '请输入评分主题!' },{max:20, message: '主题字数不能超过20!'}]}]"
+						<a-input class="lginput" v-decorator="['titleName', { rules: [{ required: true,whitespace: true, message: '请输入评分主题!' },{max:20, message: '主题字数不能超过20!'}],getValueFromEvent:(event) => {return event.target.value.replace(/\s+/g,'')}}]"
 						 placeholder="请输入评分主题" allowClear size="large" />
 					</a-form-item>
 					<a-form-item label="评分描述" :label-col="{ span: 4}" :wrapper-col="{ span: 20 }">
@@ -16,7 +16,7 @@
 					<a-form-item :label="index==0?'评分对象':''" :label-col="{ span: index==0?13:0 }" :wrapper-col="{ span:index==0?11:24 }"
 					 :style="{marginRight:index==0?'20px':''}" v-for="(item,index) in objlist" :key="item">
 						<div class="objitem">
-							<a-input v-decorator="['objs['+item+']', { rules: [{ required: true,whitespace: true, message: '请输入评分对象!' },{max:5, message: '字数最多5个!'}] }]"
+							<a-input v-decorator="['objs['+item+']', {rules: [{ required: true,whitespace: true, message: '请输入评分对象!' },{max:5, message: '字数最多5个!'}],getValueFromEvent:(event) => {return event.target.value.replace(/\s+/g,'')}}]"
 							 placeholder="评分对象" allowClear size="large" class="sminput" />
 							<a-icon type="minus-circle" @click="delObj(item)" v-if="objlist.length>1" />
 						</div>
@@ -153,7 +153,7 @@
 							symbolOffset: [0, 10]
 						},
 						min: 0,
-						minInterval: 1,
+
 					},
 					series: []
 				},

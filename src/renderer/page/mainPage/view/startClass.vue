@@ -5,7 +5,7 @@
 		</div>
 		<!-- 切换菜单 -->
 		<div class="mainmenu">
-			<div class="setbtnlist">
+			<div class="setbtnlist" v-if="!isAnswering">
 				<a href="javascript:;" @click="shownamelist" class="userlist"></a>
 				<router-link :to="'set'" class="set"></router-link>
 			</div>
@@ -31,7 +31,7 @@
 		<!-- 进度条 -->
 		<load :isprogress="isChoice" :rate="rate"></load>
 		<!-- 学生签到 -->
-		<singinlist ref="singinlist" @returnback="returnback"></singinlist>
+		<singinlist ref="singinlist" @returnback="returnback"  @startAnswer="startAnswer" @stopAnswer="stopAnswer"></singinlist>
 		<!-- 投票 -->
 		<vote ref="vote" @returnback="returnback" @startVote="startAnswer" @stopVote="stopAnswer"></vote>
 		<!-- 评分 -->
