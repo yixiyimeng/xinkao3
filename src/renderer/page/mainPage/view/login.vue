@@ -64,7 +64,8 @@
 			}
 		},
 		methods: {
-			login() {
+			login(e) {
+				e.preventDefault();
 				if (this.username && this.password) {
 					if (htmlescpe.test(this.username)) {
 						this.$toast.center('账户中包含特殊字符!');
