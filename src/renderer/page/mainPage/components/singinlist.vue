@@ -31,9 +31,10 @@
 			show() {
 				this.isshowlist = true;
 				/* 调用签到开始 */
-				this.getAttendanceList().then(() => {
-					this.startSingIn()
-				})
+				this.startSingIn()
+				// this.getAttendanceList().then(() => {
+				// 	
+				// })
 			},
 			hide() {
 				this.isshowlist = false;
@@ -46,7 +47,9 @@
 			},
 			/* 开始绑定学生 */
 			startSingIn() {
-				this.$postAction(api.startSingIn)
+				this.$postAction(api.startSingIn).then(da=>{
+					this.getAttendanceList();
+				})
 			},
 			stopSingIn() {
 				this.$postAction(api.stopSingIn)
