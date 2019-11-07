@@ -75,12 +75,19 @@
 				this.isshowNamelist = true;
 				this.code = '';
 				this.namelist = [];
+				this.isBind=0;
+				this.isrebackFill=0;
 				this.getNamelist();
 				// this.startBind();
 			},
 			closeNamelist() {
 				this.isshowNamelist = false;
-				// this.stopBind();
+				if(this.isBind==1){
+					this.stopBind();
+				}
+				if(this.isrebackFill==1){
+					this.nameStop()
+				}
 			},
 			/* 获取学生名单 */
 			getNamelist() {
@@ -154,6 +161,7 @@
 					title: '提示',
 					content: unbindtext,
 					okText: '确认',
+					centered:true,
 					cancelText: '取消',
 					onOk() {
 						$me.unBindStu(param)

@@ -8,7 +8,7 @@
 				<div class="form-group">
 					<div class="input-row flex flex-align-center">
 						<label><i class="red">*</i>班级</label>
-						<a-select class="select flex-1" size="large" v-model="formData.classCode" @change="handleChange">
+						<a-select class="select flex-1" size="large" v-model="formData.classCode" @change="handleClassChange">
 							<a-icon type="caret-down" slot="suffixIcon" />
 							<a-select-option :value="item.code" v-for="(item,index) in classList" :key="index">{{item.name}}</a-select-option>
 						</a-select>
@@ -109,7 +109,7 @@
 			this.getSubjectlist();
 			this.rangetime[0] = moment().subtract(30, 'days');
 			this.rangetime[1] = moment();
-			this.getTopicTitle();
+			// this.getTopicTitle();
 		},
 		methods: {
 			gotoPage() {
@@ -184,7 +184,7 @@
 				}).then(da => {
 					if (da && da.ret == 'success') {
 						var list = da.data;
-						$me.TopicTitleList = [];
+						
 						if (list.length > 0) {
 							$me.TopicTitleList = list.map(item => {
 								return {
@@ -192,6 +192,8 @@
 									code: item.topicCode
 								};
 							});
+						}else{
+							$me.TopicTitleList = [];
 						}
 
 					}
@@ -231,6 +233,11 @@
 						}
 					});
 				}
+			},
+			/* 切换班级 */
+			handleClassChange() {
+				this.getTopicTitle();
+				this.getTestpaperList();
 			},
 			/* 切换班级或者科目的时候，重新查询试卷 */
 			handleChange() {

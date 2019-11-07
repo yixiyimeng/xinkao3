@@ -1,6 +1,7 @@
 import axios from 'axios'
 import notification from 'ant-design-vue/es/notification'
 import message from 'ant-design-vue/es/message'
+import router from '../router'
 import {
 	VueAxios
 } from './axios'
@@ -27,8 +28,18 @@ let removePending = (config) => {
 	}
 }
 const err = (error) => {
-	if (error&&error.message&&error.message.includes('timeout')) { // 判断请求异常信息中是否含有超时timeout字符串
+	if (error && error.message && error.message.includes('timeout')) { // 判断请求异常信息中是否含有超时timeout字符串
 		message.error('请求超时了');
+	}
+	if (error.response) {
+		switch (error.response.status) {
+			case 401:
+				router.currentRoute.path !== 'login' &&
+					router.replace({
+						path: 'login',
+					})
+					break;
+		}
 	}
 	return Promise.reject(error)
 };
@@ -59,6 +70,7 @@ service.interceptors.response.use((response) => {
 		return response.data;
 	} else {
 		message.error(response.data.message ? response.data.message : '发生错误了！');
+
 	}
 
 
