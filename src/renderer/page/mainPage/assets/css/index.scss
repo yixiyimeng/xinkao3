@@ -1106,13 +1106,14 @@
 	}
 	
 	.setbox.voteChart .voteInfo label {
-		width: auto;
+		width: 4.5em;
 	}
 	
 	.voteChart .voteInfo span {
 		color: #d5525a;
 		display: inline-block;
 		padding: 0 10px 0 0;
+		word-break:break-all;
 	}
 	
 	.voteChart .echarts {

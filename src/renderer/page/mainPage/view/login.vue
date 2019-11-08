@@ -398,6 +398,7 @@
 
 			.anticon {
 				font-size: 20px;
+				vertical-align: -.3em;
 			}
 		}
 	}

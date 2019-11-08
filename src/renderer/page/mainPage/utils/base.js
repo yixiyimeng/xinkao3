@@ -40,6 +40,21 @@ export const parseDay = (time) => {
 	var day = thisdate.getDate();
 	return year + '-' + (month < 10 ? '0' + month : month) + '-' + (day < 10 ? '0' + day : day);
 }
+export function isRepeat(arr) {
+        if(!arr || arr.length < 1){
+            return false;
+        }
+        var hash = {};
+        for ( var i in arr) {
+            if (hash[arr[i]]) {
+                return true;
+            }
+            hash[arr[i]] = true;
+        }
+        return false;
+    }
+
+
 export default {
 	urlPath,
 	urlwsPath,

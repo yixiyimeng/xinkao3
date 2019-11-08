@@ -59,6 +59,7 @@
 	import 'echarts/lib/component/legend'
 	import 'echarts/lib/component/title.js'
 	import selectNamelist from '@/page/mainPage/components/selectNamelist';
+	import {isRepeat} from '@/page/mainPage/utils/base'
 	var ChartfontSize = 20;
 	export default {
 		components: {
@@ -198,6 +199,10 @@
 						this.form2.validateFields((err, values) => {
 							if (!err) {
 								var param2 = values.objs.filter(item => item != null);
+								if(isRepeat(param2)){
+									$me.$message.error('请输入不同的评分对象');
+									return false
+								}
 								var voteInfo = Object.assign({}, param, {
 									objs: param2
 								});

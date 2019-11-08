@@ -68,6 +68,7 @@
 	import 'echarts/lib/component/legend'
 	import 'echarts/lib/component/title.js'
 	import selectNamelist from '@/page/mainPage/components/selectNamelist';
+	import {isRepeat} from '@/page/mainPage/utils/base'
 	var ChartfontSize = 20;
 	export default {
 		components: {
@@ -169,7 +170,9 @@
 				chartlist: []
 			};
 		},
-		created() {},
+		created() {
+			
+		},
 		methods: {
 			addObj() {
 				if (this.objlist.length >= 5) {
@@ -199,25 +202,17 @@
 			},
 			startVote() {
 				const $me = this;
-				// 				this.form.validateFields((err, values) => {
-				// 					if (!err) {
-				// 						console.log(values);
-				// 						$me.$postAction(api.startVote, values).then(da => {
-				// 							if (da && da.ret == 'success') {
-				// 								$me.voteInfo = values;
-				// 								$me.viewState = 1;
-				// 								$me.$emit('startVote')
-				// 							}
-				// 						})
-				// 
-				// 					}
-				// 				})
+				
 				this.form.validateFields((err, values) => {
 					if (!err) {
 						var param = values;
 						this.form2.validateFields((err, values) => {
 							if (!err) {
 								var param2 = values.objs.filter(item => item != null);
+								if(isRepeat(param2)){
+									$me.$message.error('请输入不同的投票对象');
+									return false
+								}
 								var voteInfo = Object.assign({}, param, {
 									objs: param2
 								});
