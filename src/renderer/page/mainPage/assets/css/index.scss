@@ -434,14 +434,19 @@
 	
 }
 
-.namelistbox ul {
+.namelistbox ul,.bindnamelist ul {
 	height: 100%;
 	overflow: auto;
+	margin-bottom: 0;
 }
-.namelistbox ul > li {
+.bindnamelist ul{
+	padding-left: 20px;
+	padding-right: 20px;
+}
+.namelistbox ul > li,.bindnamelist ul>li {
 	float: left;
-	margin: 10px 0;
-	color: #333;
+	margin: 10px 0;color: #df8487;
+	
 	width: 25%;
 	padding-left: 10px;
 	box-sizing: border-box;
@@ -458,8 +463,39 @@
 	position: relative;
 	margin-right: 5px;
 }
+.bindnamelist ul li i{
+	width: 14px;
+	height: 14px;
+	display: inline-block;
+	border-radius: 50%;
+	vertical-align: middle;
+	position: relative;
+}
 
-.namelistbox ul li i.success {
+.bindnamelist ul li i{
+	border:1px solid #e19195
+}
+.bindnamelist ul li.success {
+	color: #333;
+}
+.bindnamelist ul li.success i{
+	border:1px solid #000;
+	background: #f3cf3e;
+	position: relative;
+}
+.bindnamelist ul li.success.active i:after{
+	content: '';
+	height: 7px;
+	width: 7px;
+	display: block;
+	border-radius: 100%;
+	background: #000;
+	position: absolute;
+	top:50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+}
+.namelistbox ul li i.success{
 	background-color: #52c41a;
 }
 .namelistbox ul li.active i.success:before {
@@ -480,40 +516,43 @@
 	background-color: #f5222d;
 }
 .namelistbox ul li img,
-.namelistbox ul li span {
+.namelistbox ul li span,
+.bindnamelist ul li span,
+.bindnamelist ul li img{
 	vertical-align: middle;
 }
-.namelistbox ul li img {
+.namelistbox ul li img,.bindnamelist ul li img {
 	cursor: pointer;
 	width: 20px;
 	height: 20px;
 }
 
-.namelistbox .unbindAllStu {
-	background: rgba(255, 0, 0, 0.6);
+.namelistbox .unbindAllStu ,.bindnamelist .unbindAllStu{
+	background: #6063b2;
 	width: 45px;
 	height: 45px;
 	text-align: center;
 	font-size: 16px;
 	border-radius: 100%;
-	padding-top: 10px;
+	padding-top: 8px;
 	box-sizing: border-box;
 	position: absolute;
 	right: 20px;
-	bottom: 5px;
+	bottom:20px;
 	cursor: pointer;
 }
-.namelistbox .unbindAllStu img {
-	width: 25px;
+.namelistbox .unbindAllStu img ,.bindnamelist .unbindAllStu img{
+	width: 30px;
 	text-align: center;
 }
-.namelistbox .tag {
+.namelistbox .tag,.bindnamelist .tag {
 	position: absolute;
-	bottom: 10px;
+	bottom: 25px;
 	left: 20px;
 	color: #333;
+	
 }
-.namelistbox .tag a {
+.namelistbox .tag a ,.bindnamelist .tag a{
 	margin-left: 10px;
 	text-decoration: underline;
 }
@@ -1069,8 +1108,8 @@
 	
 	.theme4 .bg .voteChart {
 		position: absolute;
-		left: 65px;
-		right: 65px;
+		left: 135px;
+		right: 135px;
 		bottom:120px;
 		top: 160px;
 		transform: translate(0,0);
@@ -1089,20 +1128,19 @@
 	.voteInfo {
 		font-size: 16px;
 		color: #333;
-		width: 290px;
-		background: #fff;
 		border: 14px solid #2459a0;
 		border-image-slice: 14;
 		border-image-width: 14px;
 		border-image-source: url(assets/img/theme4/votebg.png);
 		border-image-repeat: round;
 		color: #333;
-		padding: 36px 16px;
+		
 		
 	}
-	
 	.voteChart .voteInfo>div {
-		margin-bottom: 10px;
+		padding-bottom: 10px;
+		background: #fff;padding: 36px 16px;
+		width: 262px;
 	}
 	
 	.setbox.voteChart .voteInfo label {

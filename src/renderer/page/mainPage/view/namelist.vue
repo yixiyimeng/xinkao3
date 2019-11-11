@@ -1,12 +1,16 @@
 <template>
-	<div class="bindnamelist bg" v-if="isshowNamelist">
-		<a href="javascript:;" class="reback" @click="closeNamelist"></a>
-		<div class="setbox">
+	<div class="bg">
+		<!-- <div class="title"><span>学</span><span>生</span><span>名</span><span>单</span></div> -->
+		<div class="setbox bindnamelist">
 			<div>
+				<!-- 	<div class="namelistbox" >
+					<div class="mask" @click.stop="closeNamelist"></div>
+					<div class="namelistbox-bd">
+						<a href="javascript:;" class="close" @click="closeNamelist">×</a> -->
 				<div class="singtitle" v-if="isBind==1">接收器编号：{{code}}</div>
 				<ul class="clearfix">
 					<li v-for="(item, index) in namelist" :class="{ active: item.checked,'success':item.state == 1}">
-						<i @click="checkOneStu(item)"></i>
+						<i  @click="checkOneStu(item)"></i>
 						<span @click="checkOneStu(item)">{{ item.stuName }}</span>
 						<img src="../assets/img/jiebang1.png" alt="" v-if="item.state == 1" @click="isUnBindStu('one',item)" style="opacity: .6;" />
 						<img src="../assets/img/pwd2.png" alt="" v-if="item.state == 0" @click="BindOneStu(item)" />
@@ -18,6 +22,8 @@
 					<a-button type="danger" @click="stopBind" v-if="isBind==1">停止绑卡</a-button>
 					<a-button type="primary" @click="nameStart" v-if="isBind==2&&isrebackFill==0">开始回显</a-button>
 					<a-button type="danger" @click="nameStop" v-if="isBind==2&&isrebackFill==1">停止回显</a-button>
+					<!-- <a href="javascript:;" @click="nameStart" v-if="isBind==2&&isrebackFill==0">开始回显</a>
+							<a href="javascript:;" @click="nameStop" v-if="isBind==2&&isrebackFill==1">停止回显</a> -->
 				</div>
 				<div class="tag" style="left: auto; right: 100px;">
 					<span>已选择{{ checkbindStu }}个学生</span>
@@ -27,6 +33,8 @@
 
 				</div>
 				<div @click="isUnBindStu('all')" class="unbindAllStu" title="一键解绑"><img src="../assets/img/jiebang.png" alt="" /></div>
+				<!-- </div>
+				</div> -->
 			</div>
 		</div>
 	</div>
@@ -34,6 +42,7 @@
 
 <script>
 	import api from '@/page/mainPage/api';
+	// import reback from '@/page/mainPage/components/reback';
 	export default {
 		data() {
 			return {
@@ -45,11 +54,14 @@
 				isrebackFill: 0, //回显状态 0 ，没有开始， 1开始
 			};
 		},
-		props: {
-			isAnswering: {
-				type: Boolean,
-				default: false
-			}
+		// props: {
+		// 	isAnswering: {
+		// 		type: Boolean,
+		// 		default: false
+		// 	}
+		// },
+		components: {
+			// reback
 		},
 		computed: {
 			checkbindStu() {
@@ -61,8 +73,10 @@
 			},
 		},
 		created() {
+			//this.shownamelist();
 			try {
 				this.sendInfo = JSON.parse(sessionStorage.getItem('sendInfo'));
+
 
 			} catch (e) {
 				//TODO handle the exception
@@ -76,7 +90,6 @@
 				this.namelist = [];
 				this.isBind = 0;
 				this.isrebackFill = 0;
-				this.$emit('startName')
 				this.getNamelist();
 				// this.startBind();
 			},
@@ -88,8 +101,6 @@
 					this.nameStop()
 				}
 				this.isshowNamelist = false;
-				this.$emit('stopName');
-				// this.$emit('returnback')
 			},
 			/* 获取学生名单 */
 			getNamelist() {
@@ -230,7 +241,6 @@
 					if (da && da.ret == 'success') {
 						this.code = da.data.pin;
 						this.isBind = 1;
-
 					}
 
 				})
@@ -239,7 +249,6 @@
 				this.$postAction(api.stopBind).then(da => {
 					if (da && da.ret == 'success') {
 						this.isBind = 2;
-
 					}
 
 				})
@@ -252,7 +261,6 @@
 				this.$postAction(api.nameStart).then(da => {
 					if (da && da.ret == 'success') {
 						this.isrebackFill = 1;
-
 					}
 
 				})
@@ -262,7 +270,6 @@
 				this.$postAction(api.nameStop).then(da => {
 					if (da && da.ret == 'success') {
 						this.isrebackFill = 0;
-
 					}
 
 				})
@@ -273,24 +280,13 @@
 </script>
 
 <style scoped="scoped" lang="scss">
-	.bindnamelist {
-		z-index: 99999;
-		position: fixed;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-	}
-
 	.theme4 .bg .setbox {
-		position: absolute;
 		width: auto;
 		left: 135px;
 		right: 135px;
 		transform: translate(0, 0);
 		top: 160px;
 		bottom: 120px;
-
 
 		&>div {
 			height: 100%;

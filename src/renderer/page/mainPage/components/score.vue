@@ -28,14 +28,16 @@
 
 			</div>
 		</div>
-		<div class="voteChart setbox " v-if="viewState!=0">
+		<div class="voteChart " v-if="viewState!=0" :class="{setbox:isChart}">
 			<div class="flex flex-align-center">
 				<div class="voteInfo">
-					<div class="flex"><label>评分主题:</label><span class="flex-1">{{voteInfo.titleName}}</span></div>
-					<div class="flex"><label>评分对象:</label>
-						<div class="flex-1"><span v-for="(item,index) in voteInfo.objs" :key="index">{{item}}</span></div>
+					<div>
+						<div class="flex"><label>评分主题:</label><span class="flex-1">{{voteInfo.titleName}}</span></div>
+						<div class="flex"><label>评分对象:</label>
+							<div class="flex-1"><span v-for="(item,index) in voteInfo.objs" :key="index">{{item}}</span></div>
+						</div>
+						<div class="flex"><label>评分描述:</label><span class="flex-1">{{voteInfo.describe}}</span></div>
 					</div>
-					<div class="flex"><label>评分描述:</label><span class="flex-1">{{voteInfo.describe}}</span></div>
 				</div>
 				<div class="flex-1" v-if="isChart">
 					<v-chart :options="polar" autoresize class="chartbox"></v-chart>

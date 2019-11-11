@@ -45,6 +45,7 @@
 				$me.isStop = true;
 				$me.count = 3;
 				$me.viewState = 1;
+				$me.$emit('startQuickAnswer')
 				/* 开始抢答 */
 				$me.timer = setInterval(function() {
 					$me.count--;
@@ -52,9 +53,8 @@
 						$me.isStop = false;
 						clearInterval($me.timer);
 						$me.timer = null;
-						
 						$me.$postAction(api.startQuickAnswer).then(da => {
-							$me.$emit('startQuickAnswer')
+							
 						})
 					}
 

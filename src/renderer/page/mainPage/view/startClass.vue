@@ -7,6 +7,7 @@
 		<div class="mainmenu">
 			<div class="setbtnlist" v-if="!isAnswering">
 				<a href="javascript:;" @click="shownamelist" class="userlist"></a>
+				<!-- <router-link :to="'namelist'" class="userlist"></router-link> -->
 				<router-link :to="'set'" class="set"></router-link>
 			</div>
 			<!-- <div class="set"></div>
@@ -25,45 +26,48 @@
 		<!-- 返回 -->
 		<!-- <a href="javascript:;" class="reback" @click="returnback"></a> -->
 		<!-- 学生名单 -->
-		<namelist :isAnswering="isAnswering" ref="namelist"></namelist>
-		<!-- 答题 -->
-		<start-answer ref="startAnswer" @startAnswer="startAnswer" @stopAnswer="stopAnswer" @returnback="returnback"></start-answer>
+		<namelist :isAnswering="isAnswering" ref="namelist" @startName="startName" @stopName="stopName"></namelist>
 		<!-- 进度条 -->
 		<load :isprogress="isChoice" :rate="rate"></load>
-		<!-- 学生签到 -->
-		<singinlist ref="singinlist" @returnback="returnback"  @startAnswer="startAnswer" @stopAnswer="stopAnswer"></singinlist>
-		<!-- 投票 -->
-		<vote ref="vote" @returnback="returnback" @startVote="startAnswer" @stopVote="stopAnswer"></vote>
-		<!-- 评分 -->
-		<score ref="score" @returnback="returnback" @startScore="startAnswer" @stopScore="stopAnswer"></score>
-		<!-- 抢到 -->
-		<responder ref="quickAnswer" @returnback="returnback" @startQuickAnswer="startAnswer" @stopQuickAnswer="stopAnswer"></responder>
-		<!-- 弹幕 -->
-		<danmu ref="danmu" :style="{zIndex:isAnswering?999:-1}" v-show="isDanmu"></danmu>
-		<div class="classbox" v-if="isShowClassMenu">
-			<div>
-				<div class="menu">
-					<a href="javascript:;" @click="showStartAnswer">
-						<i class="icon1 icon"></i>
-						<span>答题</span>
-					</a>
-					<a href="javascript:;" @click="showQuickAnswer">
-						<i class="icon2 icon"></i>
-						<span>抢答</span>
-					</a>
-					<a href="javascript:;" @click="showStartScore">
-						<i class="icon3 icon"></i>
-						<span>评分</span>
-					</a>
-					<a href="javascript:;" @click="showStartVote">
-						<i class="icon4 icon"></i>
-						<span>投票</span>
-					</a>
-					<!-- <router-link :to="'vote'"> -->
-					<a href="javascript:;">
-						<i class="icon5 icon"></i>
-						<span>作业</span>
-					</a>
+		<!-- 显示学生名单的时候，内容隐藏 -->
+		<div v-show="!isShowName">
+			<!-- 学生签到 -->
+			<singinlist ref="singinlist" @returnback="returnback" @startAnswer="startAnswer" @stopAnswer="stopAnswer"></singinlist>
+			<!-- 答题 -->
+			<start-answer ref="startAnswer" @startAnswer="startAnswer" @stopAnswer="stopAnswer" @returnback="returnback"></start-answer>
+			<!-- 投票 -->
+			<vote ref="vote" @returnback="returnback" @startVote="startAnswer" @stopVote="stopAnswer"></vote>
+			<!-- 评分 -->
+			<score ref="score" @returnback="returnback" @startScore="startAnswer" @stopScore="stopAnswer"></score>
+			<!-- 抢答 -->
+			<responder ref="quickAnswer" @returnback="returnback" @startQuickAnswer="startAnswer" @stopQuickAnswer="stopAnswer"></responder>
+			<!-- 弹幕 -->
+			<danmu ref="danmu" :style="{zIndex:isAnswering?999:-1}" v-show="isDanmu"></danmu>
+			<div class="classbox" v-if="isShowClassMenu">
+				<div>
+					<div class="menu">
+						<a href="javascript:;" @click="showStartAnswer">
+							<i class="icon1 icon"></i>
+							<span>答题</span>
+						</a>
+						<a href="javascript:;" @click="showQuickAnswer">
+							<i class="icon2 icon"></i>
+							<span>抢答</span>
+						</a>
+						<a href="javascript:;" @click="showStartScore">
+							<i class="icon3 icon"></i>
+							<span>评分</span>
+						</a>
+						<a href="javascript:;" @click="showStartVote">
+							<i class="icon4 icon"></i>
+							<span>投票</span>
+						</a>
+						<!-- <router-link :to="'vote'"> -->
+						<a href="javascript:;">
+							<i class="icon5 icon"></i>
+							<span>作业</span>
+						</a>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -108,6 +112,7 @@
 				rate: 0, //作答进度
 				isChoice: false, //是否选择题
 				directBroadcastCode: '',
+				isShowName: false, // 显示学生名单
 			};
 		},
 		computed: {
@@ -131,6 +136,22 @@
 			shownamelist() {
 				/* 显示学生名单 */
 				this.$refs.namelist.shownamelist();
+				this.isShowName = true;
+				// this.isShowClassMenu = false;
+				this.title = '学生名单'
+			},
+			startName() {
+				/* 关闭学生名单 */
+				this.isAnswering = true;
+			},
+			stopName() {
+				/* 关闭学生名单 */
+				this.isAnswering = false;
+				this.isChoice = false;
+				this.rate = 0; //清空进度条数据
+				this.title = this.sendInfo.className.trim();;
+				this.isShowName = false;
+				// this.isShowClassMenu = true;
 			},
 			showStartAnswer() {
 				this.$refs.startAnswer.showAnswer();
@@ -181,7 +202,7 @@
 					this.$router.go(-1);
 				} else {
 					this.isShowClassMenu = true;
-					this.title = this.sendInfo.className;
+					this.title = this.sendInfo.className.trim();;
 
 				}
 			},

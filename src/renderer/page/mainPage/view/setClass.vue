@@ -5,54 +5,56 @@
 		<a href="javascript:;" class="reback" @click="returnback"></a>
 		<div class="classbox">
 			<div>
-				<div class="form-group">
-					<div class="input-row flex flex-align-center">
-						<label><i class="red">*</i>班级</label>
-						<a-select class="select flex-1" size="large" v-model="formData.classCode" @change="handleClassChange">
-							<a-icon type="caret-down" slot="suffixIcon" />
-							<a-select-option :value="item.code" v-for="(item,index) in classList" :key="index">{{item.name}}</a-select-option>
-						</a-select>
+				<a-form @submit="sendClass" autocomplete="off">
+					<div class="form-group">
+						<div class="input-row flex flex-align-center">
+							<label><i class="red">*</i>班级</label>
+							<a-select class="select flex-1" size="large" v-model="formData.classCode" @change="handleClassChange">
+								<a-icon type="caret-down" slot="suffixIcon" />
+								<a-select-option :value="item.code" v-for="(item,index) in classList" :key="index">{{item.name}}</a-select-option>
+							</a-select>
+						</div>
+						<div class="input-row mt10  flex flex-align-center">
+							<label><i class="red">*</i>科目</label>
+							<a-select class="select flex-1" size="large" v-model="formData.subjectCode" @change="handleChange">
+								<a-icon type="caret-down" slot="suffixIcon" />
+								<a-select-option :value="item.code" v-for="(item,index) in subjectList" :key="index">{{item.name}}</a-select-option>
+							</a-select>
+						</div>
+						<div class="input-row mt10  flex flex-align-center">
+							<label><i class="red">*</i>主题</label>
+							<a-input class="flex-1 inputtxt" size="large" v-model="formData.topicName" @input="changrTopic"></a-input>
+							<a-dropdown :trigger="['click']" placement="bottomRight" class="dropdown" :overlayStyle="{'width': theme=='theme4'?'455px':'200px'}"
+							 v-if="TopicTitleList.length>0">
+								<span>
+									<a-icon type="caret-down" />
+								</span>
+								<a-menu slot="overlay">
+									<a-menu-item @click="setTopicName(item)" v-for="(item,index) in TopicTitleList" :key="index">{{item.name}}</a-menu-item>
+								</a-menu>
+							</a-dropdown>
+						</div>
+						<div class="input-row flex" v-if="formData.questionId > 0 || formData.tempQuestionId > 0">
+							<label></label>
+							<a-checkbox v-model="isClearquestion" class="flex-1">
+								是否清空之前作答记录
+							</a-checkbox>
+						</div>
+						<div class="input-row  flex flex-align-center" :class="{mt10:!formData.questionId&&!formData.tempQuestionId}">
+							<label>试卷</label>
+							<a-range-picker :open="openRange" v-model="rangetime" @change="changrTime" style="width: 1px;opacity: 0; height: 0;">
+							</a-range-picker>
+							<a-icon type="calendar" @click="openRange=true" class="seltime" />
+							<a-select class="select flex-1" size="large" v-model="formData.titleCode" style="text-indent: 1.5em;">
+								<a-icon type="caret-down" slot="suffixIcon" />
+								<a-select-option :value="item.code" v-for="(item,index) in testpaperList" :key="index">{{item.name}}</a-select-option>
+							</a-select>
+						</div>
 					</div>
-					<div class="input-row mt10  flex flex-align-center">
-						<label><i class="red">*</i>科目</label>
-						<a-select class="select flex-1" size="large" v-model="formData.subjectCode" @change="handleChange">
-							<a-icon type="caret-down" slot="suffixIcon" />
-							<a-select-option :value="item.code" v-for="(item,index) in subjectList" :key="index">{{item.name}}</a-select-option>
-						</a-select>
-					</div>
-					<div class="input-row mt10  flex flex-align-center">
-						<label><i class="red">*</i>主题</label>
-						<a-input class="flex-1 inputtxt" size="large" v-model="formData.topicName" @input="changrTopic"></a-input>
-						<a-dropdown :trigger="['click']" placement="bottomRight" class="dropdown" :overlayStyle="{'width': theme=='theme4'?'400px':'200px'}"
-						 v-if="TopicTitleList.length>0">
-							<span>
-								<a-icon type="caret-down" />
-							</span>
-							<a-menu slot="overlay">
-								<a-menu-item @click="setTopicName(item)" v-for="(item,index) in TopicTitleList" :key="index">{{item.name}}</a-menu-item>
-							</a-menu>
-						</a-dropdown>
-					</div>
-					<div class="input-row flex" v-if="formData.questionId > 0 || formData.tempQuestionId > 0">
-						<label></label>
-						<a-checkbox v-model="isClearquestion" class="flex-1">
-							是否清空之前作答记录
-						</a-checkbox>
-					</div>
-					<div class="input-row  flex flex-align-center" :class="{mt10:!formData.questionId&&!formData.tempQuestionId}">
-						<label>试卷</label>
-						<a-range-picker :open="openRange" v-model="rangetime" @change="changrTime" style="width: 1px;opacity: 0; height: 0;">
-						</a-range-picker>
-						<a-icon type="calendar" @click="openRange=true" class="seltime" />
-						<a-select class="select flex-1" size="large" v-model="formData.titleCode" style="text-indent: 1.5em;">
-							<a-icon type="caret-down" slot="suffixIcon" />
-							<a-select-option :value="item.code" v-for="(item,index) in testpaperList" :key="index">{{item.name}}</a-select-option>
-						</a-select>
-					</div>
-				</div>
-				<a-button class="startClass" :loading="loading" @click="sendClass">
-					开始上课
-				</a-button>
+					<a-button class="startClass" :loading="loading" html-type="submit">
+						开始上课
+					</a-button>
+				</a-form>
 			</div>
 			<!-- <a href="javascript:;" class="startClass" ></a> -->
 		</div>
@@ -184,7 +186,7 @@
 				}).then(da => {
 					if (da && da.ret == 'success') {
 						var list = da.data;
-						
+
 						if (list.length > 0) {
 							$me.TopicTitleList = list.map(item => {
 								return {
@@ -192,7 +194,7 @@
 									code: item.topicCode
 								};
 							});
-						}else{
+						} else {
 							$me.TopicTitleList = [];
 						}
 
@@ -249,14 +251,15 @@
 				this.getTestpaperList();
 			},
 			/* 点击开始上课 */
-			sendClass() {
+			sendClass(e) {
+				e.preventDefault();
 				const $me = this;
 				/* 先判断是否loading，防止重复提交 */
 				if ($me.loading) {
 					return false;
 				}
 				if ($me.formData.classCode && $me.formData.subjectCode && $me.formData.topicName) {
-					if($me.formData.topicName.length>20){
+					if ($me.formData.topicName.length > 20) {
 						this.$toast.center('主题长度最大为20个字节  ');
 						return false
 					}

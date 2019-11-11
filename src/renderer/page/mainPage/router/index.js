@@ -105,6 +105,14 @@ export default new Router({
 								title: '开始随堂检测'
 							}
 						},
+						{
+							path: '/namelist',
+							name: 'namelist',
+							component: require('@/page/mainPage/view/namelist').default,
+							meta: {
+								title: '学生名单'
+							}
+						},
 						// {
 						// 	path: '/responder',
 						// 	name: 'responder',
