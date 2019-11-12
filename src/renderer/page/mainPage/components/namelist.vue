@@ -117,10 +117,10 @@
 			},
 			isUnBindStu(type, stu) {
 				const $me = this;
-				if ($me.isAnswering) {
-					$me.$toast.center('答题过程中不能解绑');
-					return false;
-				}
+				// if ($me.isAnswering) {
+				// 	$me.$toast.center('答题过程中不能解绑');
+				// 	return false;
+				// }
 				let unbindtext = '';
 				var param = {};
 				switch (type) {
@@ -302,6 +302,16 @@
 		transform: translate(0, 0);
 		top: 160px;
 		bottom: 120px;
+		.singtitle {
+			font-size: 30px;
+			line-height: 40px;
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			z-index: 999;
+		text-align: left;
+		}
 
 	}
 
