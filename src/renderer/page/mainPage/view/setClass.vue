@@ -40,7 +40,7 @@
 								是否清空之前作答记录
 							</a-checkbox>
 						</div>
-						<div class="input-row  flex flex-align-center" :class="{mt10:!formData.questionId&&!formData.tempQuestionId}">
+						<!-- <div class="input-row  flex flex-align-center" :class="{mt10:!formData.questionId&&!formData.tempQuestionId}">
 							<label>试卷</label>
 							<a-range-picker :open="openRange" v-model="rangetime" @change="changrTime" style="width: 1px;opacity: 0; height: 0;">
 							</a-range-picker>
@@ -49,7 +49,7 @@
 								<a-icon type="caret-down" slot="suffixIcon" />
 								<a-select-option :value="item.code" v-for="(item,index) in testpaperList" :key="index">{{item.name}}</a-select-option>
 							</a-select>
-						</div>
+						</div> -->
 					</div>
 					<a-button class="startClass" :loading="loading" html-type="submit">
 						开始上课
