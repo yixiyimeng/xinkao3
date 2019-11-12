@@ -306,9 +306,7 @@
 	}
 
 	.theme4 .setbox {
-		top: 0;
-		transform: translate(-50%, 0);
-		bottom: 20px;
+		bottom: 120px;
 		width: 80%;
 
 		&>div {

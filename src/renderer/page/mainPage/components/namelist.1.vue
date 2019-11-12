@@ -1,12 +1,13 @@
 <template>
-	<div class="bindnamelist bg" v-if="isshowNamelist">
-		<a href="javascript:;" class="reback" @click="closeNamelist"></a>
-		<div class="setbox">
-			<div>
+	<transition name="vs__fade">
+		<div class="namelistbox" v-if="isshowNamelist">
+			<div class="mask" @click.stop="closeNamelist"></div>
+			<div class="namelistbox-bd">
+				<a href="javascript:;" class="close" @click="closeNamelist">×</a>
 				<div class="singtitle" v-if="isBind==1">接收器编号：{{code}}</div>
 				<ul class="clearfix">
-					<li v-for="(item, index) in namelist" :class="{ active: item.checked,'success':item.state == 1}">
-						<i @click="checkOneStu(item)"></i>
+					<li v-for="(item, index) in namelist" :class="{ active: item.checked }">
+						<i :class="item.state == 0 ? 'warn' : 'success'" @click="checkOneStu(item)"></i>
 						<span @click="checkOneStu(item)">{{ item.stuName }}</span>
 						<img src="../assets/img/jiebang1.png" alt="" v-if="item.state == 1" @click="isUnBindStu('one',item)" style="opacity: .6;" />
 						<img src="../assets/img/pwd2.png" alt="" v-if="item.state == 0" @click="BindOneStu(item)" />
@@ -14,10 +15,10 @@
 					</li>
 				</ul>
 				<div class="tag">
-					<a-button type="primary" @click="startBind" v-if="isBind!=1&&isrebackFill!=1">开始绑卡</a-button>
-					<a-button type="danger" @click="stopBind" v-if="isBind==1">停止绑卡</a-button>
-					<a-button type="primary" @click="nameStart" v-if="isBind==2&&isrebackFill==0">开始回显</a-button>
-					<a-button type="danger" @click="nameStop" v-if="isBind==2&&isrebackFill==1">停止回显</a-button>
+					<a href="javascript:;" @click="startBind" v-if="isBind!=1">开始绑卡</a>
+					<a href="javascript:;" @click="stopBind" v-if="isBind==1">停止绑卡</a>
+					<a href="javascript:;" @click="nameStart" v-if="isBind==2&&isrebackFill==0">开始回显</a>
+					<a href="javascript:;" @click="nameStop" v-if="isBind==2&&isrebackFill==1">停止回显</a>
 				</div>
 				<div class="tag" style="left: auto; right: 100px;">
 					<span>已选择{{ checkbindStu }}个学生</span>
@@ -29,7 +30,7 @@
 				<div @click="isUnBindStu('all')" class="unbindAllStu" title="一键解绑"><img src="../assets/img/jiebang.png" alt="" /></div>
 			</div>
 		</div>
-	</div>
+	</transition>
 </template>
 
 <script>
@@ -74,22 +75,19 @@
 				this.isshowNamelist = true;
 				this.code = '';
 				this.namelist = [];
-				this.isBind = 0;
-				this.isrebackFill = 0;
-				this.$emit('startName')
+				this.isBind=0;
+				this.isrebackFill=0;
 				this.getNamelist();
 				// this.startBind();
 			},
 			closeNamelist() {
-				if (this.isBind == 1) {
+				if(this.isBind==1){
 					this.stopBind();
 				}
-				if (this.isrebackFill == 1) {
+				if(this.isrebackFill==1){
 					this.nameStop()
 				}
 				this.isshowNamelist = false;
-				this.$emit('stopName');
-				// this.$emit('returnback')
 			},
 			/* 获取学生名单 */
 			getNamelist() {
@@ -163,7 +161,7 @@
 					title: '提示',
 					content: unbindtext,
 					okText: '确认',
-					centered: true,
+					centered:true,
 					cancelText: '取消',
 					onOk() {
 						$me.unBindStu(param)
@@ -230,7 +228,6 @@
 					if (da && da.ret == 'success') {
 						this.code = da.data.pin;
 						this.isBind = 1;
-
 					}
 
 				})
@@ -239,7 +236,6 @@
 				this.$postAction(api.stopBind).then(da => {
 					if (da && da.ret == 'success') {
 						this.isBind = 2;
-
 					}
 
 				})
@@ -252,7 +248,6 @@
 				this.$postAction(api.nameStart).then(da => {
 					if (da && da.ret == 'success') {
 						this.isrebackFill = 1;
-
 					}
 
 				})
@@ -262,7 +257,6 @@
 				this.$postAction(api.nameStop).then(da => {
 					if (da && da.ret == 'success') {
 						this.isrebackFill = 0;
-
 					}
 
 				})
@@ -272,48 +266,15 @@
 	};
 </script>
 
-<style scoped="scoped" lang="scss">
-	@import '../assets/css/set.scss';
-
-	.bindnamelist {
-		z-index: 99999;
-		position: fixed;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-	}
-
-	.setbox {
-		&>div {
-			height: 100%;
-		}
-	}
-
-	.theme1 .bg .setbox {
-		background: rgba(255,255,255,.7);
-	}
-
-	.theme4 .bg .setbox {
-		position: absolute;
-		width: auto;
-		left: 135px;
-		right: 135px;
-		transform: translate(0, 0);
-		top: 160px;
-		bottom: 120px;
-
-	}
-
+<style scoped="scoped">
 	.singtitle {
 		font-size: 30px;
 		line-height: 40px;
 		text-align: center;
 		position: absolute;
-		top: -50px;
+		top: 0;
 		left: 0;
 		right: 0;
-		z-index: 999;
 
 	}
 </style>

@@ -24,7 +24,7 @@
 						<div class="input-row mt10  flex flex-align-center">
 							<label><i class="red">*</i>主题</label>
 							<a-input class="flex-1 inputtxt" size="large" v-model="formData.topicName" @input="changrTopic"></a-input>
-							<a-dropdown :trigger="['click']" placement="bottomRight" class="dropdown" :overlayStyle="{'width': theme=='theme4'?'455px':'200px'}"
+							<a-dropdown :trigger="['click']" placement="bottomRight" class="dropdown" :overlayStyle="{'width': theme=='theme4'?'455px':'296px'}"
 							 v-if="TopicTitleList.length>0">
 								<span>
 									<a-icon type="caret-down" />
@@ -103,6 +103,12 @@
 		},
 		computed: {
 			...mapState(['theme'])
+		},
+		mounted() {
+			document.body.addEventListener('keyup', this.keyEnter, false)
+		},
+		beforeDestroy() {
+			document.body.removeEventListener('keyup', this.keyEnter, false)
 		},
 		created() {
 			this.sendInfo = JSON.parse(this.$route.query.sendInfo);
@@ -253,6 +259,38 @@
 			/* 点击开始上课 */
 			sendClass(e) {
 				e.preventDefault();
+				this.sendClassInfo();
+			},
+			/* 开始上课 */
+			startDirectBroadcasts() {
+				const $me = this;
+				sessionStorage.setItem('sendInfo', JSON.stringify($me.sendInfo));
+				$me.$postAction(api.startClass, $me.sendInfo).then(da => {
+					if (da && da.ret == 'success') {
+						$me.gotoPage();
+					}
+				}).finally(() => {
+					$me.loading = false;
+				})
+			},
+			/* 同步试卷 */
+			synchronizedCoursewareQuestions() {
+				const $me = this;
+				$me.$postAction(api.synchronizedCoursewareQuestions, {
+					titleCode: $me.titleCode
+				}).then(da => {
+					if (da && da.ret == 'success') {
+						$me.startDirectBroadcasts();
+					}
+				}).catch(function(err) {
+					$me.loading = false;
+				});
+
+			},
+			returnback() {
+				this.$router.push('/login');
+			},
+			sendClassInfo(){
 				const $me = this;
 				/* 先判断是否loading，防止重复提交 */
 				if ($me.loading) {
@@ -284,36 +322,17 @@
 				} else {
 					$me.startDirectBroadcasts();
 				}
-
 			},
-			/* 开始上课 */
-			startDirectBroadcasts() {
+			keyEnter(e) {
 				const $me = this;
-				sessionStorage.setItem('sendInfo', JSON.stringify($me.sendInfo));
-				$me.$postAction(api.startClass, $me.sendInfo).then(da => {
-					if (da && da.ret == 'success') {
-						$me.gotoPage();
-					}
-				}).finally(() => {
-					$me.loading = false;
-				})
-			},
-			/* 同步试卷 */
-			synchronizedCoursewareQuestions() {
-				const $me = this;
-				$me.$postAction(api.synchronizedCoursewareQuestions, {
-					titleCode: $me.titleCode
-				}).then(da => {
-					if (da && da.ret == 'success') {
-						$me.startDirectBroadcasts();
-					}
-				}).catch(function(err) {
-					$me.loading = false;
-				});
-
-			},
-			returnback() {
-				this.$router.push('/login');
+				if (window.event) {
+					e = window.event
+				}
+				let code = e.charCode || e.keyCode;
+				if (code == 13) {
+					$me.sendClassInfo();
+			
+				}
 			}
 		}
 	};

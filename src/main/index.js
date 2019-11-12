@@ -88,6 +88,7 @@ function createWindow() {
 		mainWindow.show();
 		// mainWindow.setFullScreen(true);
 		mainWindow.maximize();
+		//mainWindow.moveTop()
 		win.moveTop()
 		//mainWindow.webContents.openDevTools({mode:'bottom'})
 	})

@@ -1,6 +1,5 @@
 <template>
 	<div v-if="showVote" class="bg">
-
 		<a href="javascript:;" class="reback" @click="returnback" v-if="viewState!=1"></a>
 		<div class="setbox" v-if="viewState==0">
 			<div>
@@ -30,6 +29,16 @@
 						</div>
 					</a-form-item>
 				</a-form>
+				<!-- <a-form :form="form2" layout='inline'>
+					<a-form-item :label="index==0?'投票对象':''" :label-col="{ span: index==0?13:0 }" :wrapper-col="{ span:index==0?11:24 }"
+					 :style="{marginRight:index==0?'20px':''}" v-for="(item,index) in objlist" :key="item">
+						<div class="objitem">
+							<a-input v-decorator="['objs['+item+']', { rules: [{ required: true,whitespace: true, message: '请输入投票对象!' },{max:5, message: '字数最多5个!'}],getValueFromEvent:(event) => {return event.target.value.replace(/\s+/g,'')} }]"
+							 placeholder="投票对象" allowClear size="large" class="sminput" />
+							<a-icon type="minus-circle" @click="delObj(item)" v-if="objlist.length>1" />
+						</div>
+					</a-form-item>
+				</a-form> -->
 				<a href="javascript:;" class="addObj" @click="addObj">
 					<a-icon type="plus-circle" /><span>添加对象</span></a>
 				<p class="votetip">说明：A 表示赞成；B 表示反对；C 表示弃权；主题限制字数：20；描述限制字数：100；投票对象限制字数：5;</p>
@@ -39,11 +48,13 @@
 		<div class="voteChart" v-if="viewState!=0" :class="{setbox:isChart}">
 			<div class="flex flex-align-center">
 				<div class="voteInfo">
-					<div class="flex"><label>投票主题:</label><span class="flex-1">{{voteInfo.titleName}}</span></div>
+					<div>
+					<div><div class="flex"><label>投票主题:</label><span class="flex-1">{{voteInfo.titleName}}</span></div>
 					<div class="flex"><label>投票对象:</label>
 						<div class="flex-1"><span v-for="(item,index) in voteInfo.objs" :key="index">{{item}}</span></div>
 					</div>
-					<div class="flex"><label>投票描述:</label><span class="flex-1">{{voteInfo.describe}}</span></div>
+					<div class="flex"><label>投票描述:</label><span class="flex-1">{{voteInfo.describe}}</span></div></div>
+				</div>
 				</div>
 				<div class="flex-1" v-if="isChart">
 					<v-chart :options="polar" autoresize class="chartbox" @click="showName"></v-chart>

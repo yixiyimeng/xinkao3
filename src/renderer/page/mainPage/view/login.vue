@@ -1,10 +1,12 @@
 <template>
 	<div class="bg">
+		<!-- <setDanmu></setDanmu>
+		<timeswiper class="countDownbox"></timeswiper> -->
 		<div class="loginbox">
 			<div>
 				<a href="javascript:;" class="logo"></a>
 				<div class="input-group">
-					<a-form  @submit="login" autocomplete="off">
+					<a-form @submit="login" autocomplete="off">
 						<div class="input-row flex flex-align-center">
 							<i class="user icon"></i>
 							<input type="text" class="flex-1" v-model.trim="username" placeholder="请输入用户名" />
@@ -30,6 +32,7 @@
 						<a-button type="primary" html-type="submit" class="loginBtn">立即登录</a-button>
 					</a-form>
 				</div>
+				
 			</div>
 		</div>
 	</div>
@@ -41,6 +44,8 @@
 		urlPath
 	} from '@/page/mainPage/utils/base';
 	import api from '@/page/mainPage/api';
+	import setDanmu from '@/page/mainPage/components/setDanmu'
+	import timeswiper from '@/page/mainPage/components/timeswiper'
 	export default {
 		data() {
 			return {
@@ -49,6 +54,9 @@
 				loginInfolist: [],
 				isRemeber: true
 			};
+		},components:{
+			setDanmu,
+			timeswiper
 		},
 		created() {
 			const _this = this;
@@ -63,9 +71,19 @@
 				//TODO handle the exception
 			}
 		},
+		mounted() {
+
+			document.body.addEventListener('keyup', this.keyEnter, false)
+		},
+		beforeDestroy() {
+			document.body.removeEventListener('keyup', this.keyEnter, false)
+		},
 		methods: {
 			login(e) {
 				e.preventDefault();
+				this.sendInfo();
+			},
+			sendInfo() {
 				if (this.username && this.password) {
 					if (htmlescpe.test(this.username)) {
 						this.$toast.center('账户中包含特殊字符!');
@@ -134,6 +152,17 @@
 						})
 				} else {
 					this.$toast.center('请输入正确的用户名和密码');
+				}
+			},
+			keyEnter(e) {
+				const $me = this;
+				if (window.event) {
+					e = window.event
+				}
+				let code = e.charCode || e.keyCode;
+				if (code == 13) {
+					$me.sendInfo();
+
 				}
 			},
 			setUserName(userInfo) {
@@ -401,5 +430,13 @@
 				vertical-align: -.3em;
 			}
 		}
+	}
+	.countDownbox {
+		position: absolute;
+		left: 400px;
+		// bottom: 50px;
+		width: 379px;
+		z-index: 9999;
+		top: 100px;
 	}
 </style>

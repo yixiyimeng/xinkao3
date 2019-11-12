@@ -42,7 +42,7 @@
 		},
 		{
 			title: '试卷描述',
-			dataIndex: 'titleCode'
+			dataIndex: 'remark'
 		},
 		// 	{
 		// 		title: '操作',

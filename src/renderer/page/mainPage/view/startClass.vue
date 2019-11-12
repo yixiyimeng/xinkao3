@@ -72,7 +72,7 @@
 			</div>
 		</div>
 		<div class="btnlist">
-			<a href="javascript:;" class="signIn" v-if="isShowClassMenu" @click="showSingInlist">签到</a>
+			<a href="javascript:;" class="signIn" v-if="isShowClassMenu&&!isAnswering" @click="showSingInlist">签到</a>
 			<a href="javascript:;" class="offClass" @click="endClass">下课</a>
 		</div>
 	</div>
@@ -137,7 +137,7 @@
 				/* 显示学生名单 */
 				this.$refs.namelist.shownamelist();
 				this.isShowName = true;
-				// this.isShowClassMenu = false;
+				//this.isShowClassMenu = false;
 				this.title = '学生名单'
 			},
 			startName() {
@@ -593,6 +593,7 @@
 			top: 160px;
 			left: 50%;
 			position: absolute;
+			bottom:120px;
 
 			&:before {
 				display: block;
@@ -604,13 +605,15 @@
 				top: -5px;
 				left: 50%;
 				transform: translateX(-50%);
+				z-index: 1;
 			}
 
 			&>div {
 				border: 2px solid #df8487;
 				background: url(../assets/img/theme4/bg2.png);
 				padding: 95px 0 45px;
-
+				overflow: auto;
+				height:100%;
 				.menu {
 					text-align: center;
 
