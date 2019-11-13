@@ -28,7 +28,7 @@
 		<div class="btnbar">
 			<a href="javascript:;" class="startClass" @click="startAnswer" v-if="viewState==0">开始答题</a>
 			<a href="javascript:;" class="startClass" @click="stopAnswer" v-if="viewState==1">{{type==2?'收取试卷':'结束答题'}} </a>
-			<count-down ref="countdown" v-if="viewState==0" @stopCountDown="stopCountDown"></count-down>
+			<count-down ref="countdown" v-if="viewState==0||viewState==1" @stopCountDown="stopCountDown"></count-down>
 		</div>
 
 	</div>
@@ -206,9 +206,16 @@
 						$me.$emit('startAnswer', 0);
 						$me.$refs.startClassTesting.show();
 						$me.answerPercent();
-						// $me.timer = setInterval(function() {
-						// 	$me.answerPercent()
-						// }, 1000)
+					/* 开始倒计时 */
+					if (this.$refs.countdown) {
+						var {
+							isCountdown,
+							countDownTime
+						} = this.$refs.countdown.getTime();
+						if (isCountdown && countDownTime > 0) {
+							$me.$refs.countdown.startCountDown();
+						}
+					}
 					}
 				})
 			},
@@ -227,6 +234,7 @@
 					this.trueAnswer = '';
 					this.$refs.answerChart.hide();
 					this.$refs.startClassTesting.hide();
+					this.$emit('returnback',true)
 				} else {
 					this.hideAnswer();
 					this.$emit('returnback')

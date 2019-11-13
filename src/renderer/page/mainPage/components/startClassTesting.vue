@@ -5,14 +5,14 @@
 				<li v-for="(item,index) in list" :key="index" @click="showDetails(index)">
 					<div>{{item.studentName}}</div>
 					<div class="progressbar">
-						<span>{{item.percent*100}}%</span>
-						<div :style="{width:item.percent*100+'%'}"></div>
+						<span>{{item.percent}}%</span>
+						<div :style="{width:item.percent+'%'}"></div>
 					</div>
 				</li>
 			</ul>
 			<div  v-if="viewState==1" ref="tablebox">
 				<div>姓名：<span>{{studentInfo.stuName}}</span></div>
-				<a-table rowKey="questionId" :columns="columns" :dataSource="dataSource" :scroll="{ x: 700, y: scrolly }" size="middle"
+				<a-table rowKey="questionId" :columns="columns" :dataSource="dataSource" :scroll="{ y: scrolly }" size="middle"
 				 :pagination="false">
 					<span slot="serial" slot-scope="text, record, index">
 						{{ index + 1 }}
@@ -41,6 +41,7 @@
 		{
 			title: '题目类型',
 			dataIndex: 'questionType',
+			width: '25%',
 			scopedSlots: {
 				customRender: 'questionType'
 			},
@@ -48,14 +49,18 @@
 		{
 			title: '按键答案',
 			dataIndex: 'answerResult',
-			// width: 300,
+			align:'center',
+			width: '25%',
 			scopedSlots: {
 				customRender: 'answerResult'
+				
 			},
 		},
 		{
 			title: '正确答案',
 			dataIndex: 'trueAnswer',
+			align:'center',
+			width: '25%',
 			// width: 300,
 		},
 		{
@@ -99,7 +104,15 @@
 				this.isShow = false;
 			},
 			setList(list) {
-				this.list = list;
+				if(list&&list.length>0){
+					this.list = list.map(item=>{
+						item.percent=parseInt(item.percent*100);
+						return item
+					});
+				}else{
+					this.list = [];
+				}
+				
 			},
 			setDetailslist(list) {
 				this.detailslist = list;

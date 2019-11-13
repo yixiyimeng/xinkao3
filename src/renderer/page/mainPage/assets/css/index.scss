@@ -329,16 +329,27 @@
 			left: 40px;
 			line-height: 69px;
 			text-align: center;
-			font-family:'微软雅黑';
+			span{
+				vertical-align: top;
+			}
+			@media screen and (min-width: 1367px){
+							 font-size: 40px;
+							 width: 408px;
+							 height: 89px;line-height: 89px;
+							
+			}
 			&.trueAnswer{
 				right: 40px;
 				left: auto;
 				.red{
 					color: #eaadaf;
 					font-size: 30px;
-					vertical-align: middle;
+					@media screen and (min-width: 1367px){
+						font-size:50px;
+					}
 				}
 			}
+			
 		}
 
 		.btnbar {
@@ -413,8 +424,7 @@
 			background: url(assets/img/theme1/titlebg.png) no-repeat center center;
 			width: 182px;
 			height:104px;
-			position: fixed;
-			font-family: 'hxfont';
+			position: fixed;	
 			color: #275f8b;
 			font-size: 26px;
 			top: 10px;
@@ -431,7 +441,11 @@
 					vertical-align: middle;
 				}
 			}
-		}	
+		}
+.theme1{.titleName{
+					font-family: 'hxfont';
+				}
+}
 .theme3 {
 	.endAnswer {
 		width: 360px;

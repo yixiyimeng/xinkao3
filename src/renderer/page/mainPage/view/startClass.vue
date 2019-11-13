@@ -194,17 +194,22 @@
 				this.isShowClassMenu = false;
 				this.title = '抢答'
 			},
-			returnback() {
+			returnback(isOnlyShowClassName) {
 				/* 返回 */
 				//this.$router.push('/login');
 				/* 如果显示的是答题菜单,则返回上一页,否则,显示答题菜单*/
 				if (this.isShowClassMenu) {
 					this.$router.go(-1);
 				} else {
-					this.isShowClassMenu = true;
-					this.title = this.sendInfo.className.trim();;
+					if(!isOnlyShowClassName){
+						this.isShowClassMenu = true;
+					}
+					this.title = this.sendInfo.className.trim();
 
 				}
+			},
+			showClassName(){
+				this.title = this.sendInfo.className.trim();
 			},
 			getprogress() {
 				/* 答题进度 */

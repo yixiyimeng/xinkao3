@@ -93,7 +93,7 @@
 <style scoped lang="scss">
 	.timecheckboxbar {
 		position: absolute;
-		right: 0;
+		left: 0;
 		bottom: 0;
 
 		span {

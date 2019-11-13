@@ -726,7 +726,10 @@
 	.theme4 .bg {
 		.thememodbox {
 			bottom: 20px;
-
+width: auto;
+left: 135px;
+right: 135px;
+transform: translate(0,0);
 		}
 
 		.resultbox {
