@@ -570,20 +570,20 @@
 					}
 				});
 			},
-			handchange(checklist){
+			handchange(checklist) {
 				console.log(checklist);
 				const $me = this;
-				$me.checkedList=checklist;
-				for(var i=0;i<colorList.length;i++){
-					if($me.checkedList.indexOf($me.title[i])>-1){
+				$me.checkedList = checklist;
+				for (var i = 0; i < colorList.length; i++) {
+					if ($me.checkedList.indexOf($me.title[i]) > -1) {
 						colorList[i] = defaultcolor[1];
 						console.log($me.title[i])
-					}else{
+					} else {
 						colorList[i] = defaultcolor[0];
 					}
 				}
 				$me.$refs.barChart.resize();
-				
+
 			}
 
 		}
@@ -726,10 +726,10 @@
 	.theme4 .bg {
 		.thememodbox {
 			bottom: 20px;
-width: auto;
-left: 135px;
-right: 135px;
-transform: translate(0,0);
+			width: auto;
+			left: 135px;
+			right: 135px;
+			transform: translate(0, 0);
 		}
 
 		.resultbox {

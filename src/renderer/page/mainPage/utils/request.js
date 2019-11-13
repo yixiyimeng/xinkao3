@@ -31,16 +31,6 @@ const err = (error) => {
 	if (error && error.message && error.message.includes('timeout')) { // 判断请求异常信息中是否含有超时timeout字符串
 		message.error('请求超时了');
 	}
-	if (error.response) {
-		switch (error.response.status) {
-			case 401:
-				router.currentRoute.path !== 'login' &&
-					router.replace({
-						path: 'login',
-					})
-					break;
-		}
-	}
 	return Promise.reject(error)
 };
 

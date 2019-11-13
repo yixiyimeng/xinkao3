@@ -1,7 +1,5 @@
 <template>
 	<div class="bg">
-		<div class="title">投票统计</div>
-		<a href="javascript:;" class="reback" @click="returnback"></a>
 		<div class="setbox flex">
 			<div class="voteInfo">
 				<div class="flex"><label>投票主题:</label><span class="flex-1">{{voteInfo.title}}</span></div>
