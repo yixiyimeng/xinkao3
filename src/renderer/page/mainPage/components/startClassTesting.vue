@@ -10,7 +10,7 @@
 					</div>
 				</li>
 			</ul>
-			<div style="margin: 10px 40px;" v-if="viewState==1">
+			<div  v-if="viewState==1" ref="tablebox">
 				<div>姓名：<span>{{studentInfo.stuName}}</span></div>
 				<a-table rowKey="questionId" :columns="columns" :dataSource="dataSource" :scroll="{ x: 700, y: scrolly }" size="middle"
 				 :pagination="false">
@@ -41,7 +41,6 @@
 		{
 			title: '题目类型',
 			dataIndex: 'questionType',
-			width: 300,
 			scopedSlots: {
 				customRender: 'questionType'
 			},
@@ -49,7 +48,7 @@
 		{
 			title: '按键答案',
 			dataIndex: 'answerResult',
-			width: 300,
+			// width: 300,
 			scopedSlots: {
 				customRender: 'answerResult'
 			},
@@ -57,12 +56,12 @@
 		{
 			title: '正确答案',
 			dataIndex: 'trueAnswer',
-
+			// width: 300,
 		},
 		{
 			title: '得分',
 			dataIndex: 'score',
-			width: 200
+			width: 100
 		},
 		// 	{
 		// 		title: '操作',
@@ -92,8 +91,8 @@
 		methods: {
 			show() {
 				this.list = [];
-				this.viewState=0;
-				this.detailslist=[];
+				this.viewState = 0;
+				this.detailslist = [];
 				this.isShow = true;
 			},
 			hide() {
@@ -106,7 +105,7 @@
 				this.detailslist = list;
 			},
 			showDetails(index) {
-				if(this.detailslist.length<=0){
+				if (this.detailslist.length <= 0) {
 					return false;
 				}
 				this.dataSource = this.detailslist[index].recordList;
@@ -114,9 +113,9 @@
 				this.viewState = 1;
 				const that = this;
 				this.$nextTick(() => {
-					that.scrolly = that.$refs.mainbox.offsetHeight - 100;
+					that.scrolly = that.$refs.tablebox.offsetHeight - 100;
 					window.onresize = function() {
-						that.scrolly = that.$refs.mainbox.offsetHeight - 100;
+						that.scrolly = that.$refs.tablebox.offsetHeight - 100;
 					};
 				})
 			},
@@ -176,6 +175,8 @@
 </script>
 
 <style scoped="scoped" lang="scss">
+	@import '../assets/css/set.scss';
+
 	.getPaper {
 		display: block;
 		font-size: 18px;
@@ -249,9 +250,26 @@
 		}
 	}
 
-	.theme1 .bg {
+	.theme1 .bg,
+	.theme2 .bg {
 		.setbox {
 			padding: 25px 35px;
+			bottom: 120px;
+			background: rgba(255, 255, 255, .7);
+
+			&>div {
+				height: 100%;
+				overflow: hidden;
+				&>div{
+					height: 100%;
+				}
+			}
+		}
+		.reback.rebacklist {
+			position: absolute;
+			top: auto;
+			bottom: -20px;
+			right: 20px;
 		}
 	}
 
@@ -266,6 +284,14 @@
 				top: 132px;
 				background: url(../assets/img/theme3/setboxbg2.png) no-repeat center top;
 				background-size: 100% auto;
+
+				&>div {
+					height: 100%;
+					overflow: hidden;
+					&>div{
+						height: 100%;
+					}
+				}
 			}
 
 			&>.title {
@@ -337,12 +363,16 @@
 					}
 				}
 			}
+			&>div{
+				margin: 10px 40px;
+				height: 100%;
+			}
 		}
 
 		.reback.rebacklist {
 			position: absolute;
 			top: auto;
-			bottom: 20px;
+			top: 5px;
 			right: 20px;
 		}
 	}

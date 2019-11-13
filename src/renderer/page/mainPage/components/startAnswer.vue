@@ -122,7 +122,10 @@
 					// 	$me.$message.error('请选择一套试卷下发');
 					// 	return false
 					// }
-					this.startTest(titleCode);
+					if(titleCode){
+						this.startTest(titleCode);
+					}
+					
 				} else {
 					if (this.type == 0) {
 						$me.questionType = $me.$refs.singleChoice.getQuestionType()

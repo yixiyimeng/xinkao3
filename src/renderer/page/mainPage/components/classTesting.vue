@@ -71,9 +71,11 @@
 		},
 		mounted() {
 			const that = this;
-			that.scrolly = document.body.offsetHeight * .6 - 380;
+			that.scrolly = that.$refs.modbox.offsetHeight - 100;
+			// that.scrolly = document.body.offsetHeight * .6 - 180;
 			window.onresize = function() {
-				that.scrolly = document.body.offsetHeight * .6 - 380;
+				// that.scrolly = document.body.offsetHeight * .6 - 180;
+				that.scrolly = that.$refs.modbox.offsetHeight - 100;
 			};
 		},
 		destroyed() {
@@ -126,6 +128,10 @@
 				})
 			},
 			getTitleCode(){
+				if(this.selectedRowKeys.length==0){
+					this.$message.error('请至少选择一套试卷');
+					return false;
+				}
 				return this.selectedRowKeys 
 			}
 		}

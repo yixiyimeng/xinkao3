@@ -39,8 +39,8 @@ export default {
 <style scoped="scoped">
 #loadingContainer {
 	box-sizing: border-box;
-	width: 640px;
-	height: 100px;
+	width: 580px;
+	height: 60px;
 	display: block;
 	margin: 0 auto;
 	position: absolute;
@@ -62,11 +62,11 @@ export default {
 #loadingContainer .loadingbar {
 	position: relative;
 	width: calc(100% - 20px);
-	height: 70px;
+	height: 60px;
 	background-color: #2459a0;
 	border-radius: 8px;
 	/* margin: 50px 10px; */
-	padding: 4px 37px 4px 4px;
+	padding: 4px 17px 4px 4px;
 }
 
 #loadingContainer .loadingbar .filler_wrapper {
@@ -93,6 +93,7 @@ export default {
 	line-height: 60px;
 	left: 45%;
 	color: #333;
+	top: 0;
 }
 
 #loadingContainer .loadingbar .leaf {
@@ -109,18 +110,19 @@ export default {
 }
 
 #loadingContainer .loadingbar .marker_container {
-	height: 99px;
-	width: 99px;
+	height:80px;
+	width: 80px;
 	border-radius: 50%;
 	/* border: solid 2px white; */
 	position: absolute;
 	background-color: darkorange;
 	right: -50px;
 	top: 50%;
-	margin-top: -50px;
+	margin-top: -40px;
 	transition: all 2s ease-out;
 	z-index: 10;
 	background: url(../assets/img/theme4/yz.png);
+	background-size: contain;
 }
 
 /* #loadingContainer .loadingbar .marker_container:before {

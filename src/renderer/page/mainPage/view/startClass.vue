@@ -1,6 +1,6 @@
 <template>
 	<div class="bg">
-		<div class="title">
+		<div class="title" v-if="title.length>0">
 			<span v-for="(item,index) in title" :key="index">{{item}}</span>
 		</div>
 		<!-- 切换菜单 -->

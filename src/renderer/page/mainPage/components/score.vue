@@ -24,7 +24,7 @@
 				</a-form>
 				<a href="javascript:;" class="addObj" @click="addObj">
 					<a-icon type="plus-circle" /><span>添加对象</span></a>
-				<p class="votetip">说明：评分范围为1-9；标题限制字数：20；描述限制字数：100；评分对象限制字数：5;</p>
+				<p class="votetip">说明：评分范围为0-9；标题限制字数：20；描述限制字数：100；评分对象限制字数：5;</p>
 
 			</div>
 		</div>

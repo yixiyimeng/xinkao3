@@ -120,7 +120,7 @@
 			position: absolute;
 			top: 140px;
 			bottom: 120px;
-			
+			overflow: auto;
 		}
 	}
 }
@@ -319,21 +319,23 @@
 
 		.titleName {
 			background: url(assets/img/theme4/title.png) no-repeat center center;
-			width: 408px;
-			height: 89px;
+			background-size: contain;
+			width: 308px;
+			height: 69px;
 			position: fixed;
 			color: #fff;
 			font-size: 30px;
 			top: 10px;
 			left: 40px;
-			line-height: 89px;
+			line-height: 69px;
 			text-align: center;
+			font-family:'微软雅黑';
 			&.trueAnswer{
 				right: 40px;
 				left: auto;
 				.red{
 					color: #eaadaf;
-					font-size: 50px;
+					font-size: 30px;
 					vertical-align: middle;
 				}
 			}
@@ -407,6 +409,29 @@
 			color: #fff;
 		}
 	}
+.titleName {
+			background: url(assets/img/theme1/titlebg.png) no-repeat center center;
+			width: 182px;
+			height:104px;
+			position: fixed;
+			font-family: 'hxfont';
+			color: #275f8b;
+			font-size: 26px;
+			top: 10px;
+			left: 40px;
+			line-height: 104px;
+			white-space: nowrap;
+			text-align: center;
+			&.trueAnswer{
+				right: 40px;
+				left: auto;
+				.red{
+					color: #eaadaf;
+					font-size: 30px;
+					vertical-align: middle;
+				}
+			}
+		}	
 .theme3 {
 	.endAnswer {
 		width: 360px;

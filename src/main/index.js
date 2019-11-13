@@ -1,31 +1,38 @@
 import {
 	app,
+	Menu,
+	Tray,
 	BrowserWindow,
-	screen,
+	dialog,
 	ipcMain,
-	globalShortcut
-} from 'electron'
+	globalShortcut,
+	screen
+} from 'electron';
+import path from 'path';
+import fs from 'fs';
+import electron from 'electron';
 
-/**
- * Set `__static` path to static files in production
- * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
- */
+
+let tray = null;
+
 if (process.env.NODE_ENV !== 'development') {
-	global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
+	global.__static = path.join(__dirname, '/static').replace(/\\/g, '\\\\');
 }
 
-let mainWindow, win
-let iswinsm = true
+let mainWindow;
+var win = null;
+//const winURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`;
 const winURL = process.env.NODE_ENV === 'development' ?
-	`http://localhost:9080/mainPage` :
-	`file://${__dirname}/mainPage/index.html`
+	'http://localhost:9080/mainPage' :
+	`file://${__dirname}/mainPage/index.html`;
 const subwinURL = process.env.NODE_ENV === 'development' ? 'http://localhost:9080/newPage' :
 	`file://${__dirname}/newPage/index.html`;
+/**
+ * Create main window
+ */
+let iswinsm = true;
 
 function createWindow() {
-	/**
-	 * Initial window options
-	 */
 	mainWindow = new BrowserWindow({
 		height: 1080,
 		useContentSize: true,
@@ -33,41 +40,47 @@ function createWindow() {
 		titleBarStyle: 'hidden-inset',
 		frame: false,
 		transparent: true,
+		// fullscreenable: true,
+		// fullscreen: true,
+		// simpleFullscreen: true,
 		resizable: false,
 		hasShadow: false,
 		webPreferences: {
 			webSecurity: false
-		}
-	})
-
-	mainWindow.loadURL(winURL)
-	mainWindow.maximize();
-	//mainWindow.setFullScreen(true); //设置全屏
-	/* 创建悬浮窗 */
-	createSuspensionWindow()
+		},
+		id: 'mainWindow',
+		// maximizable: false,
+		// minimizable: false
+	});
+	mainWindow.loadURL(winURL);
+	/* 打开悬浮窗口 */
+	createSuspensionWindow();
 	mainWindow.on('closed', () => {
 		mainWindow = null
-	})
-	/* 窗口关闭时候，提示确认 */
+	});
 	mainWindow.on('close', (e) => {
 		e.preventDefault();
 		if (mainWindow.isMinimized()) {
 			mainWindow.show();
 			mainWindow.maximize();
-			//mainWindow.setFullScreen(true);
+			 // mainWindow.setFullScreen(true);
 		}
 		mainWindow.webContents.send('isexitApp');
 	});
-	/* 窗口退出最小化的时候，通知页面， */
+	mainWindow.maximize();
+	// mainWindow.setFullScreen(true); //设置全屏
+	// mainWindow.setAlwaysOnTop(true);
+	/* 窗口退出最小化的时候，通知页面，暂停弹幕 */
 	mainWindow.on('minimize', (e) => {
 		mainWindow.webContents.send('isminimizeApp', true);
 		win.webContents.send('isminimizeAppsub', true);
 
 	});
-	
-	/* 在窗口从最小化恢复的时候触发,通知页面 */
+	/* 在窗口从最小化恢复的时候触发,通知页面，恢复弹幕 */
 	mainWindow.on('restore', (e) => {
-		//mainWindow.setFullScreen(true);
+		mainWindow.maximize();
+		win.moveTop();
+		// mainWindow.setFullScreen(true);
 		mainWindow.webContents.send('isminimizeApp', false);
 		win.webContents.send('isminimizeAppsub', false);
 
@@ -76,6 +89,13 @@ function createWindow() {
 	globalShortcut.register('CTRL+T', () => {
 		//mainWindow.setFullScreen(false);
 		mainWindow.webContents.openDevTools({
+			mode: 'bottom'
+		})
+	})
+	/* 调试 */
+	globalShortcut.register('SHIFT+T', () => {
+		//mainWindow.setFullScreen(false);
+		win.webContents.openDevTools({
 			mode: 'bottom'
 		})
 	})
@@ -88,30 +108,26 @@ function createWindow() {
 		mainWindow.show();
 		// mainWindow.setFullScreen(true);
 		mainWindow.maximize();
-		//mainWindow.moveTop()
 		win.moveTop()
 		//mainWindow.webContents.openDevTools({mode:'bottom'})
 	})
-	
+
 }
 
-/**
- * 创建悬浮窗
- */
 function createSuspensionWindow() {
 	win = new BrowserWindow({
 		width: 70, //悬浮窗口的宽度 比实际DIV的宽度要多2px 因为有1px的边框
-		height: 60, //悬浮窗口的高度 比实际DIV的高度要多2px 因为有1px的边框
+		 height: 60, //悬浮窗口的高度 比实际DIV的高度要多2px 因为有1px的边框
 		type: 'toolbar', //创建的窗口类型为工具栏窗口
 		frame: false, //要创建无边框窗口
 		resizable: true, //禁止窗口大小缩放
 		show: false, //先不让窗口显示
 		webPreferences: {
-			devTools: false //关闭调试工具
+			devTools: true //关闭调试工具
 		},
 		useContentSize: true,
 		maxWidth: 70,
-		maxHeight: 220,
+		 maxHeight: 220,
 		transparent: true, //设置透明
 		alwaysOnTop: true, //窗口是否总是显示在其他窗口之前
 	});
@@ -119,7 +135,6 @@ function createSuspensionWindow() {
 	const winSize = win.getSize(); //获取窗口宽高
 
 	//设置窗口的位置 注意x轴要桌面的宽度 - 窗口的宽度
-	// win.setPosition(size.width - winSize[0], 40);
 	win.setPosition(size.width - winSize[0], size.height - winSize[1]-260);
 	win.loadURL(subwinURL);
 
@@ -130,75 +145,173 @@ function createSuspensionWindow() {
 	win.on('close', () => {
 		win = null;
 	});
-	/* 悬浮窗窗口大小改变后，通知页面，显示按钮 */
 	win.on('resize', (e) => {
 		win.webContents.send('isresize', iswinsm);
 	});
-	/* 禁止掉手动拖动改变窗体大小 */
 	win.on('will-resize', (e) => {
 		e.preventDefault();
 	});
 
 
 }
-/* 防止软件重复打开 */
-const isSecondInstance = app.makeSingleInstance((commandLine, workingDirectory) => {
-  // Someone tried to run a second instance, we should focus our window.
-  if (mainWindow) {
-    if (mainWindow.isMinimized()) mainWindow.restore()//将窗口从最小化状态恢复到以前的状态。
-    // mainWindow.focus()
-  }
-})
-
-if (isSecondInstance) {
-  app.exit()
+/**
+ * Create Tray
+ */
+function createTray() {
+	let iconPath = path.join(__static, 'icons/icon7.png');
+	tray = new Tray(iconPath);
+	const contextMenu = Menu.buildFromTemplate([{ //小图标选项类型
+			label: '打开',
+			type: 'normal',
+			click: onOpenAppClick
+		},
+		{
+			label: '退出',
+			type: 'normal',
+			// role: 'quit'
+			click: onExitAppClick
+		}
+	]);
+	contextMenu.items[1].checked = false;
+	tray.setContextMenu(contextMenu);
+	tray.setToolTip("答题器");
+	tray.on('double-click', () => {
+		// mainWindow.isVisible() ? mainWindow.hide() : {mainWindow.show();mainWindow.setFullScreen(true);}
+		mainWindow.show();
+		// mainWindow.setFullScreen(true);
+		mainWindow.maximize();
+		win.moveTop()
+	})
 }
+
+/**
+ * when choose folder btn click
+ */
+function onOpenAppClick() {
+	// 	const musicPaths = dialog.showOpenDialog({
+	// 		properties: ['openDirectory']
+	// 	});
+	// 	if (musicPaths != null && musicPaths != 'undefined') {
+	// 		sendMusicList(musicPaths);
+	// 	}
+	mainWindow.show();
+	// mainWindow.setFullScreen(true);
+	mainWindow.maximize();
+	win.moveTop()
+}
+
+function onExitAppClick() {
+	if (mainWindow.isMinimized()) {
+		mainWindow.show();
+		mainWindow.setFullScreen(true);
+	}
+	mainWindow.webContents.send('isexitApp')
+}
+
+/**
+ * Get music tags such as title adn artist
+ * @param fullPath file path
+ * @returns {Promise}
+ */
+function getTags(fullPath) {
+	return new Promise((resolve, reject) => {
+		new jsmediatags.Reader(fullPath).setTagsToRead(["title", "artist"]).read({
+			onSuccess: ({
+				tags
+			}) => {
+				resolve(tags);
+			}
+		});
+	})
+}
+
+
+/**
+ * On ready
+ * ----------------------
+ * 1. create tray
+ * 2. create window
+ * 3. listen ,if vue is ready ,get the music path and set the music list
+ */
 app.on('ready', () => {
-	/* 创建窗口 */
+	createTray();
+	// new musicServer().start();
 	createWindow();
-	
-	/* 监听最小化 */
+
+	ipcMain.on("exitApp", () => {
+		if (process.platform !== 'darwin') {
+			//app.quit()
+			app.exit();
+		}
+	});
+
 	ipcMain.on('minApp', e => mainWindow.minimize());
-	
-	/* 监听最大化 */
 	ipcMain.on('maxApp', e => mainWindow.show());
-	
 	/* 是否退出软件 */
 	ipcMain.on('isexitApp', e => {
 		mainWindow.webContents.send('isexitApp');
 		if (mainWindow.isMinimized()) {
 			mainWindow.show();
-			//mainWindow.setFullScreen(true);
+			mainWindow.maximize();
+			// mainWindow.setFullScreen(true);
 		}
 	});
-	/* 确定退出软件 */
-	ipcMain.on("exitApp", () => {
-		if (process.platform !== 'darwin') {
-			//app.exit();
-			app.exit();
-		}
+	/* 是否上传题目 */
+	ipcMain.on('isuploadTitle', e => {
+		mainWindow.webContents.send('isuploadTitle');
+		mainWindow.show();
+		mainWindow.setFullScreen(true);
 	});
-	/* 悬浮窗是否 鼠标滑过 */
+	/* 是否退出直播间 */
+	ipcMain.on('isexitdirebro', e => {
+		mainWindow.webContents.send('exitdirebro');
+	});
+	/* 直播间状态 */
+	ipcMain.on('onlinedirebro', (e, value) => {
+		win.webContents.send('onlinedirebro', value);
+	});
+	/* 上传文件状态 */
+	ipcMain.on('uploadfile', (e, value) => {
+		win.webContents.send('isUploadfile', value);
+	});
+	ipcMain.on('showSuspensionWindow', () => {
+		if (win) {
+			if (win.isVisible()) {
+				createSuspensionWindow();
+			} else {
+				win.showInactive(); //显示但不聚焦于窗口
+			}
+		} else {
+			createSuspensionWindow();
+		}
+
+	});
 	ipcMain.on('lgwin', () => {
 		iswinsm = false;
 		win.setSize(70, 220);
-
 	})
-	/* 悬浮窗是否 鼠标滑出 */
+
 	ipcMain.on('smwin', () => {
 		iswinsm = true;
 		win.setSize(70, 60)
 	})
-})
 
+});
+
+/**
+ * On close
+ */
 app.on('window-all-closed', () => {
-	  if (process.platform !== 'darwin') {
-	    app.quit()
-	  }
-})
+	// 	if (process.platform !== 'darwin') {
+	// 		app.quit()
+	// 	}
+});
 
+/**
+ * On active
+ */
 app.on('activate', () => {
 	if (mainWindow === null) {
 		createWindow()
 	}
-})
+});

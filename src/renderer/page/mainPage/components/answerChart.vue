@@ -7,10 +7,10 @@
 				<!-- <p class="score">{{ item.score }}</p> -->
 			</div>
 		</div>
-		<div class="thememodbox" :style="{top:ranklist.length>0?'230px':'170px'}">
+		<div class="thememodbox" :style="{top:ranklist.length>0?'230px':'170px',bottom:'20px'}">
 			<div style="height: 100%;">
 				<div class="resultbox" v-if="questionType==4">
-					<a-checkbox-group :options="titleOptions" v-model="checkedList" style="vertical-align: middle;" />
+					<a-checkbox-group @change="handchange" :options="titleOptions" v-model="checkedList" style="vertical-align: middle;" />
 					<a href="javascript:;" style="position: relative; z-index: 99;" @click="getEveryAnswerName({answer:checkedList.join('')})">查看详情</a>
 				</div>
 				<div class="flex" style="height: 100%;">
@@ -45,7 +45,7 @@
 	var theme = 'theme1';
 	var barParam = {
 		grid: {
-			left: '9%',
+			left: '20%',
 			right: '5%',
 			top: '25%',
 			bottom: '19%'
@@ -211,7 +211,7 @@
 				trueAnswertxt: '',
 				questionType: '',
 				isShow: false,
-				ranklist:[],
+				ranklist: [],
 				pieOptions: {
 					color: ['#c7615d', '#e0b088', '#176bab', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074',
 						'#546570', '#c4ccd3'
@@ -526,11 +526,11 @@
 					} else {
 						if ($me.checkedList.indexOf(param.name) > -1) {
 							$me.checkedList = $me.checkedList.filter(item => item != param.name).sort()
-                            colorList[param.dataIndex]=defaultcolor[0]
+							colorList[param.dataIndex] = defaultcolor[0]
 						} else {
 							$me.checkedList.push(param.name);
 							$me.checkedList = $me.checkedList.sort();
-							colorList[param.dataIndex]=defaultcolor[1]
+							colorList[param.dataIndex] = defaultcolor[1]
 						}
 						$me.$refs.barChart.resize();
 					}
@@ -561,16 +561,31 @@
 					$me.getAnswerName('F');
 				}
 			},
-			getSpeedKingList(){
+			getSpeedKingList() {
 				const $me = this;
 				$me.$postAction(api.getSpeedKingList).then(da => {
 					if (da && da.ret == 'success') {
-						var list=da.data;
+						var list = da.data;
 						$me.ranklist = list.length > 5 ? list.slice(0, 5) : list;
 					}
 				});
+			},
+			handchange(checklist){
+				console.log(checklist);
+				const $me = this;
+				$me.checkedList=checklist;
+				for(var i=0;i<colorList.length;i++){
+					if($me.checkedList.indexOf($me.title[i])>-1){
+						colorList[i] = defaultcolor[1];
+						console.log($me.title[i])
+					}else{
+						colorList[i] = defaultcolor[0];
+					}
 				}
+				$me.$refs.barChart.resize();
 				
+			}
+
 		}
 	};
 </script>
