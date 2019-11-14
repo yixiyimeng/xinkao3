@@ -344,6 +344,7 @@
 				.red{
 					color: #eaadaf;
 					font-size: 30px;
+					margin-left: 10px;
 					@media screen and (min-width: 1367px){
 						font-size:50px;
 					}
@@ -1227,7 +1228,6 @@
 		height: 100%;
 	}
 	.voteInfo {
-		font-size: 16px;
 		color: #333;
 		border: 14px solid #2459a0;
 		border-image-slice: 14;
@@ -1235,15 +1235,21 @@
 		border-image-source: url(assets/img/theme4/votebg.png);
 		border-image-repeat: round;
 		color: #333;
+		margin: 0 auto;
 		
 		
 	}
 	.voteChart .voteInfo>div {
 		padding-bottom: 10px;
 		background: #fff;padding: 36px 16px;
-		width: 262px;
+		width: 680px;
+		font-size: 28px;
+		transition: all .3s;
 	}
-	
+	.setbox.voteChart .voteInfo>div{
+		width: 262px;
+		font-size: 16px;
+	}
 	.setbox.voteChart .voteInfo label {
 		width: 4.5em;
 	}
@@ -1251,8 +1257,14 @@
 	.voteChart .voteInfo span {
 		color: #d5525a;
 		display: inline-block;
-		padding: 0 10px 0 0;
 		word-break:break-all;
+		margin-left: 10px;
+	}
+	.voteChart .voteInfo span.obj{
+		display: block;	
+	}
+	.setbox.voteChart .voteInfo span.obj{
+		display: inline-block;
 	}
 	.voteChart .flex-1{
 		height: 100%;

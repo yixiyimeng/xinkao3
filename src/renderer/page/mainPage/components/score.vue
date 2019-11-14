@@ -34,7 +34,7 @@
 					<div>
 						<div class="flex"><label>评分主题:</label><span class="flex-1">{{voteInfo.titleName}}</span></div>
 						<div class="flex"><label>评分对象:</label>
-							<div class="flex-1"><span v-for="(item,index) in voteInfo.objs" :key="index">{{item}}</span></div>
+							<div class="flex-1"><span class="obj" v-for="(item,index) in voteInfo.objs" :key="index">({{index+1}}){{item}}</span></div>
 						</div>
 						<div class="flex"><label>评分描述:</label><span class="flex-1">{{voteInfo.describe}}</span></div>
 					</div>
@@ -93,6 +93,9 @@
 						left: 'right',
 						itemWidth: 14,
 						orient: 'vertical',
+						textStyle: {
+							fontSize:20
+						},
 						data: []
 					},
 					grid: {
@@ -264,7 +267,7 @@
 								itemStyle: {
 									barBorderRadius: [5, 5, 0, 0]
 								},
-								barWidth: '25',
+								barWidth:'35',
 								data: [item.totalScore, item.number, item.averageScore]
 							}
 							serieslist.push(seriesitem)

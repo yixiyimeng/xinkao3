@@ -9,7 +9,7 @@
 						 placeholder="请输入投票主题" allowClear size="large" />
 					</a-form-item>
 					<a-form-item label="投票描述" :label-col="{ span: 4}" :wrapper-col="{ span: 20 }">
-						<a-textarea class="textarea" placeholder="请输入投票描述" :rows="4" v-decorator="['describe', { rules: [{ required: true,whitespace: true, message: '请输入投票描述!' },{max:100, message: '描述字数不能超过20!'}] }]" />
+						<a-textarea class="textarea" placeholder="请输入投票描述" :rows="4" v-decorator="['describe', { rules: [{ required: true,whitespace: true, message: '请输入投票描述!' },{max:100, message: '描述字数不能超过100!'}] }]" />
 					</a-form-item>
 					<!-- <a-form-item label="投票对象" :label-col="{ span: 4 }" :wrapper-col="{ span:20 }">
 						<div v-for="item in objlist" :key="item" class="objitem">
@@ -49,12 +49,14 @@
 			<div class="flex flex-align-center">
 				<div class="voteInfo">
 					<div>
-					<div><div class="flex"><label>投票主题:</label><span class="flex-1">{{voteInfo.titleName}}</span></div>
-					<div class="flex"><label>投票对象:</label>
-						<div class="flex-1"><span v-for="(item,index) in voteInfo.objs" :key="index">{{item}}</span></div>
+						<div>
+							<div class="flex"><label>投票主题:</label><span class="flex-1">{{voteInfo.titleName}}</span></div>
+							<div class="flex"><label>投票对象:</label>
+								<div class="flex-1"><span class="obj" v-for="(item,index) in voteInfo.objs" :key="index">({{index+1}}){{item}}</span></div>
+							</div>
+							<div class="flex"><label>投票描述:</label><span class="flex-1">{{voteInfo.describe}}</span></div>
+						</div>
 					</div>
-					<div class="flex"><label>投票描述:</label><span class="flex-1">{{voteInfo.describe}}</span></div></div>
-				</div>
 				</div>
 				<div class="flex-1" v-if="isChart">
 					<v-chart :options="polar" autoresize class="chartbox" @click="showName"></v-chart>
@@ -79,7 +81,9 @@
 	import 'echarts/lib/component/legend'
 	import 'echarts/lib/component/title.js'
 	import selectNamelist from '@/page/mainPage/components/selectNamelist';
-	import {isRepeat} from '@/page/mainPage/utils/base'
+	import {
+		isRepeat
+	} from '@/page/mainPage/utils/base'
 	var ChartfontSize = 20;
 	export default {
 		components: {
@@ -111,6 +115,9 @@
 						left: 'right',
 						itemWidth: 14,
 						orient: 'vertical',
+						textStyle: {
+							fontSize:20
+						},
 						data: []
 					},
 					grid: {
@@ -182,7 +189,7 @@
 			};
 		},
 		created() {
-			
+
 		},
 		methods: {
 			addObj() {
@@ -213,14 +220,14 @@
 			},
 			startVote() {
 				const $me = this;
-				
+
 				this.form.validateFields((err, values) => {
 					if (!err) {
 						var param = values;
 						this.form2.validateFields((err, values) => {
 							if (!err) {
 								var param2 = values.objs.filter(item => item != null);
-								if(isRepeat(param2)){
+								if (isRepeat(param2)) {
 									$me.$message.error('请输入不同的投票对象');
 									return false
 								}
@@ -287,7 +294,7 @@
 								itemStyle: {
 									barBorderRadius: [5, 5, 0, 0]
 								},
-								barWidth: '25',
+								barWidth: '35',
 								data: item.voteStatisticsNames.map(subitem => subitem.studentInfos.length)
 							}
 							serieslist.push(seriesitem)

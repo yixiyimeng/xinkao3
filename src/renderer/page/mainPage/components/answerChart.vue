@@ -186,6 +186,22 @@
 		y2: 1,
 		colorStops: [{
 				offset: 0, //颜色的开始位置
+				color: '#e4a8a5' // 0% 处的颜色
+			},
+			{
+				offset: 1, //颜色的结束位置
+				color: '#c8615d' // 100% 处的颜色
+			}
+		]
+	},
+	{
+		type: 'linear',
+		x: 0,
+		y: 0,
+		x2: 0,
+		y2: 1,
+		colorStops: [{
+				offset: 0, //颜色的开始位置
 				color: '#fed601' // 0% 处的颜色
 			},
 			{
@@ -213,9 +229,7 @@
 				isShow: false,
 				ranklist: [],
 				pieOptions: {
-					color: ['#c7615d', '#e0b088', '#176bab', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074',
-						'#546570', '#c4ccd3'
-					],
+					color: defaultcolor,
 					series: [{
 						name: '正确率',
 						type: 'pie',
@@ -390,6 +404,7 @@
 				this.trueAnswer = param.trueAnswer == 'E' ? 'true' : (param.trueAnswer == 'F' ? 'false' : param.trueAnswer);
 				this.trueAnswertxt = param.trueAnswer == 'E' ? '√' : (param.trueAnswer == 'F' ? '×' : param.trueAnswer);
 				this.questionType = param.questionType;
+				this.checkedList=[];
 				this.getEveryAnswerNum();
 				this.getSpeedKingList();
 				if (this.trueAnswer) {
@@ -441,10 +456,11 @@
 
 				if (title && title.length > 0) {
 					colorList = title.map((item, i) => {
-						console.log(122);
 						if (title[i] == ($me.trueAnswer == 'false' ? '×' : $me.trueAnswer == 'true' ? '√' : $me.trueAnswer)) {
 							return defaultcolor[1];
-						} else {
+						} else if(title[i] =='未作答'){
+							return defaultcolor[2];
+						}else{
 							return defaultcolor[0];
 						}
 
@@ -481,13 +497,13 @@
 					if (da && da.ret == 'success') {
 						var list = da.data;
 						let myoption = [{
-								value: list.trueNum,
-								name: '正确'
-							},
-							{
 								value: list.totalNum - list.trueNum,
 								name: '错误'
+							},{
+								value: list.trueNum,
+								name: '正确'
 							}
+							
 						]
 						let option = Object.assign({}, $me.pieOptions);
 						option.series[0].data = myoption;
@@ -577,8 +593,8 @@
 				for (var i = 0; i < colorList.length; i++) {
 					if ($me.checkedList.indexOf($me.title[i]) > -1) {
 						colorList[i] = defaultcolor[1];
-						console.log($me.title[i])
-					} else {
+						// console.log($me.title[i])
+					} else if($me.title[i]!='未作答'){
 						colorList[i] = defaultcolor[0];
 					}
 				}
