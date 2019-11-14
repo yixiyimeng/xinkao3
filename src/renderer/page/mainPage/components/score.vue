@@ -32,6 +32,7 @@
 			<div class="flex flex-align-center">
 				<div class="voteInfo">
 					<div>
+						<div class="votetip">评分范围为0-9</div>
 						<div class="flex"><label>评分主题:</label><span class="flex-1">{{voteInfo.titleName}}</span></div>
 						<div class="flex"><label>评分对象:</label>
 							<div class="flex-1"><span class="obj" v-for="(item,index) in voteInfo.objs" :key="index">({{index+1}}){{item}}</span></div>

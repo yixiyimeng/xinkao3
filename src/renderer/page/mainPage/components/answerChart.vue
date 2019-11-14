@@ -244,7 +244,8 @@
 									return params.name + params.value + '人\n(' + params.percent + '%)';
 								},
 								textStyle: {
-									fontSize: this.ChartfontSize > 18 ? 18 : this.ChartfontSize
+									fontSize: 20,
+									color: '#fff',
 								}
 							}
 						},
@@ -449,7 +450,7 @@
 				var percentage = myoption.percentage;
 				var option = Object.assign({}, barParam);
 				$me.titleOptions = title
-					.filter(item => item != '未作答')
+					.filter(item => item != 'N')
 					.map(item => {
 						return item
 					});
@@ -458,7 +459,7 @@
 					colorList = title.map((item, i) => {
 						if (title[i] == ($me.trueAnswer == 'false' ? '×' : $me.trueAnswer == 'true' ? '√' : $me.trueAnswer)) {
 							return defaultcolor[1];
-						} else if(title[i] =='未作答'){
+						} else if(title[i] =='N'){
 							return defaultcolor[2];
 						}else{
 							return defaultcolor[0];
@@ -535,7 +536,7 @@
 				const $me = this;
 				// console.log(param.name==)
 				if ($me.questionType == 4) {
-					if ($me.title[param.dataIndex] == '未作答') {
+					if ($me.title[param.dataIndex] == 'N') {
 						this.getEveryAnswerName({
 							answer: $me.title[param.dataIndex]
 						});
@@ -594,7 +595,7 @@
 					if ($me.checkedList.indexOf($me.title[i]) > -1) {
 						colorList[i] = defaultcolor[1];
 						// console.log($me.title[i])
-					} else if($me.title[i]!='未作答'){
+					} else if($me.title[i]!='N'){
 						colorList[i] = defaultcolor[0];
 					}
 				}
@@ -643,7 +644,7 @@
 			font-size: 24px;
 			line-height: 40px;
 			position: absolute;
-			right: 75px;
+			right: 35px;
 
 			p {
 				margin-bottom: 0;

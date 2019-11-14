@@ -42,9 +42,9 @@
 		},
 		filters:{
 			filterAnswer(value){
-				if(value=='false'){
+				if(value=='F'){
 					return '×'
-				}else if(value=='true'){
+				}else if(value=='E'){
 					return '√'
 				}else{
 					return value

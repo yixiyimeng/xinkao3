@@ -50,6 +50,7 @@
 				<div class="voteInfo">
 					<div>
 						<div>
+							<div class="votetip">A 表示赞成；B 表示反对；C 表示弃权</div>
 							<div class="flex"><label>投票主题:</label><span class="flex-1">{{voteInfo.titleName}}</span></div>
 							<div class="flex"><label>投票对象:</label>
 								<div class="flex-1"><span class="obj" v-for="(item,index) in voteInfo.objs" :key="index">({{index+1}}){{item}}</span></div>
