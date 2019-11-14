@@ -8,6 +8,7 @@
 					<li v-for="(item, index) in namelist" :key="index">
 						<span>{{ item.stuName }}</span>
 						<span v-if="item.answer">({{item.answer|filterAnswer}})</span>
+						<span  v-if="!item.answer">(未作答)</span>
 					</li>
 				</ul>
 	
