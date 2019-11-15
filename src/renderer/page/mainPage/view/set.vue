@@ -33,13 +33,13 @@
 					<a-switch v-model="isCheck" @change="onChange" />
 				</div>
 				<div class="mt15 inputtxt flex flex-align-center">
-					<label>主题</label>
+					<label>换肤</label>
 					<a-select class="select flex-1" size="large" v-model="defaulttheme" @change="changeTheme">
 						<a-icon type="caret-down" slot="suffixIcon" class="caret" />
 						<a-select-option value="theme1">主题一</a-select-option>
-						<a-select-option value="theme2">主题二</a-select-option>
-						<a-select-option value="theme3">主题三</a-select-option>
-						<a-select-option value="theme4">主题四</a-select-option>
+					<!-- 	<a-select-option value="theme2">主题二</a-select-option>
+						<a-select-option value="theme3">主题三</a-select-option> -->
+						<a-select-option value="theme4">主题二</a-select-option>
 					</a-select>
 				</div>
 			</div>
