@@ -312,7 +312,7 @@
 			},
 			showName(param) {
 				this.selectNamelist = this.chartlist[param.seriesIndex].voteStatisticsNames[param.dataIndex].studentInfos;
-				this.$refs.selectname.show();
+				this.$refs.selectname.show(1);
 			}
 		}
 

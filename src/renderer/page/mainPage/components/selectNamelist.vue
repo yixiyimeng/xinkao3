@@ -7,12 +7,14 @@
 				<ul class="clearfix">
 					<li v-for="(item, index) in namelist" :key="index">
 						<span>{{ item.stuName }}</span>
-						<span v-if="item.answer">({{item.answer|filterAnswer}})</span>
-						<span  v-if="!item.answer">(未作答)</span>
+						<template v-if="isShowAnswer">
+							<span v-if="item.answer">({{item.answer|filterAnswer}})</span>
+							<span v-if="!item.answer">(未作答)</span>
+						</template>
 					</li>
 				</ul>
-	
-		   </div>
+
+			</div>
 		</div>
 	</transition>
 </template>
@@ -21,6 +23,7 @@
 		data() {
 			return {
 				isshowNamelist: false,
+				isShowAnswer: true
 			};
 		},
 		props: {
@@ -29,25 +32,30 @@
 				default: []
 			}
 		},
-		
+
 		created() {
-			
+
 		},
 		methods: {
-			show(){
-				this.isshowNamelist=true
+			show(type) {
+				if (type && type == 1) {
+					this.isShowAnswer = false
+				} else {
+					this.isShowAnswer = true
+				}
+				this.isshowNamelist = true
 			},
-			closeNamelist(){
-				this.isshowNamelist=false
+			closeNamelist() {
+				this.isshowNamelist = false
 			}
 		},
-		filters:{
-			filterAnswer(value){
-				if(value=='F'){
+		filters: {
+			filterAnswer(value) {
+				if (value == 'F') {
 					return '×'
-				}else if(value=='E'){
+				} else if (value == 'E') {
 					return '√'
-				}else{
+				} else {
 					return value
 				}
 			}

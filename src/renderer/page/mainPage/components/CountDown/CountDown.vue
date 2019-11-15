@@ -31,6 +31,18 @@
 				default:false
 			}
 		},
+		watch:{
+			isAnswering(newval,oldval){
+				if((newval!=oldval)&&newval){
+					if(this.showcountDown){
+						if(this.countDownTime==0){
+							this.isCountdown=false;	
+						}
+						this.showcountDown=false
+					}
+				}
+			}
+		},
 		methods: {
 			/* 设置倒计时 */
 			countDown(time) {
