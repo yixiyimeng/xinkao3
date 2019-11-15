@@ -25,6 +25,12 @@
 				timer: null
 			};
 		},
+		props:{
+			isAnswering:{
+				type:Boolean,
+				default:false
+			}
+		},
 		methods: {
 			/* 设置倒计时 */
 			countDown(time) {
@@ -38,10 +44,16 @@
 			},
 			// 是否倒计时
 			checkcountDown() {
+				if(this.isAnswering){
+					return false
+				}
 				this.isCountdown = this.showcountDown = !this.isCountdown;
 			},
 			// 是否显示设置倒计时
 			checkshowcountDown() {
+				if(this.isAnswering){
+					return false
+				}
 				this.showcountDown = !this.showcountDown;
 			},
 			startCountDown() {

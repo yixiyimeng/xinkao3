@@ -6,9 +6,9 @@
 		<!-- 切换菜单 -->
 		<div class="mainmenu">
 			<div class="setbtnlist" v-if="!isAnswering">
-				<a href="javascript:;" @click="shownamelist" class="userlist"></a>
+				<a href="javascript:;" @click="shownamelist" class="userlist" title="学生名单"></a>
 				<!-- <router-link :to="'namelist'" class="userlist"></router-link> -->
-				<router-link :to="'set'" class="set"></router-link>
+				<router-link :to="'set'" class="set" title="设置"></router-link>
 			</div>
 			<!-- <div class="set"></div>
 			<div class="setbtnlist">
