@@ -141,6 +141,8 @@
 				this.formData.topicCode = '';
 				this.formData.questionId = '';
 				this.formData.tempQuestionId = '';
+				/* 清除空格 */
+				this.formData.topicName=this.formData.topicName.trim();
 			},
 			/* 查询班级 */
 			getClasslist() {

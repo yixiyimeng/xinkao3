@@ -119,6 +119,7 @@
 				this.$confirm({
 					title: '提示',
 					content: '设置信道将解绑全部学生，你确定设置吗？',
+					centered:true,
 					onOk() {
 						$me.$postAction(api.defaultSet).then(da => {
 							if (da && da.ret == 'success') {
