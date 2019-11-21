@@ -46,7 +46,9 @@ const api = {
 	answerPercent:'/randomDetection/answerPercent',//更新随堂检测进度
 	getSpeedKingList:'/answer/statistics/getSpeedKingList',//答题速度王
 	nameStart:'/bindingCard/nameStart',
-	nameStop:'/bindingCard/nameStop'
+	nameStop:'/bindingCard/nameStop',
+	getDanmuinfo:'/teacherHabit/queryTeacHabit/',
+	setDanmuinfo:'/teacherHabit/save'
 }
 export default api
 export function postAction(url, parameter,obj={}) {

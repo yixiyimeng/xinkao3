@@ -335,7 +335,22 @@
 					$me.sendClassInfo();
 			
 				}
-			}
+			},
+			getDanmuinfo() {
+				/* 获取弹幕设置 */
+				this.$postAction(api.getDanmuinfo + '44').then(da => {
+					if (da && da.ret == 'success') {
+						var list = da.data;
+						if (list && list.length > 0) {
+							list = list.map(item => {
+								item.isOpenBarrageflag = item.isOpenBarrage == 1;
+								return item
+							})
+						}
+						this.$store.commit('SET_danmuinfolist', this.list);
+					}
+				})
+			},
 		}
 	};
 </script>

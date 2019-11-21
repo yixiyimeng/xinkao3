@@ -7,6 +7,7 @@ export default new Vuex.Store({
 		theme:localStorage.getItem('theme')||'theme4',
 		isDanmu:localStorage.getItem('isDanmu')=='true'||true,
 		isminimizeAppState: false, //最小化
+		danmuinfolist:[]
 	},
 	getters: {
 		getisminimizeApp: (state) => {
@@ -25,6 +26,10 @@ export default new Vuex.Store({
 		SET_danmu:(state, isDanmu)=>{
 			state.isDanmu = isDanmu;
 			localStorage.setItem('isDanmu',isDanmu)
+		},
+		SET_danmuinfolist:(state, danmuinfolist)=>{
+			state.danmuinfolist = danmuinfolist;
+			// localStorage.setItem('isDanmu',isDanmu)
 		},
 	}
 });

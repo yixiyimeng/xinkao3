@@ -116,7 +116,7 @@
 			};
 		},
 		computed: {
-			...mapState(['isDanmu'])
+			...mapState(['isDanmu', 'danmuinfolist'])
 		},
 		created() {
 			this.sendInfo = JSON.parse(this.$route.query.sendInfo);
@@ -201,14 +201,14 @@
 				if (this.isShowClassMenu) {
 					this.$router.go(-1);
 				} else {
-					if(!isOnlyShowClassName){
+					if (!isOnlyShowClassName) {
 						this.isShowClassMenu = true;
 					}
 					this.title = this.sendInfo.className.trim();
 
 				}
 			},
-			showClassName(){
+			showClassName() {
 				this.title = this.sendInfo.className.trim();
 			},
 			getprogress() {
@@ -258,6 +258,12 @@
 												$me.$refs.startAnswer.answerPercent();
 											}
 										}
+										break;
+									}
+								case 3:
+									{
+										/* 设置未连接 */
+										$me.$message.error('设备未连接')
 										break;
 									}
 								case 16:
@@ -310,7 +316,8 @@
 					});
 					$me.$loading.close();
 				}, 5000);
-			}
+			},
+
 		}
 	};
 </script>
@@ -598,8 +605,14 @@
 			top: 160px;
 			left: 50%;
 			position: absolute;
-			bottom:120px;
-
+			bottom: 120px;
+			@media screen and (max-width: 1440px){
+				width: auto;
+				transform: translate(0, 0);
+				left:165px;
+				right:165px;
+							
+			}
 			&:before {
 				display: block;
 				content: '';
@@ -618,7 +631,8 @@
 				background: url(../assets/img/theme4/bg2.png);
 				padding: 95px 0 45px;
 				overflow: auto;
-				height:100%;
+				height: 100%;
+
 				.menu {
 					text-align: center;
 
@@ -740,7 +754,7 @@
 
 		.btnlist {
 			position: absolute;
-			bottom: 35px;
+			bottom: 15px;
 			right: 35px;
 			z-index: 999;
 

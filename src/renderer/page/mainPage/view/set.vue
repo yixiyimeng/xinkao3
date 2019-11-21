@@ -43,7 +43,7 @@
 					</a-select>
 				</div>
 			</div>
-			
+			<setDanmu></setDanmu>
 			<!-- <div class="btnlist">
 				<router-link :to="'setStu'">学生管理</router-link>
 				<router-link :to="'setTest'">试卷管理</router-link>

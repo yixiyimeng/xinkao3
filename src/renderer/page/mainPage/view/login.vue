@@ -1,7 +1,7 @@
 <template>
 	<div class="bg">
-		<!-- <setDanmu></setDanmu>
-		<timeswiper class="countDownbox"></timeswiper> -->
+		<!-- <setDanmu></setDanmu> -->
+		<!-- <timeswiper class="countDownbox"></timeswiper> -->
 		<div class="loginbox">
 			<div>
 				<a href="javascript:;" class="logo"></a>

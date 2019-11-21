@@ -236,16 +236,22 @@
 		}
 	}
 .startAnswer .thememodbox {
-			width: 1227px;
+			width: 1225px;
 			background: #fff;
 			padding: 18px;
 			border: 2px solid #1e569e;
 			transform: translate(-50%, 0);
-			top: 170px;
+			top: 160px;
 			left: 50%;
 			position: fixed;
 			bottom: 120px;
-
+			@media screen and (max-width: 1440px){
+				width: auto;
+				transform: translate(0, 0);
+				left:165px;
+				right:165px;
+							
+			}
 			&:before {
 				display: block;
 				content: '';
@@ -269,7 +275,7 @@
 
 			.tablink {
 				border-bottom: 1px solid #2459a0;
-				padding-top: 95px;
+				padding-top: 65px;
 				margin: 0 60px;
 
 				&>li {
@@ -332,7 +338,7 @@
 			span{
 				vertical-align: top;
 			}
-			@media screen and (min-width: 1367px){
+			@media screen and (min-width: 1441px){
 							 font-size: 40px;
 							 width: 408px;
 							 height: 89px;line-height: 89px;
