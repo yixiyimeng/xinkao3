@@ -156,7 +156,7 @@
 					$me.titleName = '单题单选-数字题';
 				} else if ($me.questionType == 4) {
 					$me.range = this.$refs.multileChoice.getRange();
-					var str = "/^(?!.*([" + $me.range + "]).*\\1)[" + $me.range + "]{2,4}$/";
+					var str = "/^(?!.*([" + $me.range + "]).*\\1)[" + $me.range + "]{2,6}$/";
 
 					answerreg = eval(str);
 					//answerreg=/^(?!.*([A-D]).*\1)[A-D]{2,4}$/;

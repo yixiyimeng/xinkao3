@@ -21,6 +21,9 @@
 						{{ text|typefilter}}
 					</span>
 					<a-tag slot="answerResult" slot-scope="text, record, index" v-if="text" :color="record.result?'#87d068':'#f00'">{{ text|Answerfilter}}</a-tag>
+				<span slot="trueAnswer" slot-scope="text, record, index">
+					{{ text|Answerfilter}}
+				</span>
 				</a-table>
 			</div>
 
@@ -61,6 +64,10 @@
 			dataIndex: 'trueAnswer',
 			align:'center',
 			width: '25%',
+			scopedSlots: {
+				customRender: 'trueAnswer'
+				
+			},
 			// width: 300,
 		},
 		{
@@ -170,15 +177,18 @@
 				var str = value;
 				switch (value) {
 					case 'true':
+					case 'E':
 						{
 							str = "√"
 							break;
 						}
 					case 'false':
+					case 'F':
 						{
 							str = "×"
 							break;
 						}
+					
 
 				}
 				return str
