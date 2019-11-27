@@ -43,7 +43,10 @@
 			};
 		},
 		computed: {
-			...mapState(['isminimizeAppState'])
+			...mapState(['isminimizeAppState']),
+		alertCont() {
+			return this.$store.getters.onalertCont();
+		}
 		},
 		methods: {
 			exitApp: function() {
@@ -66,9 +69,18 @@
 				} else {
 					this.transitionName = 'slide-right';
 				}
+			},
+			alertCont: {
+				handler(newName, oldName) {
+					if(newName&&newName!=oldName)
+					console.log("123343newName:" + JSON.stringify(newName));
+				},
+				immediate: true
 			}
 		},
 		created() {
+			/* 连接websock */
+			// this.$store.dispatch('STAFF_WEBSOCKET')
 			const _this = this;
 			/* 监听主进程 是否关闭软件 */
 			_this.$electron.ipcRenderer.on('isexitApp', event => {

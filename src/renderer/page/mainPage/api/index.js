@@ -48,7 +48,9 @@ const api = {
 	nameStart:'/bindingCard/nameStart',
 	nameStop:'/bindingCard/nameStop',
 	getDanmuinfo:'/teacherHabit/queryTeacHabit/',
-	setDanmuinfo:'/teacherHabit/save'
+	setDanmuinfo:'/teacherHabit/save',
+	importQuesrions:'/randomDetection/importQuesrions',
+	uploadTestPaper:'/randomDetection/uploadTestPaper'
 }
 export default api
 export function postAction(url, parameter,obj={}) {
@@ -60,4 +62,15 @@ export function postAction(url, parameter,obj={}) {
 		},
 		data: parameter
 	},obj))
+}
+export function postActionUpload(url, parameter) {
+	return axios({
+		url: url,
+		method: 'post',
+		headers: {
+			"Content-Type": "multipart/form-data"
+		},
+		processData: false,
+		data: parameter
+	})
 }

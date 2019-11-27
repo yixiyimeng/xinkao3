@@ -89,7 +89,8 @@
 	import responder from '@/page/mainPage/components/responder';
 	import api from '@/page/mainPage/api';
 	import {
-		mapState
+		mapState,
+		mapGetters
 	} from 'vuex';
 	export default {
 		components: {
@@ -116,7 +117,8 @@
 			};
 		},
 		computed: {
-			...mapState(['isDanmu', 'danmuinfolist'])
+			...mapState(['isDanmu', 'danmuinfolist']),
+			// ...mapGetters(['onEvent'])
 		},
 		created() {
 			this.sendInfo = JSON.parse(this.$route.query.sendInfo);
@@ -132,6 +134,16 @@
 				this.ws = null;
 			}
 		},
+		// watch: {
+		// 	onEvent: {
+		// 		handler(newName, oldName) {
+		// 			if(newName&&newName!=oldName)
+		// 			console.log("123343newName:" + JSON.stringify(newName));
+		// 		},
+		// 		immediate: true
+		// 	}
+		// 
+		// },
 		methods: {
 			shownamelist() {
 				/* 显示学生名单 */
