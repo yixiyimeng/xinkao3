@@ -3,7 +3,7 @@
 		<div class="upload-bd">
 			<a href="javascript:;" class="close" @click="close()"></a>
 			<div>
-				<div class="upload-title">堂测标准答案设置</div>
+				<div class="upload-title">套题模式堂测标准答案设置</div>
 				<div class="upload-btnbar flex flex-pack-justify flex-align-center">
 					<div>
 						<label>标题</label>
@@ -239,7 +239,7 @@
 			},
 			close() {
 				this.visible = false;
-				this.list=[];
+				this.list = [];
 				this.form.resetFields();
 				this.$emit('close');
 			},
@@ -444,7 +444,6 @@
 		bottom: 0;
 		z-index: 999;
 	}
-
 	// .bg .mask {
 	// 	background: rgba(0, 0, 0, 0.4);
 	// 	height: 100%;
@@ -463,7 +462,12 @@
 		box-sizing: border-box;
 		box-shadow: 0 0 10px rgba($color: #2459a0, $alpha: .3);
 	}
-
+.theme1 .bg>.upload-bd{
+	left: 135px;
+	right: 135px;
+	top: 140px;
+	bottom: 120px;
+}
 	.bg>.upload-bd>div {
 		overflow-y: auto;
 		height: 100%;

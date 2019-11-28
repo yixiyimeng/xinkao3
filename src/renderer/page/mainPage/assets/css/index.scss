@@ -1240,8 +1240,12 @@
 		border-image-repeat: round;
 		color: #333;
 		margin: 0 auto;
-		
-		
+	}
+	.theme1 .voteInfo{
+		border: none;
+		box-shadow: 0 0 10px rgba(0,0,0,.1);
+		border-radius: 10px;
+		overflow: hidden;
 	}
 	.voteChart .voteInfo>div {
 		padding-bottom: 10px;

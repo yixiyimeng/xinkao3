@@ -14,6 +14,7 @@
 			</div> -->
 		</div>
 		<transition :name="transitionName">
+			<!-- <img :src="img" alt=""> -->
 			<router-view class="Router"></router-view>
 		</transition>
 		<div class="exitappWin animated fadeIn" v-if="isexit">
@@ -39,14 +40,15 @@
 		data() {
 			return {
 				transitionName: 'slide-right',
-				isexit: false
+				isexit: false,
+				img: ''
 			};
 		},
 		computed: {
 			...mapState(['isminimizeAppState']),
-		alertCont() {
-			return this.$store.getters.onalertCont();
-		}
+			alertCont() {
+				return this.$store.getters.onalertCont();
+			}
 		},
 		methods: {
 			exitApp: function() {
@@ -72,8 +74,8 @@
 			},
 			alertCont: {
 				handler(newName, oldName) {
-					if(newName&&newName!=oldName)
-					console.log("123343newName:" + JSON.stringify(newName));
+					if (newName && newName != oldName)
+						console.log("123343newName:" + JSON.stringify(newName));
 				},
 				immediate: true
 			}
@@ -91,15 +93,24 @@
 			_this.$electron.ipcRenderer.on('isminimizeApp', (event, flag) => {
 				_this.$store.commit('SET_isminimizeApp', flag);
 			});
-
 			/* 监听页面刷新的时候，存储store */
 			window.addEventListener('beforeunload', () => {
 				sessionStorage.setItem('messageStore', JSON.stringify(this.$store.state));
-				
+
 			});
 			//在页面加载时读取localStorage里的状态信息
 			sessionStorage.getItem('messageStore') && this.$store.replaceState(Object.assign(this.$store.state, JSON.parse(
 				sessionStorage.getItem('messageStore'))));
+
+			/* 截图 */
+			// _this.$electron.ipcRenderer.send('PrintScr');
+			/* 监听主进程 是否保存截图*/
+// 			_this.$electron.ipcRenderer.on('saveImg', (event, imgData) => {
+// 				let imgs = 'data:image/png;base64,' + btoa(
+// 					new Uint8Array(imgData).reduce((data, byte) => data + String.fromCharCode(byte), ''))
+// 				_this.img = imgs;
+// 
+// 			});
 		}
 	};
 </script>
@@ -141,5 +152,4 @@
 		opacity: 0;
 		transform: translate3d(-100%, 0, 0);
 	}
-	
 </style>

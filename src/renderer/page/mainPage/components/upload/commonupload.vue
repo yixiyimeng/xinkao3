@@ -3,7 +3,7 @@
 		<div class="upload-bd">
 			<a href="javascript:;" class="close" @click="close()"></a>
 			<div>
-				<div class="upload-title">堂测标准答案设置</div>
+				<div class="upload-title">普通模式堂测标准答案设置</div>
 				<div class="upload-btnbar flex flex-pack-justify flex-align-center">
 					<div>
 						<label>标题</label>
@@ -403,6 +403,12 @@
 		padding: 40px 0;
 		box-sizing: border-box;
 		box-shadow: 0 0 10px rgba($color: #2459a0, $alpha: .3);
+	}
+	.theme1 .bg>.upload-bd{
+		left: 135px;
+		right: 135px;
+		top: 140px;
+		bottom: 120px;
 	}
 
 	.bg>.upload-bd>div {

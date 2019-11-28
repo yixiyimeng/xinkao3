@@ -227,10 +227,14 @@
 		text-decoration: none;
 	}
 
+	.theme1 .subtablink a,
+	.theme1 .subtablink {
+		color: rgba($color: #fff, $alpha: .8);
+	}
+
 	.subtablink a.active {
 		color: #2459a0;
 	}
-
 	.subtablink a,
 	.subtablink span {
 		vertical-align: middle;
