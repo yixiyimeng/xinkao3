@@ -540,7 +540,7 @@
 			},
 			handbar(param) {
 				const $me = this;
-				// console.log(param.name==)
+				console.log(param)
 				if ($me.questionType == 4) {
 					if ($me.title[param.dataIndex] == 'N') {
 						this.getEveryAnswerName({

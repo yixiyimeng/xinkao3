@@ -15,7 +15,8 @@
 				<a-table rowKey="questionId" :columns="columns" :dataSource="dataSource" :scroll="{ y: scrolly }" size="middle"
 				 :pagination="false">
 					<span slot="serial" slot-scope="text, record, index">
-						{{ index + 1 }}
+						<!-- {{ index + 1 }} -->
+						{{text}}
 					</span>
 					<span slot="questionType" slot-scope="text, record, index">
 						{{ text|typefilter}}
@@ -35,7 +36,7 @@
 <script>
 	const columns = [{
 			title: '题号',
-			dataIndex: 'num',
+			dataIndex: 'questionId',
 			width: 100,
 			scopedSlots: {
 				customRender: 'serial'
