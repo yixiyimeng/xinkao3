@@ -82,6 +82,7 @@
 			_this.$electron.ipcRenderer.on('saveImg', (event, imgData) => {
 				let imgs = 'data:image/png;base64,' + btoa(
 					new Uint8Array(imgData).reduce((data, byte) => data + String.fromCharCode(byte), ''))
+				console.log('imgs',imgs)
 				_this.img = imgs;
 
 			});

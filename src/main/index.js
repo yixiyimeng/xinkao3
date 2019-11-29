@@ -313,16 +313,20 @@ app.on('ready', () => {
 		const {
 			execFile
 		} = require('child_process');
-		var screen_window = execFile(path.join(__static, 'PrintScr.exe'))
-		screen_window.on('exit', function(code) {
+		clipboard.clear();
+		var screen_window = execFile(path.join(__static, 'QQPrintScr.exe'))
+		screen_window.on('exit', function() {
+			// console.log('关闭了');
+			 console.log(arguments);
 			// 执行成功返回 1，返回 0 没有截图
-			if (code){ 
-				mainWindow.webContents.paste();
+			// if (code){ 
+				// mainWindow.webContents.paste();
 				let pngs=clipboard.readImage().toPNG();
+				
 				let imgData = new Buffer(pngs, 'base64')
-				// console.log(pngs)
+				console.log('imgData',imgData)
 			  mainWindow.webContents.send('saveImg',imgData);
-			}
+			// }
 		})
 	})
 });
