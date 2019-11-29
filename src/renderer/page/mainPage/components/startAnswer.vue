@@ -2,7 +2,7 @@
 	<div class="startAnswer" v-if="isShowAnswer">
 		<a href="javascript:;" class="reback" @click="returnback" v-if="viewState!=1"></a>
 		<div class="titleName" v-if="viewState!=0&&type!=2">{{titleName}}</div>
-		<div class="thememodbox" v-if="viewState==0">
+		<div class="thememodbox setbox" v-if="viewState==0">
 			<div>
 				<ul class="tablink clearfix">
 					<li :class="{active:type==0}" @click="type=0"><a href="javascript:;">单题单选</a></li>

@@ -1,7 +1,7 @@
 <template>
 	<div class="bg" v-if="isshowlist">
 		<a href="javascript:;" class="reback" @click="returnback"></a>
-		<div class="singInbox">
+		<div class="setbox singInbox">
 			<div class="singlist">
 				<ul class="clearfix">
 					<li v-for="(item, index) in namelist" :class="{ active: item.checked }">
@@ -74,41 +74,51 @@
 </script>
 
 <style scoped="scoped" lang="scss">
-	.theme4 .singInbox {
-		width: 80%;
-		top: 160px;
-		bottom: 10%;
-		background: #fff;
-		padding: 18px;
-		position: absolute;
-		left: 10%;
-		border: 2px solid #1e569e;
-
-		&:before {
-			display: block;
-			content: '';
-			height: 91px;
-			width: 549px;
-			background: url(../assets/img/theme4/bg.png);
-			position: absolute;
-			top: -5px;
-			left: 50%;
-			transform: translateX(-50%);
-		}
-
-		&>div {
-			border: 2px solid #df8487;
-			background: url(../assets/img/theme4/bg2.png);
-			padding: 70px 35px 15px;
-			overflow: auto;
-			height: 100%;
-		}
-	}
-
+	 @import '../assets/css/set.scss';
+	 .theme1 .bg .setbox {
+	 	background: rgba(255, 255, 255, .7);
+	 }
+// 	.theme4 .singInbox {
+// 		width: 80%;
+// 		top: 160px;
+// 		bottom: 10%;
+// 		background: #fff;
+// 		padding: 18px;
+// 		position: absolute;
+// 		left: 10%;
+// 		border: 2px solid #1e569e;
+// 
+// 		&:before {
+// 			display: block;
+// 			content: '';
+// 			height: 91px;
+// 			width: 549px;
+// 			background: url(../assets/img/theme4/bg.png);
+// 			position: absolute;
+// 			top: -5px;
+// 			left: 50%;
+// 			transform: translateX(-50%);
+// 		}
+// 
+// 		&>div {
+// 			border: 2px solid #df8487;
+// 			background: url(../assets/img/theme4/bg2.png);
+// 			padding: 70px 35px 15px;
+// 			overflow: auto;
+// 			height: 100%;
+// 		}
+// 	}
+// 
+.theme1 .bg .setbox > div.singlist,
+.theme4 .bg .setbox > div.singlist{
+	padding-left: 20px;
+	padding-right: 20px;
+}
 	.singlist ul {
 		height: 100%;
 		overflow: auto;
 		margin-bottom: 0;
+	
 		
 	}
 

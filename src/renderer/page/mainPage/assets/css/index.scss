@@ -185,24 +185,37 @@
 			height: 80px;
 			width: 80px;
 			background: url(assets/img/theme4/titlebg.png) #fff;
+			background-size: cover;
 			display: inline-block;
 			font-size: 64px;
 			color: #2459a0;
 			line-height: 80px;
 			text-align: center;
 			margin-right: 20px;font-family: 'hxfont';
+			@media screen and (max-width: 1360px){
+				height: 60px;
+				width: 60px;
+				line-height: 60px;
+				font-size: 44px;
+				margin-right: 10px;
+			}
 		}
 	}
 	.reback {
 		height: 85px;
 		width:98px;
 		background: url(assets/img/theme4/reback.png) no-repeat center center;
+		background-size: cover;
 		position: fixed;
 		top: 100px;
 		right: 35px;
+		@media screen and (max-width: 1360px){
+			height: 70px;
+			width:81px;
+		}
 	}
 	.setbox{
-		width: 1120px;
+		width: 1250px;
 		background: #fff;
 		padding: 11px;
 		position: relative;
@@ -212,18 +225,28 @@
 		left: 50%;
 		position: absolute;
 		border-radius: 0;
-		bottom:auto;
+		bottom:120px;
+		@media screen and (max-width: 1360px){
+			top: 140px;
+			padding: 8px;
+			bottom: 100px;
+		}
 		&:before {
 			display: block;
 			content: '';
 			height: 91px;
 			width: 549px;
 			background: url(assets/img/theme4/bg.png);
+			background-size: cover;
 			position: absolute;
 			top: -5px;
 			left: 50%;
 			transform: translateX(-50%);
 			z-index: 1;
+			@media screen and (max-width: 1360px){
+				width: 450px;
+				height: 75px;
+			}
 		}
 		
 		&>div {
@@ -231,48 +254,60 @@
 			background: url(assets/img/theme4/bg2.png);
 			padding: 95px 0 45px;
 			z-index: 0;
-			// overflow: auto;
-			// height: 100%;
+			overflow: auto;
+			height:100%;
+			@media screen and (max-width: 1360px){
+				padding: 75px 0 25px;
+			}
 		}
+		
 	}
 .startAnswer .thememodbox {
-			width: 1225px;
-			background: #fff;
-			padding: 18px;
-			border: 2px solid #1e569e;
-			transform: translate(-50%, 0);
-			top: 160px;
-			left: 50%;
-			position: fixed;
-			bottom: 120px;
-			@media screen and (max-width: 1440px){
-				width: auto;
-				transform: translate(0, 0);
-				left:165px;
-				right:165px;
-							
+// 			width: 1225px;
+// 			background: #fff;
+// 			padding: 18px;
+// 			border: 2px solid #1e569e;
+// 			transform: translate(-50%, 0);
+// 			top: 160px;
+// 			left: 50%;
+// 			position: fixed;
+// 			bottom: 120px;
+// 			@media screen and (max-width: 1440px){
+// 				width: auto;
+// 				transform: translate(0, 0);
+// 				left:165px;
+// 				right:165px;
+// 							
+// 			}
+// 			&:before {
+// 				display: block;
+// 				content: '';
+// 				height: 91px;
+// 				width: 549px;
+// 				background: url(assets/img/theme4/bg.png);
+// 				position: absolute;
+// 				top: -5px;
+// 				left: 50%;
+// 				transform: translateX(-50%);
+// 				z-index: 1;
+// 			}
+// 
+// 			&>div {
+// 				border: 2px solid #df8487;
+// 				background: url(assets/img/theme4/bg2.png);
+// 				// padding-bottom: 25px;
+// 				overflow: auto;
+// 				height:100%;
+// 			}
+ &>div {
+			padding: 0;
+			z-index: 0;
+			overflow: auto;
+			height:100%;
+			@media screen and (max-width: 1360px){
+				padding: 0;
 			}
-			&:before {
-				display: block;
-				content: '';
-				height: 91px;
-				width: 549px;
-				background: url(assets/img/theme4/bg.png);
-				position: absolute;
-				top: -5px;
-				left: 50%;
-				transform: translateX(-50%);
-				z-index: 1;
-			}
-
-			&>div {
-				border: 2px solid #df8487;
-				background: url(assets/img/theme4/bg2.png);
-				// padding-bottom: 25px;
-				overflow: auto;
-				height:100%;
-			}
-
+		}
 			.tablink {
 				border-bottom: 1px solid #2459a0;
 				padding-top: 65px;
@@ -365,7 +400,7 @@
 			left: 50%;
 			transform: translate(-50%, 0);
 			width: 1227px;
-
+			z-index:9999;
 			a {
 				display: block;
 				margin: 0 auto;
@@ -392,7 +427,7 @@
 		left: 50%;
 		transform: translate(-50%, 0);
 		width: 1227px;
-	
+		z-index:9999;
 		a {
 			display: block;
 			margin: 0 auto;
@@ -498,10 +533,10 @@
 	overflow: auto;
 	margin-bottom: 0;
 }
-.bindnamelist ul{
-	padding-left: 20px;
-	padding-right: 20px;
-}
+// .bindnamelist ul{
+// 	padding-left: 20px;
+// 	padding-right: 20px;
+// }
 .namelistbox ul > li,.bindnamelist ul>li {
 	float: left;
 	margin: 10px 0;color: #df8487;
@@ -599,6 +634,9 @@
 	right: 20px;
 	bottom:20px;
 	cursor: pointer;
+	@media screen and (max-width: 1360px) {
+		bottom: 12px;
+	}
 }
 .namelistbox .unbindAllStu img ,.bindnamelist .unbindAllStu img{
 	width: 30px;
@@ -606,13 +644,16 @@
 }
 .namelistbox .tag,.bindnamelist .tag {
 	position: absolute;
-	bottom: 25px;
+	bottom: 15px;
 	left: 20px;
 	color: #333;
 	
 }
-.theme1 .namelistbox .tag,.bindnamelist .tag{
-	bottom: 30px;
+.theme1 .namelistbox .tag,.theme1 .bindnamelist .tag{
+	bottom: -10px;
+}
+.theme1 .namelistbox .unbindAllStu ,.theme1 .bindnamelist .unbindAllStu{
+	bottom: -15px;
 }
 .namelistbox .tag a ,.bindnamelist .tag a{
 	margin-left: 10px;
@@ -1106,17 +1147,14 @@
 	}
 	.theme1 {
 		.setbox {
-			
-			/deep/ .ant-form {
-				width: 860px;
-	
-				label {
-					font-size: 24px;
-	
-				}
-			}
-	
-	
+// 			/deep/ .ant-form {
+// 				width: 860px;
+// 	
+// 				label {
+// 					font-size: 24px;
+// 
+// 				}
+// 			}
 	
 			/deep/ .textarea.ant-input {
 				color: #333;
@@ -1154,62 +1192,63 @@
 	
 	.theme4 {
 		.setbox {
-			/deep/ .ant-form {
+			.voteform{
+				/deep/ .ant-form {
 				width: 860px;
 	
 				label {
 					font-size: 24px;
-	
 				}
-			}
-	
+			   }
 			/deep/ .ant-input {
-				background: none;
-				border-radius: 0;
-				border: none !important;
-				border-color: #fff !important;
-				padding-left: 20px;
-				color: #fff;
-				box-shadow: none;
-	
-				&:focus {
+					background: none;
+					border-radius: 0;
+					border: none !important;
+					border-color: #fff !important;
+					padding-left: 20px;
+					color: #fff;
 					box-shadow: none;
+				
+					&:focus {
+						box-shadow: none;
+					}
 				}
-			}
-	
-			/deep/ .textarea.ant-input {
-				color: #333;
-				padding: 10px 20px;
-			}
-	
-			.textarea {
-				background: url(assets/img/theme4/txtbg3.png) no-repeat left top;
-				background-size: 100% 100%;
-	
-			}
-	
-			.lginput {
-				background: url(assets/img/theme4/txtbg.png);
-				background-size: cover;
-	
-			}
-	
-			.sminput {
-				background: url(assets/img/theme4/txtbg2.png) no-repeat center center;
-				background-size: contain;
-				width: 115px;
-			}
+				
+				/deep/ .textarea.ant-input {
+					color: #333;
+					padding: 10px 20px;
+				}
+				
+				 .textarea {
+					background: url(assets/img/theme4/txtbg3.png) no-repeat left top;
+					background-size: 100% 100%;
+				
+				}
+				
+				 .lginput {
+					background: url(assets/img/theme4/txtbg.png);
+					background-size: cover;
+				
+				}
+				
+				.sminput {
+					background: url(assets/img/theme4/txtbg2.png) no-repeat center center;
+					background-size: contain;
+					width: 115px;
+				}
+			
+		}	
 		}
 	}
 	
 	
 	.setbox {
-		/deep/ .ant-form {
-			width: 800px;
+		.voteform /deep/ .ant-form {
+			width: 840px;
 			margin: 0 auto;
 	
 			label {
-				font-size: 16px;
+				font-size:23px;
 			}
 		}
 		}

@@ -18,7 +18,7 @@
 					</div>
 				</div>
 				<div class="mt10">
-					<a-form :form="form" autocomplete="off" class="flex flex-align-top">
+					<a-form :form="form" autocomplete="off" class="flex flex-align-top formbox">
 						<a-row :gutter="24" class="mb10 flex-1">
 							<a-col :span="5">
 								<a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="大题题号">
@@ -444,6 +444,13 @@
 		bottom: 0;
 		z-index: 999;
 	}
+
+	.theme4 .bg>.upload-bd /deep/ .ant-form {
+		width: 100%;
+	}
+
+	
+
 	// .bg .mask {
 	// 	background: rgba(0, 0, 0, 0.4);
 	// 	height: 100%;
@@ -453,7 +460,6 @@
 		position: absolute;
 		left: 60px;
 		right: 60px;
-		// transform: translateX(-50%);
 		top: 100px;
 		bottom: 40px;
 		background: #fff;
@@ -461,13 +467,22 @@
 		padding: 40px 0;
 		box-sizing: border-box;
 		box-shadow: 0 0 10px rgba($color: #2459a0, $alpha: .3);
+
+		@media screen and (max-width: 1360px) {
+			left: 40px;
+			right: 40px;
+			top: 80px;
+			bottom: 30px;
+		}
 	}
-.theme1 .bg>.upload-bd{
-	left: 135px;
-	right: 135px;
-	top: 140px;
-	bottom: 120px;
-}
+
+	.theme1 .bg>.upload-bd {
+		left: 135px;
+		right: 135px;
+		top: 140px;
+		bottom: 120px;
+	}
+
 	.bg>.upload-bd>div {
 		overflow-y: auto;
 		height: 100%;

@@ -618,24 +618,37 @@
 			left: 50%;
 			position: absolute;
 			bottom: 120px;
-			@media screen and (max-width: 1440px){
+
+			@media screen and (max-width: 1440px) {
 				width: auto;
 				transform: translate(0, 0);
-				left:165px;
-				right:165px;
-							
+				left: 165px;
+				right: 165px;
+				bottom: 100px;
 			}
+
+			@media screen and (max-width: 1360px) {
+				top: 140px;
+				padding: 8px;
+			}
+
 			&:before {
 				display: block;
 				content: '';
 				height: 91px;
 				width: 549px;
 				background: url(../assets/img/theme4/bg.png);
+				background-size: cover;
 				position: absolute;
 				top: -5px;
 				left: 50%;
 				transform: translateX(-50%);
 				z-index: 1;
+
+				@media screen and (max-width: 1360px) {
+					width: 450px;
+					height: 75px;
+				}
 			}
 
 			&>div {
@@ -644,6 +657,10 @@
 				padding: 95px 0 45px;
 				overflow: auto;
 				height: 100%;
+
+				@media screen and (max-width: 1360px) {
+					padding: 75px 0 25px;
+				}
 
 				.menu {
 					text-align: center;
@@ -657,13 +674,26 @@
 						font-size: 42px;
 						padding-top: 50px;
 
+						@media screen and (max-width: 1360px) {
+							width: 180px;
+							font-size: 36px;
+						}
+
 						&:nth-child(2) {
 							margin: 0 122px;
+
+							@media screen and (max-width: 1360px) {
+								margin: 0 90px;
+							}
 						}
 
 						&:nth-child(4),
 						&:nth-child(5) {
 							margin: 0 72px 50px;
+
+							@media screen and (max-width: 1360px) {
+								margin: -20px 50px 0;
+							}
 						}
 
 						&:after {
@@ -678,6 +708,11 @@
 							left: 50%;
 							top: 30px;
 							transform: translate(-50%, 0) rotate(45deg);
+
+							@media screen and (max-width: 1360px) {
+								height: 160px;
+								width: 160px;
+							}
 						}
 
 						&:hover:after {
@@ -765,7 +800,7 @@
 		}
 
 		.btnlist {
-			position: absolute;
+			position: fixed;
 			bottom: 15px;
 			right: 35px;
 			z-index: 999;
@@ -778,11 +813,21 @@
 				text-align: center;
 				line-height: 85px;
 				background: url(../assets/img/theme4/btn.png);
+				background-size: cover;
 				color: #2b5fa3;
 				font-size: 30px;
+				@media screen and (max-width: 1360px) {
+					width: 96px;
+					height: 70px;
+					line-height: 70px;
+					font-size: 24px;
+				}
 
 				&.offClass {
 					margin-left: 30px;
+					@media screen and (max-width: 1360px) {
+						margin-left: 20px;
+					}
 				}
 			}
 

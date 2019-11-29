@@ -10,7 +10,8 @@
 						<div class="input-row flex flex-align-center">
 							<i class="user icon"></i>
 							<input type="text" class="flex-1" v-model.trim="username" placeholder="请输入用户名" />
-							<a-dropdown :trigger="['click']" placement="bottomRight" class="dropdown" :overlayStyle="{'width': '200px'}">
+							<a-dropdown v-if="loginInfolist.length>0" :trigger="['click']" placement="bottomRight" class="dropdown"
+							 :overlayStyle="{'width': '200px'}">
 								<span>
 									<a-icon type="caret-down" /></span>
 								<a-menu slot="overlay">
@@ -32,9 +33,12 @@
 						<a-button type="primary" html-type="submit" class="loginBtn">立即登录</a-button>
 					</a-form>
 				</div>
-				
+
 			</div>
 		</div>
+		<img :src="img" alt="" style="width: 200px; position: absolute;
+		right: 30px; bottom: 200px;">
+		<div style="width: 80px; height: 60px; background: #f00; position: absolute; bottom: 120px; right: 40px;" @click="PrintScr">截图</div>
 	</div>
 </template>
 
@@ -52,9 +56,11 @@
 				username: '',
 				password: '',
 				loginInfolist: [],
-				isRemeber: true
+				isRemeber: true,
+				img: ''
 			};
-		},components:{
+		},
+		components: {
 			setDanmu,
 			timeswiper
 		},
@@ -70,6 +76,15 @@
 			} catch (e) {
 				//TODO handle the exception
 			}
+			/* 截图 */
+			// 
+			/* 监听主进程 是否保存截图*/
+			_this.$electron.ipcRenderer.on('saveImg', (event, imgData) => {
+				let imgs = 'data:image/png;base64,' + btoa(
+					new Uint8Array(imgData).reduce((data, byte) => data + String.fromCharCode(byte), ''))
+				_this.img = imgs;
+
+			});
 		},
 		mounted() {
 
@@ -168,6 +183,9 @@
 			setUserName(userInfo) {
 				this.username = userInfo.username;
 				this.password = userInfo.password
+			},
+			PrintScr() {
+				this.$electron.ipcRenderer.send('PrintScr');
 			}
 		}
 	};
@@ -431,6 +449,7 @@
 			}
 		}
 	}
+
 	.countDownbox {
 		position: absolute;
 		left: 400px;

@@ -2,7 +2,7 @@
 	<div v-if="showVote" class="bg">
 		<a href="javascript:;" class="reback" @click="returnback" v-if="viewState!=1"></a>
 		<div class="setbox" v-if="viewState==0">
-			<div>
+			<div class="voteform">
 				<a-form :form="form">
 					<a-form-item label="评分主题" :label-col="{ span: 4}" :wrapper-col="{ span: 20 }">
 						<a-input class="lginput" v-decorator="['titleName', { rules: [{ required: true,whitespace: true, message: '请输入评分主题!' },{max:20, message: '主题字数不能超过20!'}],getValueFromEvent:(event) => {return event.target.value.replace(/\s+/g,'')}}]"

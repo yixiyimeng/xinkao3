@@ -83,8 +83,6 @@
 			font-size: 30px;
 			color: #fff;
 			text-align: center;
-			height: 1.85rem;
-			max-height: 240px;
 			border-radius: 10px;
 			display: -webkit-box;
 			display: -webkit-flex;
@@ -215,11 +213,21 @@
 				display: block;
 				height: auto;
 
+				@media screen and (max-width: 1360px) {
+					padding: 16px 0;
+				}
+
 				i {
 					display: inline-block;
 					background: no-repeat center center;
+					background-size: cover;
 					height: 164px;
 					width: 164px;
+
+					@media screen and (max-width: 1360px) {
+						height: 140px;
+						width: 140px;
+					}
 
 					&.icon1 {
 						background-image: url(../assets/img/theme4/smenuicon1.png);

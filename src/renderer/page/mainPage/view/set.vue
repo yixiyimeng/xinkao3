@@ -37,7 +37,7 @@
 					<a-select class="select flex-1" size="large" v-model="defaulttheme" @change="changeTheme">
 						<a-icon type="caret-down" slot="suffixIcon" class="caret" />
 						<a-select-option value="theme1">主题一</a-select-option>
-					<!-- 	<a-select-option value="theme2">主题二</a-select-option>
+						<!-- 	<a-select-option value="theme2">主题二</a-select-option>
 						<a-select-option value="theme3">主题三</a-select-option> -->
 						<a-select-option value="theme4">主题二</a-select-option>
 					</a-select>
@@ -67,18 +67,18 @@
 				channels: [],
 				ch: '',
 				power: '',
-				isCheck:true,
-				defaulttheme:''
+				isCheck: true,
+				defaulttheme: ''
 			};
 		},
 		computed: {
-			...mapState(['theme','isDanmu'])
+			...mapState(['theme', 'isDanmu'])
 		},
 		created() {
 			this.getChannels();
 			this.readChannel();
-			this.defaulttheme=this.theme;
-			this.isCheck=this.isDanmu;
+			this.defaulttheme = this.theme;
+			this.isCheck = this.isDanmu;
 		},
 		methods: {
 			returnback() {
@@ -93,11 +93,11 @@
 				})
 			},
 			setChannel() {
-				const $me=this;
+				const $me = this;
 				this.$confirm({
 					title: '提示',
 					content: '设置信道将解绑全部学生，你确定设置吗？',
-					centered:true,
+					centered: true,
 					onOk() {
 						$me.$postAction(api.setChannel, {
 							ch: $me.ch,
@@ -115,11 +115,11 @@
 
 			},
 			defaultSet() {
-				const $me=this;
+				const $me = this;
 				this.$confirm({
 					title: '提示',
 					content: '设置信道将解绑全部学生，你确定设置吗？',
-					centered:true,
+					centered: true,
 					onOk() {
 						$me.$postAction(api.defaultSet).then(da => {
 							if (da && da.ret == 'success') {
@@ -132,8 +132,8 @@
 						console.log('Cancel');
 					},
 				});
-				
-				
+
+
 			},
 			getChannels() {
 				/* 获取通道列表 */
@@ -143,11 +143,11 @@
 					}
 				})
 			},
-			onChange(value){
+			onChange(value) {
 				/* 是否显示弹幕 */
 				this.$store.commit('SET_danmu', value);
 			},
-			changeTheme(value){
+			changeTheme(value) {
 				/* 切换主题 */
 				this.$store.commit('SET_theme', value);
 			}
@@ -171,7 +171,8 @@
 		.setbox {
 			top: 174px;
 			background: rgba($color: #fff, $alpha: 0.7);
-			>div{
+
+			>div {
 				width: 500px;
 			}
 		}
@@ -197,9 +198,10 @@
 			top: 150px;
 			background: #fff;
 			bottom: 40px;
-			>div{
+
+			>div {
 				width: 500px;
-			} 
+			}
 		}
 
 		.setbox:after {
@@ -254,7 +256,7 @@
 		.setbox {
 			width: 780px;
 			text-align: center;
-
+			bottom: auto;
 			label {
 				text-align: left;
 				padding-left: 20px;
@@ -357,7 +359,8 @@
 	.select {
 		width: 200px;
 	}
-	.pr20{
+
+	.pr20 {
 		padding-right: 20px;
 	}
 </style>

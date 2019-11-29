@@ -376,7 +376,7 @@
 	.ml20 {
 		margin-left: 20px;
 	}
-
+	
 	.bg {
 		position: fixed;
 		top: 0;
@@ -385,7 +385,13 @@
 		bottom: 0;
 		z-index: 999;
 	}
-
+	
+	.theme4 .bg>.upload-bd /deep/ .ant-form {
+		width: 100%;
+	}
+	
+	
+	
 	// .bg .mask {
 	// 	background: rgba(0, 0, 0, 0.4);
 	// 	height: 100%;
@@ -395,7 +401,6 @@
 		position: absolute;
 		left: 60px;
 		right: 60px;
-		// transform: translateX(-50%);
 		top: 100px;
 		bottom: 40px;
 		background: #fff;
@@ -403,20 +408,28 @@
 		padding: 40px 0;
 		box-sizing: border-box;
 		box-shadow: 0 0 10px rgba($color: #2459a0, $alpha: .3);
+	
+		@media screen and (max-width: 1360px) {
+			left: 40px;
+			right: 40px;
+			top: 80px;
+			bottom: 30px;
+		}
 	}
-	.theme1 .bg>.upload-bd{
+	
+	.theme1 .bg>.upload-bd {
 		left: 135px;
 		right: 135px;
 		top: 140px;
 		bottom: 120px;
 	}
-
+	
 	.bg>.upload-bd>div {
 		overflow-y: auto;
 		height: 100%;
 		padding: 0 40px;
 	}
-
+	
 	.ant-btn-success,
 	.ant-btn-success:hover,
 	.ant-btn-success:active {
@@ -424,7 +437,7 @@
 		color: #fff;
 		boder: 1px solid #3bb1c2
 	}
-
+	
 	.bg>.upload-bd .upload-title {
 		color: #2459a0;
 		font-size: 16px;
@@ -433,7 +446,7 @@
 		text-align: left;
 		border-bottom: 1px solid #cfdbec;
 	}
-
+	
 	.bg>.upload-bd .upload-btnbar .upload,
 	.totalbar .btn {
 		position: relative;
@@ -446,7 +459,7 @@
 		display: inline-block;
 		margin-left: 10px;
 	}
-
+	
 	.bg>.upload-bd .upload-btnbar .upload input[type='file'] {
 		position: absolute;
 		top: 0;
@@ -454,31 +467,31 @@
 		font-size: 400px;
 		opacity: 0;
 	}
-
+	
 	.w100 {
 		width: 100%;
 	}
-
+	
 	/deep/ .ant-table-wrapper .operation {
 		a {
 			&.del {
 				color: #d43030;
 			}
-
+	
 			&.add {
 				color: #00baad;
 			}
 		}
 	}
-
+	
 	/deep/ .ant-form-item {
 		margin-bottom: 0;
 	}
-
+	
 	.link {
 		color: #1890ff;
 	}
-
+	
 	.close {
 		color: #fff;
 		font-size: 40px;
@@ -491,14 +504,14 @@
 		text-align: center;
 		background: url(../../assets/img/close2.png);
 	}
-
+	
 	.totalbar {
 		position: absolute;
 		right: 40px;
 		bottom: 5px;
 		line-height: 28px
 	}
-
+	
 	.totalbar span,
 	.totalbar .btn {
 		vertical-align: middle;

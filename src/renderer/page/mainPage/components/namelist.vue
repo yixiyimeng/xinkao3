@@ -2,7 +2,7 @@
 	<div class="bindnamelist bg" v-if="isshowNamelist">
 		<a href="javascript:;" class="reback" @click="closeNamelist"></a>
 		<div class="setbox">
-			<div>
+			<div class="stuname">
 				<div class="singtitle" v-if="isBind==1">接收器编号：{{code}}</div>
 				<ul class="clearfix">
 					<li v-for="(item, index) in namelist" :class="{ active: item.checked,'success':item.state == 1}">
@@ -275,33 +275,20 @@
 <style scoped="scoped" lang="scss">
 	@import '../assets/css/set.scss';
 
-	.bindnamelist {
-		z-index: 99999;
-		position: fixed;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-	}
+	.theme1 .bg .setbox {
+		background: rgba(255, 255, 255, .7);
 
-	.setbox {
-		&>div {
-			height: 100%;
+		&>.stuname {
+			padding-left: 20px;
+			padding-right: 20px;
+
+			@media screen and (max-width: 1360px) {
+				padding-bottom: 25px
+			}
 		}
 	}
 
-	.theme1 .bg .setbox {
-		background: rgba(255,255,255,.7);
-	}
-
 	.theme4 .bg .setbox {
-		position: absolute;
-		width: auto;
-		left: 135px;
-		right: 135px;
-		transform: translate(0, 0);
-		top: 160px;
-		bottom: 120px;
 		.singtitle {
 			font-size: 30px;
 			line-height: 40px;
@@ -310,7 +297,16 @@
 			left: 0;
 			right: 0;
 			z-index: 999;
-		text-align: left;
+			text-align: left;
+		}
+
+		&>.stuname {
+			padding-left: 20px;
+			padding-right: 20px;
+
+			@media screen and (max-width: 1360px) {
+				padding-bottom: 45px
+			}
 		}
 
 	}

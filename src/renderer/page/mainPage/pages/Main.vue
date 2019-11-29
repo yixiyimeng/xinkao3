@@ -102,15 +102,7 @@
 			sessionStorage.getItem('messageStore') && this.$store.replaceState(Object.assign(this.$store.state, JSON.parse(
 				sessionStorage.getItem('messageStore'))));
 
-			/* 截图 */
-			// _this.$electron.ipcRenderer.send('PrintScr');
-			/* 监听主进程 是否保存截图*/
-// 			_this.$electron.ipcRenderer.on('saveImg', (event, imgData) => {
-// 				let imgs = 'data:image/png;base64,' + btoa(
-// 					new Uint8Array(imgData).reduce((data, byte) => data + String.fromCharCode(byte), ''))
-// 				_this.img = imgs;
-// 
-// 			});
+			
 		}
 	};
 </script>
