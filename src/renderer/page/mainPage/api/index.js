@@ -50,7 +50,8 @@ const api = {
 	getDanmuinfo:'/teacherHabit/queryTeacHabit/',
 	setDanmuinfo:'/teacherHabit/save',
 	importQuesrions:'/randomDetection/importQuesrions',
-	uploadTestPaper:'/randomDetection/uploadTestPaper'
+	uploadTestPaper:'/randomDetection/uploadTestPaper',
+	getAuthentication:'/platform/authentication',//获取题库地址
 }
 export default api
 export function postAction(url, parameter,obj={}) {

@@ -6,8 +6,7 @@ import {
 	dialog,
 	ipcMain,
 	globalShortcut,
-	screen,
-	clipboard
+	screen
 } from 'electron';
 import path from 'path';
 import fs from 'fs';
@@ -64,7 +63,7 @@ function createWindow() {
 		if (mainWindow.isMinimized()) {
 			mainWindow.show();
 			mainWindow.maximize();
-			// mainWindow.setFullScreen(true);
+			 // mainWindow.setFullScreen(true);
 		}
 		mainWindow.webContents.send('isexitApp');
 	});
@@ -86,7 +85,6 @@ function createWindow() {
 		win.webContents.send('isminimizeAppsub', false);
 
 	});
-
 	/* 调试 */
 	globalShortcut.register('CTRL+T', () => {
 		//mainWindow.setFullScreen(false);
@@ -119,7 +117,7 @@ function createWindow() {
 function createSuspensionWindow() {
 	win = new BrowserWindow({
 		width: 70, //悬浮窗口的宽度 比实际DIV的宽度要多2px 因为有1px的边框
-		height: 60, //悬浮窗口的高度 比实际DIV的高度要多2px 因为有1px的边框
+		 height: 60, //悬浮窗口的高度 比实际DIV的高度要多2px 因为有1px的边框
 		type: 'toolbar', //创建的窗口类型为工具栏窗口
 		frame: false, //要创建无边框窗口
 		resizable: true, //禁止窗口大小缩放
@@ -129,7 +127,7 @@ function createSuspensionWindow() {
 		},
 		useContentSize: true,
 		maxWidth: 70,
-		maxHeight: 220,
+		 maxHeight: 220,
 		transparent: true, //设置透明
 		alwaysOnTop: true, //窗口是否总是显示在其他窗口之前
 	});
@@ -137,7 +135,7 @@ function createSuspensionWindow() {
 	const winSize = win.getSize(); //获取窗口宽高
 
 	//设置窗口的位置 注意x轴要桌面的宽度 - 窗口的宽度
-	win.setPosition(size.width - winSize[0], size.height - winSize[1] - 260);
+	win.setPosition(size.width - winSize[0], size.height - winSize[1]-260);
 	win.loadURL(subwinURL);
 
 	win.once('ready-to-show', () => {
@@ -235,7 +233,7 @@ if (!gotTheLock) {
 		// 当运行第二个实例时,将会聚焦到myWindow这个窗口
 		if (mainWindow) {
 			if (mainWindow.isMinimized()) mainWindow.restore()
-			// myWindow.focus()
+			// mainWindow.focus()
 		}
 	})
 }
@@ -308,27 +306,7 @@ app.on('ready', () => {
 		iswinsm = true;
 		win.setSize(70, 60)
 	})
-	ipcMain.on('PrintScr', () => {
-		console.log(path.join(__static, 'PrintScr.exe'));
-		const {
-			execFile
-		} = require('child_process');
-		clipboard.clear();
-		var screen_window = execFile(path.join(__static, 'QQPrintScr.exe'))
-		screen_window.on('exit', function() {
-			// console.log('关闭了');
-			 console.log(arguments);
-			// 执行成功返回 1，返回 0 没有截图
-			// if (code){ 
-				// mainWindow.webContents.paste();
-				let pngs=clipboard.readImage().toPNG();
-				
-				let imgData = new Buffer(pngs, 'base64')
-				console.log('imgData',imgData)
-			  mainWindow.webContents.send('saveImg',imgData);
-			// }
-		})
-	})
+
 });
 
 /**

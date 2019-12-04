@@ -75,6 +75,7 @@
 			<a href="javascript:;" class="signIn" v-if="isShowClassMenu&&!isAnswering" @click="showSingInlist">签到</a>
 			<a href="javascript:;" class="offClass" @click="endClass">下课</a>
 		</div>
+		<iframe :src="iframeUrl" frameborder="0" style="position: fixed; top: 0;left: 0; right: 0; bottom: 0; height: 100%; width: 100%;"></iframe>
 	</div>
 </template>
 
@@ -114,6 +115,7 @@
 				isChoice: false, //是否选择题
 				directBroadcastCode: '',
 				isShowName: false, // 显示学生名单
+				iframeUrl:'http://www.baidu.com'
 			};
 		},
 		computed: {
@@ -124,6 +126,10 @@
 			this.sendInfo = JSON.parse(this.$route.query.sendInfo);
 			this.title = this.sendInfo.className.trim();
 			this.directBroadcastCode = this.sendInfo.directBroadcastCode;
+			this.$store.state.directBroadcastCode=this.directBroadcastCode
+			/* 开始上课 */
+			this.$electron.ipcRenderer.send('onlinedirebro', true);
+			this.getAuthentication();
 		},
 		mounted() {
 			this.getWebSocket();
@@ -329,6 +335,12 @@
 					$me.$loading.close();
 				}, 5000);
 			},
+			getAuthentication(){
+				this.$postAction(api.getAuthentication,{}).then(da=>{
+					console.log(da.data)
+					this.iframeUrl=da.data;
+				})
+			}
 
 		}
 	};

@@ -12,6 +12,7 @@ export default new Vuex.Store({
 		websock: null,
 		eventlist: [],
 		alertCont: [],
+		directBroadcastCode:''
 	},
 	getters: {
 		getisminimizeApp: (state) => {

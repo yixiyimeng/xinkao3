@@ -8,8 +8,9 @@
 					<div></div>
 				</div>
 			</a>
-			<a href="javascript:;" class="minApp" @click="minApp" title="最小化" v-if="!isminimizeAppStatesub"><img src="../assets/min.png" alt="" /></a>
-			<a href="javascript:;" class="minApp" @click="maxApp" title="最大化" v-if="isminimizeAppStatesub"><img src="../assets/max.png" alt="" /></a>
+			<a href="javascript:;" class="minApp" @click="minApp" title="最小化" v-if="!isminimizeAppStatesub"></a>
+			<a href="javascript:;" class="maxApp" @click="maxApp" title="最大化" v-if="isminimizeAppStatesub"><img src="../assets/max.png" alt="" /></a>
+			<a href="javascript:;" class="exitBtn" @click="exitBtn" title="下课" v-if="onlinedirebro"></a>
 			<a href="javascript:;" class="exitApp mt10" @click="exitBtnApp" title="退出"><img src="../assets/exit.png" alt="" /></a>
 		</div>
 	</div>
@@ -63,6 +64,10 @@ export default {
 		_this.ishover =!flag;
 			
 		});
+		/* 是否上课 */
+		_this.$electron.ipcRenderer.on('onlinedirebro', (event, flag) => {
+			_this.onlinedirebro = flag;
+		});
 		document.addEventListener('drag',function(event){
 			event.preventDefault()
 		},false);
@@ -88,13 +93,16 @@ export default {
 	methods: {
 		minApp: function() {
 			this.$electron.ipcRenderer.send('minApp');
+			this.setsmwin();
 		},
 		maxApp: function() {
 			this.$electron.ipcRenderer.send('maxApp');
+			this.setsmwin();
 		},
 		exitBtn: function() {
 			/* 退出直播间 */
 			this.$electron.ipcRenderer.send('isexitdirebro');
+			this.setsmwin();
 		},
 		uploadTitle() {
 			/*上传题目*/
@@ -160,6 +168,7 @@ body,html{
 .rightBtnlist .uploadTitle,
 .rightBtnlist .exitApp,
 .rightBtnlist .minApp,
+.rightBtnlist .maxApp,
 .rightBtnlist .exitBtn {
 	opacity: 0;
 	transition: all 0.3s;
@@ -176,6 +185,7 @@ body,html{
 } */
 .rightBtnlist.active .exitApp,
 .rightBtnlist.active .minApp,
+.rightBtnlist.active .maxApp,
 .rightBtnlist.active .exitBtn {
 	opacity: 1;
 	position: relative;
@@ -198,8 +208,9 @@ body,html{
 .exitApp,
 .uploadTitle,
 .minApp,
+.maxApp,
 .exitBtn{
-	background: rgba(255, 0, 0, 0.6);
+	background: #f96060;
 	color: #fff;
 	display: block;
 	width: 45px;
@@ -213,22 +224,30 @@ body,html{
 	-webkit-app-region: no-drag;
 }
 .exitBtn {
-	background: rgba(230, 162, 60, 0.9) url(../assets/exitvideo.png) center center no-repeat;
-	background-size: 30px;
+	background: #7b6dfb url(../assets/exitvideo.png) no-repeat center center;
+	background-size: 20px;
 
 	
 }
+
 .uploadTitle,
-.minApp {
+.maxApp,
+.minApp{
 	margin-bottom: 10px;
-	background: rgba(24, 114, 255, 0.9);
+	background: rgba(24, 114, 255, 0.9) no-repeat center center;
+}
+.minApp{
+	background: rgba(24, 114, 255, 0.9) url(../assets/min.png) no-repeat center center;
+	background-size: 20px;
 }
 .uploadTitle img,
 .exitApp img,
-.minApp img {
+.maxApp img,
+.minApp img{
 	width: 25px;
 	display: inline-block;
 }
+
 .la-ball-scale-multiple,
 .la-ball-scale-multiple>div {
 	position: relative;

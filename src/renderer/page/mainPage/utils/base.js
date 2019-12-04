@@ -1,5 +1,5 @@
-// export const urlPath = 'http://192.168.10.104:8080/teacher-client';
-// export const urlwsPath = 'ws://192.168.10.104:8080/teacher-client';
+// export const urlPath = 'http://192.168.10.111:8080/teacher-client';
+// export const urlwsPath = 'ws://192.168.10.111:8080/teacher-client';
 // export const urlPath = 'http://192.168.10.167:8080/teacher-client';
 // export const urlwsPath = 'ws://192.168.10.167:8080/teacher-client';
 export const urlPath = 'http://localhost:8080/teacher-client';

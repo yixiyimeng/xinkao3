@@ -45,7 +45,7 @@
 			};
 		},
 		computed: {
-			...mapState(['isminimizeAppState']),
+			...mapState(['isminimizeAppState', 'directBroadcastCode','loginInfo']),
 			alertCont() {
 				return this.$store.getters.onalertCont();
 			}
@@ -59,6 +59,34 @@
 					_this.$loading.close();
 					_this.$electron.ipcRenderer.send('exitApp');
 				}, 2000);
+			},
+			exitBtn() {
+				/* 下课 */
+				const $me = this;
+
+				var param = {
+					code: this.directBroadcastCode
+				};
+				this.$loading('正在下课...');
+				$me.$postAction(api.endClass, param).then(da => {
+					if (da && da.ret == 'success') {
+
+					}
+				})
+				setTimeout(function() {
+					$me.$router.push({
+						//页面跳转
+						path: 'class',
+						query: {
+							sendInfo: JSON.stringify($me.loginInfo)
+						}
+					});
+					$me.$loading.close();
+					// this.$store.commit('SET_startClass', false);
+					/* 通知悬浮窗 退出直播间成功 */
+					$me.$electron.ipcRenderer.send('onlinedirebro', false);
+				}, 5000);
+
 			}
 		},
 		watch: {
@@ -93,6 +121,10 @@
 			_this.$electron.ipcRenderer.on('isminimizeApp', (event, flag) => {
 				_this.$store.commit('SET_isminimizeApp', flag);
 			});
+			/* 主进程 通知是否退出直播间 */
+			_this.$electron.ipcRenderer.on('exitdirebro', (event, flag) => {
+				_this.exitBtn();
+			});
 			/* 监听页面刷新的时候，存储store */
 			window.addEventListener('beforeunload', () => {
 				sessionStorage.setItem('messageStore', JSON.stringify(this.$store.state));
@@ -102,7 +134,7 @@
 			sessionStorage.getItem('messageStore') && this.$store.replaceState(Object.assign(this.$store.state, JSON.parse(
 				sessionStorage.getItem('messageStore'))));
 
-			
+
 		}
 	};
 </script>

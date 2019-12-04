@@ -36,9 +36,6 @@
 
 			</div>
 		</div>
-		<img :src="img" alt="" style="width: 200px; position: absolute;
-		right: 30px; bottom: 200px;">
-		<div style="width: 80px; height: 60px; background: #f00; position: absolute; bottom: 120px; right: 40px;" @click="PrintScr">截图</div>
 	</div>
 </template>
 
@@ -154,6 +151,7 @@
 									teacherCode: da.data.userId,
 									teacherName: da.data.name
 								};
+								$me.$store.state.loginInfo=$me.sendInfo;
 								$me.$router.push({
 									//页面跳转
 									path: 'class',
@@ -185,9 +183,9 @@
 				this.username = userInfo.username;
 				this.password = userInfo.password
 			},
-			PrintScr() {
-				this.$electron.ipcRenderer.send('PrintScr');
-			}
+			// PrintScr() {
+			// 	this.$electron.ipcRenderer.send('PrintScr');
+			// }
 		}
 	};
 </script>

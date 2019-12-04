@@ -7,7 +7,7 @@
 				<!-- <p class="score">{{ item.score }}</p> -->
 			</div>
 		</div>
-		<div class="thememodbox" :style="{top:ranklist.length>0?'230px':'170px',bottom:'120px'}">
+		<div class="thememodbox setbox" :style="{top:ranklist.length>0?'230px':'170px',bottom:'120px'}">
 			<div style="height: 100%;">
 				<div class="resultbox" v-if="questionType==4">
 					<a-checkbox-group @change="handchange" :options="titleOptions" v-model="checkedList" style="vertical-align: middle;" />
