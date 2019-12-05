@@ -37,7 +37,8 @@ const err = (error) => {
 // request 拦截器
 service.interceptors.request.use(config => {
 	/* 设置请求头部 */
-	//config.headers['authorization'] = 'Basic token=' + token // 让每个请求携带自定义 token 请根据实际情况自行修改
+	//config.headers['Cookie'] = 'Basic token=' + token // 让每个请求携带自定义 token 请根据实际情况自行修改
+	
 	if (config.url.indexOf('mergeFile') >= 0) {
 		return config
 	}
@@ -56,12 +57,13 @@ service.interceptors.request.use(config => {
 service.interceptors.response.use((response) => {
 	//console.log(response)
 	removePending(response.config); //在一个ajax响应后再执行一下取消操作，把已经完成的请求从pending中移除
-	if (response.data.ret == 'success') {
-		return response.data;
-	} else {
-		message.error(response.data.message ? response.data.message : '发生错误了！');
-
-	}
+// 	if (response.data.ret == 'success') {
+// 		return response.data;
+// 	} else {
+// 		message.error(response.data.message ? response.data.message : '发生错误了！');
+// 
+// 	}
+return response.data;
 
 
 }, err)

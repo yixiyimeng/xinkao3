@@ -75,7 +75,6 @@
 			<a href="javascript:;" class="signIn" v-if="isShowClassMenu&&!isAnswering" @click="showSingInlist">签到</a>
 			<a href="javascript:;" class="offClass" @click="endClass">下课</a>
 		</div>
-		<iframe :src="iframeUrl" frameborder="0" style="position: fixed; top: 0;left: 0; right: 0; bottom: 0; height: 100%; width: 100%;"></iframe>
 	</div>
 </template>
 

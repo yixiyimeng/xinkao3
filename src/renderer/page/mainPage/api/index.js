@@ -2,7 +2,7 @@ import { axios } from '@/page/mainPage/utils/request'
 import {urlwsPath} from '@/page/mainPage/utils/base'
 const api = {
 	urlwsPath:urlwsPath+'/websocket',
-	Login: '/platform/login',
+	Login: 'http://kong.sso.com:8889/teacher-platform-face/login',
 	getClasses:'/platform/getClasses',
 	getSubjectlist:'/platform/getSubjects',
 	getTestpaperList:'/platform/getCoursewares',
@@ -51,7 +51,7 @@ const api = {
 	setDanmuinfo:'/teacherHabit/save',
 	importQuesrions:'/randomDetection/importQuesrions',
 	uploadTestPaper:'/randomDetection/uploadTestPaper',
-	getAuthentication:'/platform/authentication',//获取题库地址
+	getAuthentication:'http://kong.sso.com:8889/teacher-platform-face/oauth/authentication',//获取题库地址
 }
 export default api
 export function postAction(url, parameter,obj={}) {

@@ -10,8 +10,7 @@
 						<div class="input-row flex flex-align-center">
 							<i class="user icon"></i>
 							<input type="text" class="flex-1" v-model.trim="username" placeholder="请输入用户名" />
-							<a-dropdown v-if="loginInfolist.length>0" :trigger="['click']" placement="bottomRight" class="dropdown"
-							 :overlayStyle="{'width': '200px'}">
+							<a-dropdown :trigger="['click']" placement="bottomRight" class="dropdown" :overlayStyle="{'width': '200px'}">
 								<span>
 									<a-icon type="caret-down" /></span>
 								<a-menu slot="overlay">
@@ -33,9 +32,11 @@
 						<a-button type="primary" html-type="submit" class="loginBtn">立即登录</a-button>
 					</a-form>
 				</div>
-
+				
 			</div>
 		</div>
+		<iframe :src="iframeUrl" frameborder="0" style="position: fixed; top: 0;left: 0; right: 0; bottom: 0; height: 100%; width: 100%; z-index: -1;"></iframe>
+		
 	</div>
 </template>
 
@@ -54,10 +55,9 @@
 				password: '',
 				loginInfolist: [],
 				isRemeber: true,
-				img: ''
+				iframeUrl:'http://www.baidu.com'
 			};
-		},
-		components: {
+		},components:{
 			setDanmu,
 			timeswiper
 		},
@@ -73,16 +73,6 @@
 			} catch (e) {
 				//TODO handle the exception
 			}
-			/* 截图 */
-			// 
-			/* 监听主进程 是否保存截图*/
-			_this.$electron.ipcRenderer.on('saveImg', (event, imgData) => {
-				let imgs = 'data:image/png;base64,' + btoa(
-					new Uint8Array(imgData).reduce((data, byte) => data + String.fromCharCode(byte), ''))
-				console.log('imgs',imgs)
-				_this.img = imgs;
-
-			});
 		},
 		mounted() {
 
@@ -94,9 +84,9 @@
 		methods: {
 			login(e) {
 				e.preventDefault();
-				this.sendInfo();
+				this.sendLoginInfo();
 			},
-			sendInfo() {
+			sendLoginInfo() {
 				if (this.username && this.password) {
 					if (htmlescpe.test(this.username)) {
 						this.$toast.center('账户中包含特殊字符!');
@@ -115,7 +105,7 @@
 					this.$loading('正在登陆...');
 					this.$postAction(api.Login, JSON.stringify(param))
 						.then(da => {
-							if (da && da.ret == 'success') {
+							// if (da && da.ret == 'success') {
 								if ($me.isRemeber) {
 									var useritem = {
 										username: $me.username,
@@ -151,15 +141,16 @@
 									teacherCode: da.data.userId,
 									teacherName: da.data.name
 								};
-								$me.$store.state.loginInfo=$me.sendInfo;
-								$me.$router.push({
-									//页面跳转
-									path: 'class',
-									query: {
-										sendInfo: JSON.stringify($me.sendInfo)
-									}
-								});
-							}
+								$me.getAuthentication();
+								// $me.$router.push({
+								// 	//页面跳转
+								// 	path: 'class',
+								// 	query: {
+								// 		sendInfo: JSON.stringify($me.sendInfo)
+								// 	}
+								// });
+								
+							// }
 						})
 						.finally(() => {
 							$me.$loading.close();
@@ -183,9 +174,12 @@
 				this.username = userInfo.username;
 				this.password = userInfo.password
 			},
-			// PrintScr() {
-			// 	this.$electron.ipcRenderer.send('PrintScr');
-			// }
+			getAuthentication(){
+				this.$postAction(api.getAuthentication,{}).then(da=>{
+					console.log(da.data)
+					this.iframeUrl=da.data;
+				})
+			}
 		}
 	};
 </script>
@@ -448,7 +442,6 @@
 			}
 		}
 	}
-
 	.countDownbox {
 		position: absolute;
 		left: 400px;

@@ -16,7 +16,7 @@
 						</div>
 						<div class="input-row mt10  flex flex-align-center">
 							<label><i class="red">*</i>科目</label>
-							<a-select class="select flex-1" size="large" v-model="formData.subjectCode" @change="handleChange">
+							<a-select class="select flex-1" size="large" v-model="formData.subjectCode" @change="handleClassChange">
 								<a-icon type="caret-down" slot="suffixIcon" />
 								<a-select-option :value="item.code" v-for="(item,index) in subjectList" :key="index">{{item.name}}</a-select-option>
 							</a-select>
@@ -188,9 +188,13 @@
 			/*获取课程名*/
 			getTopicTitle() {
 				const $me = this;
+				if(!this.formData.classCode||!this.formData.subjectCode){
+					return false
+				}
 				this.$postAction(api.getTopicTitle, {
 					// teacherCode: $me.sendInfo.teacAssistantCode,
 					classCode: this.formData.classCode,
+					subjectCode: this.formData.subjectCode,
 				}).then(da => {
 					if (da && da.ret == 'success') {
 						var list = da.data;
@@ -247,11 +251,11 @@
 			/* 切换班级 */
 			handleClassChange() {
 				this.getTopicTitle();
-				this.getTestpaperList();
+				// this.getTestpaperList();
 			},
 			/* 切换班级或者科目的时候，重新查询试卷 */
 			handleChange() {
-				this.getTestpaperList();
+				// this.getTestpaperList();
 			},
 			/* 切换时间的时候，重新查询试卷 */
 			changrTime() {

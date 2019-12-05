@@ -12,7 +12,8 @@ export default new Vuex.Store({
 		websock: null,
 		eventlist: [],
 		alertCont: [],
-		directBroadcastCode:''
+		directBroadcastCode:'',
+		loginInfo:null,//登录后保存的基本信息
 	},
 	getters: {
 		getisminimizeApp: (state) => {
