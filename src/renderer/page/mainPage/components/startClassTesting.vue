@@ -10,27 +10,27 @@
 					</div>
 				</li>
 			</ul>
-			
+
 			<div v-if="viewState==1" style="overflow: auto;" ref="chartbox">
 				<div class="subtablink">
 					<a href="javascript:;" @click="changeType(1)" :class="{'active':type==1}">列表</a>
 					<span>|</span>
 					<a href="javascript:;" @click="changeType(2)" :class="{'active':type==2}">图表</a>
 				</div>
-				
-				<a-table v-if="type==1" rowKey="stuCode" :columns="countcolumns" :dataSource="countSource"  :scroll="{ x:scrollx, y: scrolly }" 
-				 size="middle" :pagination="false" >
+
+				<a-table v-if="type==1" rowKey="stuCode" :columns="countcolumns" :dataSource="countSource" :scroll="{ x:scrollx, y: scrolly }"
+				 size="middle" :pagination="false">
 					<span slot="serial" slot-scope="text, record, index">
 						{{ index + 1 }}
 					</span>
 					<span :slot="item.key" v-for="(item,index) in titleNames" :key="index" slot-scope="text, record" :style="{color:text.split('|')[1]=='true'?'#00a095':'#d43030'}">{{text.split('|')[0]=='true'?'√':(text.split('|')[0]=='false'?'×':text.split('|')[0])||'--'}}</span>
 					<span slot="stuName" slot-scope="text, record, index">
-						<a href="javascript:;"  @click="showStuDetail(record)" v-if="text!='合计'">{{text}}</a>
+						<a href="javascript:;" @click="showStuDetail(record)" v-if="text!='合计'">{{text}}</a>
 						<template v-if="text=='合计'">{{text}}</template>
 					</span>
-					
+
 				</a-table>
-				
+
 				<div v-if="type==2">
 					<v-chart :options="ratepolar" autoresize class="chartbox" style="width: 100%;"></v-chart>
 					<v-chart :options="countpolar" autoresize class="chartbox" style="width: 100%;"></v-chart>
@@ -226,6 +226,7 @@
 			x: 60,
 			x2: 40,
 			y2: 54
+
 		},
 		calculable: true,
 		xAxis: [{
@@ -381,12 +382,89 @@
 				countcolumns: countcolumns,
 				countSource: [],
 				ratepolar: rateOption,
-				countpolar: countOption,
+				countpolar: null,
 				res: null,
 				titleNames: [],
 				type: 1,
-				scrollx:'100%'
-				 
+				scrollx: '100%',
+				// 				option: {
+				// 					tooltip: {
+				// 						trigger: 'axis',
+				// 						axisPointer: {
+				// 							type: 'shadow',
+				// 							label: {
+				// 								show: true
+				// 							}
+				// 						}
+				// 					},
+				// 					toolbox: {
+				// 						show: true,
+				// 						feature: {
+				// 							mark: {
+				// 								show: true
+				// 							},
+				// 							dataView: {
+				// 								show: true,
+				// 								readOnly: false
+				// 							},
+				// 							magicType: {
+				// 								show: true,
+				// 								type: ['line', 'bar']
+				// 							},
+				// 							restore: {
+				// 								show: true
+				// 							},
+				// 							saveAsImage: {
+				// 								show: true
+				// 							}
+				// 						}
+				// 					},
+				// 					calculable: true,
+				// 					legend: {
+				// 						data: ['Growth', 'Budget 2011', 'Budget 2012'],
+				// 						itemGap: 5
+				// 					},
+				// 					grid: {
+				// 						top: '12%',
+				// 						left: '1%',
+				// 						right: '10%',
+				// 						containLabel: true
+				// 					},
+				// 					xAxis: [{
+				// 						type: 'category',
+				// 						data: ['哈哈','借我玩玩','2万33']
+				// 					}],
+				// 					yAxis: [{
+				// 						type: 'value',
+				// 						name: 'Budget (million USD)',
+				// 						
+				// 					}],
+				// 					dataZoom: [{
+				// 							show: true,
+				// 							start: 94,
+				// 							end: 100
+				// 						},
+				// 						{
+				// 							type: 'inside',
+				// 							start: 94,
+				// 							end: 100
+				// 						},
+				// 
+				// 					],
+				// 					series: [{
+				// 							name: 'Budget 2011',
+				// 							type: 'bar',
+				// 							stack: '参与人数',
+				// 							data: [10, 20, 40, 10, 60]
+				// 						},
+				// 						{
+				// 							name: 'Budget 2012',
+				// 							type: 'bar',
+				// 							stack: '参与人数',
+				// 							data: [10, 25, 30, 50, 30]
+				// 						}
+				// 					]
+				// 				}
 
 			};
 		},
@@ -435,9 +513,9 @@
 				let totalNoneStulist = [];
 				if (this.res.ret == 'success') {
 					if (this.res.data.titleNames && this.res.data.titleNames.length > 0) {
-					
-						
-						
+
+
+
 						for (var i = 0; i < this.res.data.titleNames.length; i++) {
 							var item = this.res.data.titleNames[i];
 							var obj = {
@@ -455,8 +533,8 @@
 						}
 
 						let normalcolumns = JSON.parse(JSON.stringify(countcolumns));
-						normalcolumns=normalcolumns.map(item => {
-							
+						normalcolumns = normalcolumns.map(item => {
+
 							if (item.title == '#') {
 								item.width = 100;
 							} else {
@@ -467,25 +545,25 @@
 							return item
 						})
 						this.countcolumns = [...normalcolumns, ...this.titleNames];
-						this.scrollx=580+this.titleNames.length*140;
-						this.$nextTick(() => {	
-							let chartboxW=this.$refs.chartbox.offsetWidth;
-							if(this.scrollx<chartboxW){
-								if(this.titleNames&&this.titleNames.length>0){
-									this.titleNames.forEach(item=>{
-										item.width=(chartboxW-580)/this.titleNames.length
+						this.scrollx = 580 + this.titleNames.length * 140;
+						this.$nextTick(() => {
+							let chartboxW = this.$refs.chartbox.offsetWidth;
+							if (this.scrollx < chartboxW) {
+								if (this.titleNames && this.titleNames.length > 0) {
+									this.titleNames.forEach(item => {
+										item.width = (chartboxW - 580) / this.titleNames.length
 									})
 								}
 								this.countcolumns = [...normalcolumns, ...this.titleNames];
 							}
 						})
-						
+
 						console.log('this.countcolumns', this.countcolumns);
 
 					} else {
 						this.countcolumns = [...columns]
 					}
-					
+
 					if (this.res.data.stuDetailDos && this.res.data.stuDetailDos.length > 0) {
 						this.countSource = this.res.data.stuDetailDos.map(item => {
 							let param = {
@@ -544,7 +622,8 @@
 						ratepolar.dataZoom = dataZoom;
 					}
 					this.ratepolar = ratepolar;
-					this.countpolar = countOption;
+					this.countpolar = countpolar;
+					console.log('countpolar', this.countpolar)
 				}
 			},
 			setDetailslist(list) {
