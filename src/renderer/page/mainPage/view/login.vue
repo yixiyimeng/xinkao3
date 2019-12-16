@@ -28,14 +28,17 @@
 								记住密码
 							</a-checkbox>
 						</div>
-						<!-- <a href="javascript:;" class="loginBtn" @click="login" @keyup.enter="login">立即登录</a> -->
+						<!-- <a href="javascript:;" class="loginBtn" @click="saveImgFullScreen">截图</a> -->
 						<a-button type="primary" html-type="submit" class="loginBtn">立即登录</a-button>
 					</a-form>
 				</div>
 				
 			</div>
 		</div>
-		<iframe :src="iframeUrl" frameborder="0" style="position: fixed; top: 0;left: 0; right: 0; bottom: 0; height: 100%; width: 100%; z-index: -1;"></iframe>
+		<div style="position: absolute; top: 0; left: 0; height: 200px; width: 200px;">
+			<img :src="imgUrl" alt="">
+		</div>
+		<!-- <iframe :src="iframeUrl" frameborder="0" style="position: fixed; top: 0;left: 0; right: 0; bottom: 0; height: 100%; width: 100%; z-index: -1;"></iframe> -->
 		
 	</div>
 </template>
@@ -55,7 +58,8 @@
 				password: '',
 				loginInfolist: [],
 				isRemeber: true,
-				iframeUrl:'http://www.baidu.com'
+				iframeUrl:'http://www.baidu.com',
+				imgUrl:''
 			};
 		},components:{
 			setDanmu,
@@ -141,14 +145,14 @@
 									teacherCode: da.data.userId,
 									teacherName: da.data.name
 								};
-								$me.getAuthentication();
-								// $me.$router.push({
-								// 	//页面跳转
-								// 	path: 'class',
-								// 	query: {
-								// 		sendInfo: JSON.stringify($me.sendInfo)
-								// 	}
-								// });
+								// $me.getAuthentication();
+								$me.$router.push({
+									//页面跳转
+									path: 'class',
+									query: {
+										sendInfo: JSON.stringify($me.sendInfo)
+									}
+								});
 								
 							// }
 						})
@@ -178,6 +182,18 @@
 				this.$postAction(api.getAuthentication,{}).then(da=>{
 					console.log(da.data)
 					this.iframeUrl=da.data;
+				})
+			},
+			saveImgFullScreen(){
+				var param={
+					x:0,
+					y:0,
+					width:100,
+					height:100
+				};
+				this.$postAction(api.saveImg,param).then(da=>{
+					// console.log(da.data)
+				this.imgUrl='data:image/jpg;base64,'+da.data
 				})
 			}
 		}

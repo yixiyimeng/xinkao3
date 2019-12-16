@@ -6,9 +6,28 @@
 		<!-- 切换菜单 -->
 		<div class="mainmenu">
 			<div class="setbtnlist" v-if="!isAnswering">
-				<a href="javascript:;" @click="shownamelist" class="userlist" title="学生名单"></a>
+				<!-- <a href="javascript:;" class="resource" title="资源课件">
+					<i></i>
+					<span>资源课件</span>
+				</a>
+				<a href="javascript:;" class="zujuan" title="组卷网">
+					<i></i>
+					<span>组卷网</span>
+				</a> -->
+				<!-- <a href="javascript:;" @click="shownamelist" class="set" title="工具">
+					<i></i>
+					<span>工具箱</span>
+				</a> -->
+				<router-link :to="'set'" class="set">
+					<i></i>
+					<span>工具箱</span></router-link>
+				<a href="javascript:;" @click="shownamelist" class="userlist" title="学生名单">
+					<i></i>
+					<span>学生名单</span>
+				</a>
+
 				<!-- <router-link :to="'namelist'" class="userlist"></router-link> -->
-				<router-link :to="'set'" class="set" title="设置"></router-link>
+				<!-- <router-link :to="'set'" class="set" title="设置"></router-link> -->
 			</div>
 			<!-- <div class="set"></div>
 			<div class="setbtnlist">
@@ -43,6 +62,8 @@
 			<responder ref="quickAnswer" @returnback="returnback" @startQuickAnswer="startAnswer" @stopQuickAnswer="stopAnswer"></responder>
 			<!-- 弹幕 -->
 			<danmu ref="danmu" :style="{zIndex:isAnswering?999:-1}" v-show="isDanmu"></danmu>
+			<!-- 课后作业 -->
+			<homework ref="homework" @returnback="returnback"></homework>
 			<div class="classbox" v-if="isShowClassMenu">
 				<div>
 					<div class="menu">
@@ -63,7 +84,7 @@
 							<span>投票</span>
 						</a>
 						<!-- <router-link :to="'vote'"> -->
-						<a href="javascript:;">
+						<a href="javascript:;" @click="showStarthomeWork">
 							<i class="icon5 icon"></i>
 							<span>作业</span>
 						</a>
@@ -71,10 +92,14 @@
 				</div>
 			</div>
 		</div>
-		<div class="btnlist">
+		<!-- <div class="btnlist">
 			<a href="javascript:;" class="signIn" v-if="isShowClassMenu&&!isAnswering" @click="showSingInlist">签到</a>
 			<a href="javascript:;" class="offClass" @click="endClass">下课</a>
-		</div>
+		</div> -->
+		<!-- 工具栏 -->
+		<!-- <toolbar></toolbar> -->
+		<!-- <canvas id="draw" ref="draw" style="position: fixed; border: 1px solid #f00; z-index: 9999; top: 120px; left: 130px;" width="1000" height="500">您的浏览器不支持画布！</canvas> -->
+
 	</div>
 </template>
 
@@ -87,6 +112,8 @@
 	import vote from '@/page/mainPage/components/vote';
 	import score from '@/page/mainPage/components/score';
 	import responder from '@/page/mainPage/components/responder';
+	import toolbar from '@/page/mainPage/components/toolbar';
+	import homework from '@/page/mainPage/components/homework';
 	import api from '@/page/mainPage/api';
 	import {
 		mapState,
@@ -101,7 +128,10 @@
 			singinlist,
 			vote,
 			score,
-			responder
+			responder,
+			toolbar,
+			homework,
+
 		},
 		data() {
 			return {
@@ -114,7 +144,7 @@
 				isChoice: false, //是否选择题
 				directBroadcastCode: '',
 				isShowName: false, // 显示学生名单
-				iframeUrl:'http://www.baidu.com'
+
 			};
 		},
 		computed: {
@@ -125,13 +155,49 @@
 			this.sendInfo = JSON.parse(this.$route.query.sendInfo);
 			this.title = this.sendInfo.className.trim();
 			this.directBroadcastCode = this.sendInfo.directBroadcastCode;
-			this.$store.state.directBroadcastCode=this.directBroadcastCode
+			this.$store.state.directBroadcastCode = this.directBroadcastCode
 			/* 开始上课 */
 			this.$electron.ipcRenderer.send('onlinedirebro', true);
 			this.getAuthentication();
 		},
 		mounted() {
 			this.getWebSocket();
+			/* 画图 */
+
+			// 			let myCanvas = this.$refs.draw;
+			// 			var ctx = myCanvas.getContext('2d');
+			// 			ctx.strokeStyle = '#000';
+			// 			let isSameMove = false;
+			// 
+			// 			function windowToCanvas(canvas, x, y) {
+			// 				var rect = canvas.getBoundingClientRect();
+			// 				return {
+			// 					x: x - rect.left * (canvas.width / rect.width),
+			// 					y: y - rect.top * (canvas.height / rect.height)
+			// 				};
+			// 			}
+			// 			//绘制图形函数
+			// 			myCanvas.onpointerdown = function(e) {
+			// 				
+			// 				isSameMove = true;
+			// 				var ele = windowToCanvas(myCanvas, e.clientX, e.clientY);
+			// 				console.log(1223);
+			// 				ctx.beginPath();
+			// 				ctx.moveTo(ele.x, ele.y);
+			// 				myCanvas.onpointermove = function(e) {
+			// 
+			// 					if (isSameMove) {
+			// 						var ele = windowToCanvas(myCanvas, e.clientX, e.clientY);
+			// 						ctx.lineTo(ele.x, ele.y);
+			// 						ctx.stroke();
+			// 						ctx.save();
+			// 					}
+			// 				}
+			// 			}
+			// 			myCanvas.onpointerup = function(e) {
+			// 				isSameMove = false;
+			// 			}
+
 		},
 		destroyed() {
 			if (this.ws) {
@@ -210,6 +276,11 @@
 				this.$refs.quickAnswer.show();
 				this.isShowClassMenu = false;
 				this.title = '抢答'
+			},
+			showStarthomeWork() {
+				this.$refs.homework.show();
+				this.isShowClassMenu = false;
+				this.title = '课后作业'
 			},
 			returnback(isOnlyShowClassName) {
 				/* 返回 */
@@ -334,10 +405,10 @@
 					$me.$loading.close();
 				}, 5000);
 			},
-			getAuthentication(){
-				this.$postAction(api.getAuthentication,{}).then(da=>{
+			getAuthentication() {
+				this.$postAction(api.getAuthentication, {}).then(da => {
 					console.log(da.data)
-					this.iframeUrl=da.data;
+					this.iframeUrl = da.data;
 				})
 			}
 
@@ -435,36 +506,36 @@
 			}
 		}
 
-		.btnlist {
-			text-align: right;
-			position: absolute;
-			bottom: 35px;
-			right: 35px;
-			z-index: 999;
-
-			a {
-				height: 56px;
-				width: 56px;
-				display: inline-block;
-				text-align: center;
-				line-height: 56px;
-				background: no-repeat center center;
-				background-size: cover;
-				font-family: 'hxfont';
-				font-size: 18px;
-
-				&.signIn {
-					background-image: url(../assets/img/theme1/btn1.png);
-					color: #6699cc;
-				}
-
-				&.offClass {
-					background-image: url(../assets/img/theme1/btn2.png);
-					color: #fff;
-					margin-left: 10px;
-				}
-			}
-		}
+		// 		.btnlist {
+		// 			text-align: right;
+		// 			position: absolute;
+		// 			bottom: 35px;
+		// 			right: 35px;
+		// 			z-index: 999;
+		// 
+		// 			a {
+		// 				height: 56px;
+		// 				width: 56px;
+		// 				display: inline-block;
+		// 				text-align: center;
+		// 				line-height: 56px;
+		// 				background: no-repeat center center;
+		// 				background-size: cover;
+		// 				font-family: 'hxfont';
+		// 				font-size: 18px;
+		// 
+		// 				&.signIn {
+		// 					background-image: url(../assets/img/theme1/btn1.png);
+		// 					color: #6699cc;
+		// 				}
+		// 
+		// 				&.offClass {
+		// 					background-image: url(../assets/img/theme1/btn2.png);
+		// 					color: #fff;
+		// 					margin-left: 10px;
+		// 				}
+		// 			}
+		// 		}
 	}
 
 	.theme2 .bg {
@@ -517,36 +588,36 @@
 			}
 		}
 
-		.btnlist {
-			text-align: right;
-			text-align: right;
-			position: absolute;
-			bottom: 35px;
-			right: 35px;
-			z-index: 999;
-
-			a {
-				width: 100px;
-				height: 34px;
-				display: inline-block;
-				text-align: center;
-				line-height: 34px;
-				background: no-repeat center center;
-				background-size: cover;
-				font-size: 18px;
-
-				&.signIn {
-					background-image: url(../assets/img/theme2/btn1.png);
-					color: #6699cc;
-				}
-
-				&.offClass {
-					background-image: url(../assets/img/theme2/btn2.png);
-					color: #fff;
-					margin-left: 10px;
-				}
-			}
-		}
+		// 		.btnlist {
+		// 			text-align: right;
+		// 			text-align: right;
+		// 			position: absolute;
+		// 			bottom: 35px;
+		// 			right: 35px;
+		// 			z-index: 999;
+		// 
+		// 			a {
+		// 				width: 100px;
+		// 				height: 34px;
+		// 				display: inline-block;
+		// 				text-align: center;
+		// 				line-height: 34px;
+		// 				background: no-repeat center center;
+		// 				background-size: cover;
+		// 				font-size: 18px;
+		// 
+		// 				&.signIn {
+		// 					background-image: url(../assets/img/theme2/btn1.png);
+		// 					color: #6699cc;
+		// 				}
+		// 
+		// 				&.offClass {
+		// 					background-image: url(../assets/img/theme2/btn2.png);
+		// 					color: #fff;
+		// 					margin-left: 10px;
+		// 				}
+		// 			}
+		// 		}
 	}
 
 	.theme3 .bg {
@@ -595,31 +666,31 @@
 			}
 		}
 
-		.btnlist {
-			text-align: right;
-
-			a {
-				width: 100px;
-				height: 41px;
-				display: inline-block;
-				text-align: center;
-				line-height: 38px;
-				font-size: 18px;
-				color: #fff;
-				background: rgba($color: #07f8ff, $alpha: 0.3);
-				border: 1px solid #07f8ff;
-				border-radius: 5px;
-
-				&.offClass {
-					margin-left: 10px;
-				}
-			}
-		}
+		// 		.btnlist {
+		// 			text-align: right;
+		// 
+		// 			a {
+		// 				width: 100px;
+		// 				height: 41px;
+		// 				display: inline-block;
+		// 				text-align: center;
+		// 				line-height: 38px;
+		// 				font-size: 18px;
+		// 				color: #fff;
+		// 				background: rgba($color: #07f8ff, $alpha: 0.3);
+		// 				border: 1px solid #07f8ff;
+		// 				border-radius: 5px;
+		// 
+		// 				&.offClass {
+		// 					margin-left: 10px;
+		// 				}
+		// 			}
+		// 		}
 	}
 
 	.theme4 .bg {
 		.classbox {
-			width: 1225px;
+			width: 1250px;
 			background: #fff;
 			padding: 11px;
 			position: relative;
@@ -810,39 +881,39 @@
 			}
 		}
 
-		.btnlist {
-			position: fixed;
-			bottom: 15px;
-			right: 35px;
-			z-index: 999;
-
-			.offClass,
-			.signIn {
-				width: 116px;
-				height: 85px;
-				display: inline-block;
-				text-align: center;
-				line-height: 85px;
-				background: url(../assets/img/theme4/btn.png);
-				background-size: cover;
-				color: #2b5fa3;
-				font-size: 30px;
-				@media screen and (max-width: 1360px) {
-					width: 96px;
-					height: 70px;
-					line-height: 70px;
-					font-size: 24px;
-				}
-
-				&.offClass {
-					margin-left: 30px;
-					@media screen and (max-width: 1360px) {
-						margin-left: 20px;
-					}
-				}
-			}
-
-		}
+		// 		.btnlist {
+		// 			position: fixed;
+		// 			bottom: 15px;
+		// 			right: 35px;
+		// 			z-index: 999;
+		// 
+		// 			.offClass,
+		// 			.signIn {
+		// 				width: 116px;
+		// 				height: 85px;
+		// 				display: inline-block;
+		// 				text-align: center;
+		// 				line-height: 85px;
+		// 				background: url(../assets/img/theme4/btn.png);
+		// 				background-size: cover;
+		// 				color: #2b5fa3;
+		// 				font-size: 30px;
+		// 				@media screen and (max-width: 1360px) {
+		// 					width: 96px;
+		// 					height: 70px;
+		// 					line-height: 70px;
+		// 					font-size: 24px;
+		// 				}
+		// 
+		// 				&.offClass {
+		// 					margin-left: 30px;
+		// 					@media screen and (max-width: 1360px) {
+		// 						margin-left: 20px;
+		// 					}
+		// 				}
+		// 			}
+		// 
+		// 		}
 	}
 
 	.vs__fade-enter-active,

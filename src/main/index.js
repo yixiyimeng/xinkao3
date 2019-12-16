@@ -6,7 +6,8 @@ import {
 	dialog,
 	ipcMain,
 	globalShortcut,
-	screen
+	screen,
+	clipboard
 } from 'electron';
 import path from 'path';
 import fs from 'fs';
@@ -306,6 +307,24 @@ app.on('ready', () => {
 		iswinsm = true;
 		win.setSize(70, 60)
 	})
+	ipcMain.on('PrintScr', () => {
+			console.log(path.join(__static, 'PrintScr.exe'));
+			const {
+				execFile
+			} = require('child_process');
+			clipboard.clear();
+			var screen_window = execFile(path.join(__static, 'PrintScr.exe'))
+			screen_window.on('exit', function(code) {
+				// 执行成功返回 1，返回 0 没有截图
+				if (code){ 
+					mainWindow.webContents.paste();
+					let pngs=clipboard.readImage().toPNG();
+					let imgData = new Buffer(pngs, 'base64')
+					// console.log(pngs)
+				  mainWindow.webContents.send('saveImg',imgData);
+				}
+			})
+		})
 
 });
 

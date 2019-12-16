@@ -110,7 +110,7 @@
 		width: 74px;
 		background: url(assets/img/theme1/reback.png) no-repeat center center;
 		position: fixed;
-		top: 70px;
+		bottom: 40px;
 		right: 35px;
 	}
 	.startAnswer{
@@ -144,7 +144,7 @@
 		width: 62px;
 		background: url(assets/img/theme2/reback.png) no-repeat center center;
 		position: fixed;
-		top: 74px;
+		bottom: 44px;
 		right: 40px;
 	}
 
@@ -157,7 +157,7 @@
 		background: url(assets/img/theme3/reback.png) no-repeat center center;
 		background-size: cover;
 		position: absolute;
-		top: 70px;
+		bottom: 40px;
 		right: 75px;
 	}
 
@@ -207,7 +207,7 @@
 		background: url(assets/img/theme4/reback.png) no-repeat center center;
 		background-size: cover;
 		position: fixed;
-		top: 100px;
+		bottom: 40px;
 		right: 35px;
 		@media screen and (max-width: 1360px){
 			height: 70px;
@@ -920,23 +920,54 @@
 		position: absolute;
 		z-index: 9999;
 		left:0;
-		top:20%;
+		bottom:120px;
 		.setbtnlist {
 			a {
 				display:block;
-				background: #2459a0 no-repeat center center;
-				height: 45px;
-				width: 45px;
-				border-radius: 100%;
+				background: #fff;
+				// background: #2459a0 no-repeat center center;
+				height: 50px;
+				width: 187px;
+				border:1px solid #2459a0;
+				color:#2459a0;
+				font-size:24px;
+				padding-left:28px;
+				 border-radius: 10px;
+				 i{
+					 display: inline-block;
+					 height: 30px;
+					 width: 30px;
+					 background: no-repeat center center;
+					 vertical-align: middle;
+				 }
+				 span{
+					  vertical-align: middle;
+				 }
 				&.userlist{
-					background-image: url(assets/img/theme4/user.png);
+					i{
+						background-image: url(assets/img/icon6.png);
+					}
 				}
+				
 				&.set{
-					background-image: url(assets/img/set.png);
+					i{
+						background-image: url(assets/img/icon9.png);
+					}
+				}
+				&.zujuan{
+					i{
+						background-image: url(assets/img/icon7.png);
+					}
+				}
+				&.resource{
+					i{
+						background-image: url(assets/img/icon8.png);
+					}
 				}
 				&+a{
-					margin-top: 10px;
+					margin-top: 18px;
 				}
+				
 			}
 		}
 	}

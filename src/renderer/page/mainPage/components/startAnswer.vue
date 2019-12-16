@@ -93,7 +93,8 @@
 							$me.isAnswering = false;
 							$me.viewState = 2;
 							$me.$emit('stopAnswer');
-							$me.$refs.startClassTesting.setDetailslist(da.data)
+							// $me.$refs.startClassTesting.setDetailslist(da.data)
+							$me.$refs.startClassTesting.setCountlist(da)
 							// clearInterval($me.timer);
 							// $me.timer = null;
 						}
