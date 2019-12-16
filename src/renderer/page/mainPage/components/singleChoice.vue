@@ -213,7 +213,7 @@
 				display: block;
 				height: auto;
 
-				@media screen and (max-width: 1360px) {
+				@media only screen and (max-width: 1366px) {
 					padding: 16px 0;
 				}
 
@@ -224,7 +224,7 @@
 					height: 164px;
 					width: 164px;
 
-					@media screen and (max-width: 1360px) {
+					@media only screen and (max-width: 1366px) {
 						height: 140px;
 						width: 140px;
 					}

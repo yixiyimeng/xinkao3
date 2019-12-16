@@ -110,7 +110,7 @@
 		width: 74px;
 		background: url(assets/img/theme1/reback.png) no-repeat center center;
 		position: fixed;
-		bottom: 40px;
+		bottom: 30px;
 		right: 35px;
 	}
 	.startAnswer{
@@ -192,7 +192,7 @@
 			line-height: 80px;
 			text-align: center;
 			margin-right: 20px;font-family: 'hxfont';
-			@media screen and (max-width: 1360px){
+			@media screen and (max-width: 1366px){
 				height: 60px;
 				width: 60px;
 				line-height: 60px;
@@ -207,9 +207,9 @@
 		background: url(assets/img/theme4/reback.png) no-repeat center center;
 		background-size: cover;
 		position: fixed;
-		bottom: 40px;
+		bottom: 30px;
 		right: 35px;
-		@media screen and (max-width: 1360px){
+		@media screen and (max-width: 1366px){
 			height: 70px;
 			width:81px;
 		}
@@ -226,10 +226,11 @@
 		position: absolute;
 		border-radius: 0;
 		bottom:120px;
-		@media screen and (max-width: 1360px){
+		@media screen and (max-width: 1366px){
 			top: 140px;
 			padding: 8px;
 			bottom: 100px;
+			width: 80%;
 		}
 		&:before {
 			display: block;
@@ -243,7 +244,7 @@
 			left: 50%;
 			transform: translateX(-50%);
 			z-index: 1;
-			@media screen and (max-width: 1360px){
+			@media screen and (max-width: 1366px){
 				width: 450px;
 				height: 75px;
 			}
@@ -256,7 +257,7 @@
 			z-index: 0;
 			overflow: auto;
 			height:100%;
-			@media screen and (max-width: 1360px){
+			@media screen and (max-width: 1366px){
 				padding: 75px 0 25px;
 			}
 		}
@@ -304,7 +305,7 @@
 			z-index: 0;
 			overflow: auto;
 			height:100%;
-			@media screen and (max-width: 1360px){
+			@media screen and (max-width: 1366px){
 				padding: 0;
 			}
 		}
@@ -396,11 +397,11 @@
 
 		.btnbar {
 			position: fixed;
-			bottom: 40px;
+			bottom: 30px;
 			left: 50%;
 			transform: translate(-50%, 0);
 			width: 1227px;
-			z-index:9999;
+			z-index:9998;
 			a {
 				display: block;
 				margin: 0 auto;
@@ -423,11 +424,11 @@
 }
 .btnbar {
 		position: fixed;
-		bottom: 40px;
+		bottom: 30px;
 		left: 50%;
 		transform: translate(-50%, 0);
 		width: 1227px;
-		z-index:9999;
+		z-index:9998;
 		a {
 			display: block;
 			margin: 0 auto;
@@ -634,7 +635,7 @@
 	right: 20px;
 	bottom:20px;
 	cursor: pointer;
-	@media screen and (max-width: 1360px) {
+	@media screen and (max-width: 1366px) {
 		bottom: 12px;
 	}
 }
@@ -1345,7 +1346,7 @@
 		display: block;	
 	}
 	.setbox.voteChart .voteInfo span.obj{
-		display: inline-block;
+		display: block;
 	}
 	.voteChart .flex-1{
 		height: 100%;

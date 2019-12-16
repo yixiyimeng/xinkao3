@@ -10,20 +10,27 @@
 					</div>
 				</li>
 			</ul>
+			
 			<div v-if="viewState==1" style="overflow: auto;" ref="chartbox">
 				<div class="subtablink">
 					<a href="javascript:;" @click="changeType(1)" :class="{'active':type==1}">列表</a>
 					<span>|</span>
 					<a href="javascript:;" @click="changeType(2)" :class="{'active':type==2}">图表</a>
 				</div>
-				<a-table v-if="type==1" rowKey="questionId" :columns="countcolumns" :dataSource="countSource" :scroll="{ y: scrolly }"
-				 size="middle" :pagination="false">
+				
+				<a-table v-if="type==1" rowKey="stuCode" :columns="countcolumns" :dataSource="countSource"  :scroll="{ x:scrollx, y: scrolly }" 
+				 size="middle" :pagination="false" >
 					<span slot="serial" slot-scope="text, record, index">
 						{{ index + 1 }}
 					</span>
 					<span :slot="item.key" v-for="(item,index) in titleNames" :key="index" slot-scope="text, record" :style="{color:text.split('|')[1]=='true'?'#00a095':'#d43030'}">{{text.split('|')[0]=='true'?'√':(text.split('|')[0]=='false'?'×':text.split('|')[0])||'--'}}</span>
-					<a href="javascript:;" slot="stuName" slot-scope="text, record, index" @click="showStuDetail(record)">{{text}}</a>
+					<span slot="stuName" slot-scope="text, record, index">
+						<a href="javascript:;"  @click="showStuDetail(record)" v-if="text!='合计'">{{text}}</a>
+						<template v-if="text=='合计'">{{text}}</template>
+					</span>
+					
 				</a-table>
+				
 				<div v-if="type==2">
 					<v-chart :options="ratepolar" autoresize class="chartbox" style="width: 100%;"></v-chart>
 					<v-chart :options="countpolar" autoresize class="chartbox" style="width: 100%;"></v-chart>
@@ -37,16 +44,16 @@
 						<!-- {{ index + 1 }} -->
 						{{text}}
 					</span>
-					<span slot="questionType" slot-scope="text, record, index">
+					<span slot="questionName" slot-scope="text, record, index">
 						{{ text}}
 					</span>
 					<a-tag slot="answer" slot-scope="text, record, index" v-if="text" :color="record.answerResult=='true'?'#87d068':'#f00'">
-						<template v-if="record.questionId==2">{{ text|Answerfilter}}</template>
-						<template v-if="record.questionId!=2">{{ text}}</template>
+						<template v-if="record.questionType==2">{{ text|Answerfilter}}</template>
+						<template v-if="record.questionType!=2">{{ text}}</template>
 					</a-tag>
 					<span slot="trueAnswer" slot-scope="text, record, index">
-						<template v-if="record.questionId==2">{{ text|Answerfilter}}</template>
-						<template v-if="record.questionId!=2">{{ text}}</template>
+						<template v-if="record.questionType==2">{{ text|Answerfilter}}</template>
+						<template v-if="record.questionType!=2">{{ text}}</template>
 					</span>
 				</a-table>
 			</div>
@@ -67,6 +74,7 @@
 			title: '姓名',
 			dataIndex: 'stuName',
 			key: 'stuName',
+			align: 'center',
 			// fixed: 'left',
 			width: '32%',
 			scopedSlots: {
@@ -78,15 +86,15 @@
 			title: '排名',
 			key: 'ranking',
 			dataIndex: 'ranking',
-			// fixed: 'left',
+			align: 'center',
 			width: '32%'
 		},
 		{
 			title: '综合正确率',
 			key: 'compCorrRate',
 			dataIndex: 'compCorrRate',
-			// fixed: 'left',
-			width: '32%'
+			width: '32%',
+			align: 'center',
 		}
 	];
 	var defaultcolor = [{
@@ -316,10 +324,10 @@
 		},
 		{
 			title: '题目类型',
-			dataIndex: 'questionType',
+			dataIndex: 'questionName',
 			width: '25%',
 			scopedSlots: {
-				customRender: 'questionType'
+				customRender: 'questionName'
 			},
 		},
 		{
@@ -346,7 +354,8 @@
 		{
 			title: '得分',
 			dataIndex: 'score',
-			width: 100
+			width: 100,
+			align: 'center',
 		},
 		// 	{
 		// 		title: '操作',
@@ -375,7 +384,9 @@
 				countpolar: countOption,
 				res: null,
 				titleNames: [],
-				type: 1
+				type: 1,
+				scrollx:'100%'
+				 
 
 			};
 		},
@@ -424,12 +435,17 @@
 				let totalNoneStulist = [];
 				if (this.res.ret == 'success') {
 					if (this.res.data.titleNames && this.res.data.titleNames.length > 0) {
+					
+						
+						
 						for (var i = 0; i < this.res.data.titleNames.length; i++) {
 							var item = this.res.data.titleNames[i];
 							var obj = {
 								title: item.titleName + '_' + item.questionId,
 								key: item.questionId,
 								dataIndex: item.questionId,
+								align: 'center',
+								width: 140,
 								scopedSlots: {
 									customRender: item.questionId
 								}
@@ -439,20 +455,37 @@
 						}
 
 						let normalcolumns = JSON.parse(JSON.stringify(countcolumns));
-						this.countcolumns = [...normalcolumns.map(item => {
+						normalcolumns=normalcolumns.map(item => {
+							
 							if (item.title == '#') {
 								item.width = 100;
 							} else {
-								item.width = 180;
+								item.width = 160;
 							}
 
 							item.fixed = 'left';
 							return item
-						}), ...this.titleNames];
+						})
+						this.countcolumns = [...normalcolumns, ...this.titleNames];
+						this.scrollx=580+this.titleNames.length*140;
+						this.$nextTick(() => {	
+							let chartboxW=this.$refs.chartbox.offsetWidth;
+							if(this.scrollx<chartboxW){
+								if(this.titleNames&&this.titleNames.length>0){
+									this.titleNames.forEach(item=>{
+										item.width=(chartboxW-580)/this.titleNames.length
+									})
+								}
+								this.countcolumns = [...normalcolumns, ...this.titleNames];
+							}
+						})
+						
+						console.log('this.countcolumns', this.countcolumns);
 
 					} else {
 						this.countcolumns = [...columns]
 					}
+					
 					if (this.res.data.stuDetailDos && this.res.data.stuDetailDos.length > 0) {
 						this.countSource = this.res.data.stuDetailDos.map(item => {
 							let param = {
