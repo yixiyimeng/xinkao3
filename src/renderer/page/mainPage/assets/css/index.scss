@@ -1295,11 +1295,12 @@
 		transform: translate(0,0);
 		&.setbox{
 			width: auto;
+			&>div{
+				padding-left: 60px;
+				padding-right: 20px;
+			}
 		}
-		&>div{
-			padding-left: 60px;
-			padding-right: 60px;
-		}
+		
 	}
 	.voteChart>div{
 		padding: 40px 60px;
