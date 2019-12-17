@@ -161,7 +161,7 @@
 		grid: {
 			x: 60,
 			x2: 40,
-			y2: 54
+			y2: 64
 		},
 		calculable: true,
 		xAxis: [{
@@ -225,7 +225,7 @@
 		grid: {
 			x: 60,
 			x2: 40,
-			y2: 54
+			y2: 64
 
 		},
 		calculable: true,
@@ -609,14 +609,17 @@
 					countpolar.series[1].data = totalFalseStulist;
 					countpolar.series[2].data = totalNoneStulist;
 					if (ratexAxis.length > 10) {
+						var num=100/(ratexAxis.length/10-1)
 						let dataZoom = [{
 							show: true,
-							start: 70,
-							end: 100
+							start: 0,
+							end: 100/(ratexAxis.length/10-1),
+							zoomOnMouseWheel:false
 						}, {
 							type: 'inside',
-							start: 70,
-							end: 100
+							start: 0,
+							end: 100/(ratexAxis.length/10-1),
+							zoomOnMouseWheel:false
 						}]
 						countpolar.dataZoom = dataZoom;
 						ratepolar.dataZoom = dataZoom;
