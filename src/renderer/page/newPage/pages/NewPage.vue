@@ -1,7 +1,7 @@
 <template>
 	<div id="suspension">
-		<div class="rightBtnlist" @mouseenter="setbgwin" @mouseleave="setsmwin" :class="{active:ishover}">
-			<a href="javascript:;" class="kjbtn"  @click.stop="isShowWin">
+		<div class="rightBtnlist" @mouseenter="setbgwin" @mouseleave="setsmwin" :class="{active:ishover}" >
+			<a href="javascript:;" class="kjbtn">
 				<div class="la-ball-scale-multiple">
 					<div></div>
 					<div></div>
@@ -117,14 +117,9 @@ export default {
 		},
 		setsmwin(){
 			this.ishover=false;
-			this.$electron.ipcRenderer.send('smwin');	
-		},
-		isShowWin(){
-			if(!this.ishover){
-				this.setbgwin()
-			}else{
-				this.setsmwin();
-			}
+			this.$electron.ipcRenderer.send('smwin');
+		
+			
 		}
 	}
 };

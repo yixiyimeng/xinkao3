@@ -112,9 +112,7 @@
 		},
 		created() {
 			this.sendInfo = JSON.parse(this.$route.query.sendInfo);
-			if (this.sendInfo) {
-				this.schoolCode = this.sendInfo.schoolCode;
-			}
+			this.schoolCode = this.sendInfo.schoolCode;
 			this.getClasslist();
 			this.getSubjectlist();
 			this.rangetime[0] = moment().subtract(30, 'days');
@@ -144,7 +142,7 @@
 				this.formData.questionId = '';
 				this.formData.tempQuestionId = '';
 				/* 清除空格 */
-				this.formData.topicName = this.formData.topicName.trim();
+				this.formData.topicName=this.formData.topicName.trim();
 			},
 			/* 查询班级 */
 			getClasslist() {
@@ -190,7 +188,7 @@
 			/*获取课程名*/
 			getTopicTitle() {
 				const $me = this;
-				if (!this.formData.classCode || !this.formData.subjectCode) {
+				if(!this.formData.classCode||!this.formData.subjectCode){
 					return false
 				}
 				this.$postAction(api.getTopicTitle, {
@@ -298,7 +296,7 @@
 			returnback() {
 				this.$router.push('/login');
 			},
-			sendClassInfo() {
+			sendClassInfo(){
 				const $me = this;
 				/* 先判断是否loading，防止重复提交 */
 				if ($me.loading) {
@@ -339,7 +337,7 @@
 				let code = e.charCode || e.keyCode;
 				if (code == 13) {
 					$me.sendClassInfo();
-
+			
 				}
 			},
 			getDanmuinfo() {

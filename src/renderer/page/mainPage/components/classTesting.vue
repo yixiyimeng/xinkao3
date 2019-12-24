@@ -3,16 +3,15 @@
 		<div class="subtitle flex flex-pack-justify flex-align-center">
 			<div><img src="../assets/img/gou.png" alt="" v-if="theme!='theme4'" />
 				<img src="../assets/img/gou2.png" alt="" v-if="theme=='theme4'" />
-				<span class="ml10">请选择试卷</span>
-			</div>
-			<!-- <div>
+				<span class="ml10">请选择试卷</span></div>
+			<div>
 				<div class="subtablink">
 					<a href="javascript:;" @click="changeType(1)" :class="{'active':type==1}">普通模式</a>
 					<span>|</span>
 					<a href="javascript:;" @click="changeType(2)" :class="{'active':type==2}">套题模式</a>
 				</div>
 				<a href="javascript:;" class="addBtn" @click="addPaper">添加试卷</a>
-			</div> -->
+			</div>
 		</div>
 		<div class="tablelist mt20" ref="setbox">
 			<a-table style="height: 100%;" rowKey="titleCode" :columns="columns" :dataSource="dataSource" :scroll="{ x: 700, y: scrolly }"
@@ -167,7 +166,6 @@
 </script>
 
 <style scoped="scoped" lang="scss">
-	
 	.theme1 {
 		.modbox {
 			position: absolute;

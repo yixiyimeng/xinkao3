@@ -123,12 +123,9 @@
 					},
 					grid: {
 						left: '3%',
-						right: 80,
+						right: '4%',
 						bottom: '3%',
 						containLabel: true
-						// x: 60,
-						// x2: 40,
-						// y2: '3%'
 					},
 					color: ['#c7615d', '#e0b088', '#176bab', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074',
 						'#546570', '#c4ccd3'
@@ -298,7 +295,7 @@
 								itemStyle: {
 									barBorderRadius: [5, 5, 0, 0]
 								},
-								barMaxWidth: '35',
+								barWidth: '35',
 								data: item.voteStatisticsNames.map(subitem => subitem.studentInfos.length)
 							}
 							serieslist.push(seriesitem)

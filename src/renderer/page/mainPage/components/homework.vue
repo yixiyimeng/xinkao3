@@ -210,14 +210,13 @@
 </script>
 
 <style scoped="scoped" lang="scss">
-	@import '../assets/css/set.scss';
 	.theme1 {
 		.modbox {
-			// position: absolute;
-			// top: 80px;
-			// left: 0;
-			// right: 0;
-			// bottom: 0;
+			position: absolute;
+			top: 80px;
+			left: 0;
+			right: 0;
+			bottom: 0;
 		}
 	}
 
@@ -274,7 +273,7 @@
 
 	.theme1 .subtablink a,
 	.theme1 .subtablink {
-		color: rgba($color: #000, $alpha: .8);
+		color: rgba($color: #fff, $alpha: .8);
 	}
 
 	.subtablink a.active {

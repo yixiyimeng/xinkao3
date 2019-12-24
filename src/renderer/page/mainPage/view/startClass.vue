@@ -6,21 +6,18 @@
 		<!-- 切换菜单 -->
 		<div class="mainmenu">
 			<div class="setbtnlist" v-if="!isAnswering">
-				<!-- <a href="javascript:;" class="resource" title="资源课件">
+				<a href="javascript:;" @click="shownamelist" class="resource" title="资源课件">
 					<i></i>
 					<span>资源课件</span>
 				</a>
-				<a href="javascript:;" class="zujuan" title="组卷网">
+				<a href="javascript:;" @click="shownamelist" class="zujuan" title="组卷网">
 					<i></i>
 					<span>组卷网</span>
-				</a> -->
-				<!-- <a href="javascript:;" @click="shownamelist" class="set" title="工具">
+				</a>
+				<a href="javascript:;" @click="shownamelist" class="set" title="工具">
 					<i></i>
 					<span>工具箱</span>
-				</a> -->
-				<router-link :to="'set'" class="set">
-					<i></i>
-					<span>工具箱</span></router-link>
+				</a>
 				<a href="javascript:;" @click="shownamelist" class="userlist" title="学生名单">
 					<i></i>
 					<span>学生名单</span>
@@ -66,7 +63,6 @@
 			<homework ref="homework" @returnback="returnback"></homework>
 			<div class="classbox" v-if="isShowClassMenu">
 				<div>
-
 					<div class="menu">
 						<a href="javascript:;" @click="showStartAnswer">
 							<i class="icon1 icon"></i>
@@ -100,7 +96,7 @@
 		<!-- 工具栏 -->
 		<!-- <toolbar></toolbar> -->
 		<!-- <canvas id="draw" ref="draw" style="position: fixed; border: 1px solid #f00; z-index: 9999; top: 120px; left: 130px;" width="1000" height="500">您的浏览器不支持画布！</canvas> -->
-
+		
 	</div>
 </template>
 
@@ -132,7 +128,7 @@
 			responder,
 			toolbar,
 			homework,
-
+			
 		},
 		data() {
 			return {
@@ -145,8 +141,7 @@
 				isChoice: false, //是否选择题
 				directBroadcastCode: '',
 				isShowName: false, // 显示学生名单
-
-
+				
 			};
 		},
 		computed: {
@@ -280,9 +275,9 @@
 				this.title = '抢答'
 			},
 			showStarthomeWork() {
-				// this.$refs.homework.show();
-				// this.isShowClassMenu = false;
-				// this.title = '课后作业'
+				this.$refs.homework.show();
+				this.isShowClassMenu = false;
+				this.title = '课后作业'
 			},
 			returnback(isOnlyShowClassName) {
 				/* 返回 */
@@ -703,7 +698,7 @@
 			position: absolute;
 			bottom: 120px;
 
-			@media only screen and (max-width: 1440px) {
+			@media screen and (max-width: 1440px) {
 				width: auto;
 				transform: translate(0, 0);
 				left: 165px;
@@ -711,7 +706,7 @@
 				bottom: 100px;
 			}
 
-			@media only screen and (max-width: 1366px) {
+			@media screen and (max-width: 1360px) {
 				top: 140px;
 				padding: 8px;
 			}
@@ -729,7 +724,7 @@
 				transform: translateX(-50%);
 				z-index: 1;
 
-				@media only screen and (max-width: 1366px) {
+				@media screen and (max-width: 1360px) {
 					width: 450px;
 					height: 75px;
 				}
@@ -742,13 +737,12 @@
 				overflow: auto;
 				height: 100%;
 
-				@media only screen and (max-width: 1366px) {
+				@media screen and (max-width: 1360px) {
 					padding: 75px 0 25px;
 				}
 
 				.menu {
 					text-align: center;
-					padding: 0 10px;
 
 					a {
 						position: relative;
@@ -759,7 +753,7 @@
 						font-size: 42px;
 						padding-top: 50px;
 
-						@media only screen and (max-width: 1366px) {
+						@media screen and (max-width: 1360px) {
 							width: 180px;
 							font-size: 36px;
 						}
@@ -767,7 +761,7 @@
 						&:nth-child(2) {
 							margin: 0 122px;
 
-							@media screen and (max-width: 1366px) {
+							@media screen and (max-width: 1360px) {
 								margin: 0 90px;
 							}
 						}
@@ -776,7 +770,7 @@
 						&:nth-child(5) {
 							margin: 0 72px 50px;
 
-							@media only screen and (max-width: 1366px) {
+							@media screen and (max-width: 1360px) {
 								margin: -20px 50px 0;
 							}
 						}
@@ -794,7 +788,7 @@
 							top: 30px;
 							transform: translate(-50%, 0) rotate(45deg);
 
-							@media only screen and (max-width: 1366px) {
+							@media screen and (max-width: 1360px) {
 								height: 160px;
 								width: 160px;
 							}
