@@ -14,22 +14,22 @@
 					<i></i>
 					<p>倒计时</p>
 				</a>
-				<a href="javascript:;" class="rollCall">
+				<!-- <a href="javascript:;" class="rollCall">
 					<i></i>
 					<p>点名</p>
 				</a>
 				<a href="javascript:;" class="pickName">
 					<i></i>
 					<p>随机</p>
-				</a>
+				</a> -->
 				<a href="javascript:;" class="barrage" @click="show(1)">
 					<i></i>
 					<p>弹幕</p>
 				</a>
-				<a href="javascript:;" class="more">
+				<!-- <a href="javascript:;" class="more">
 					<i></i>
 					<p>更多</p>
-				</a>
+				</a> -->
 			</div>
 		</div>
 		<!-- <setDanmu @close="close" v-if="type==1"></setDanmu> -->

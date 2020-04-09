@@ -94,7 +94,7 @@
 			<a href="javascript:;" class="offClass" @click="endClass">下课</a>
 		</div> -->
 		<!-- 工具栏 -->
-		<!-- <toolbar></toolbar> -->
+		<toolbar></toolbar>
 		<!-- <canvas id="draw" ref="draw" style="position: fixed; border: 1px solid #f00; z-index: 9999; top: 120px; left: 130px;" width="1000" height="500">您的浏览器不支持画布！</canvas> -->
 		
 	</div>
@@ -159,42 +159,6 @@
 		},
 		mounted() {
 			this.getWebSocket();
-			/* 画图 */
-
-			// 			let myCanvas = this.$refs.draw;
-			// 			var ctx = myCanvas.getContext('2d');
-			// 			ctx.strokeStyle = '#000';
-			// 			let isSameMove = false;
-			// 
-			// 			function windowToCanvas(canvas, x, y) {
-			// 				var rect = canvas.getBoundingClientRect();
-			// 				return {
-			// 					x: x - rect.left * (canvas.width / rect.width),
-			// 					y: y - rect.top * (canvas.height / rect.height)
-			// 				};
-			// 			}
-			// 			//绘制图形函数
-			// 			myCanvas.onpointerdown = function(e) {
-			// 				
-			// 				isSameMove = true;
-			// 				var ele = windowToCanvas(myCanvas, e.clientX, e.clientY);
-			// 				console.log(1223);
-			// 				ctx.beginPath();
-			// 				ctx.moveTo(ele.x, ele.y);
-			// 				myCanvas.onpointermove = function(e) {
-			// 
-			// 					if (isSameMove) {
-			// 						var ele = windowToCanvas(myCanvas, e.clientX, e.clientY);
-			// 						ctx.lineTo(ele.x, ele.y);
-			// 						ctx.stroke();
-			// 						ctx.save();
-			// 					}
-			// 				}
-			// 			}
-			// 			myCanvas.onpointerup = function(e) {
-			// 				isSameMove = false;
-			// 			}
-
 		},
 		destroyed() {
 			if (this.ws) {
@@ -202,16 +166,7 @@
 				this.ws = null;
 			}
 		},
-		// watch: {
-		// 	onEvent: {
-		// 		handler(newName, oldName) {
-		// 			if(newName&&newName!=oldName)
-		// 			console.log("123343newName:" + JSON.stringify(newName));
-		// 		},
-		// 		immediate: true
-		// 	}
-		// 
-		// },
+		
 		methods: {
 			shownamelist() {
 				/* 显示学生名单 */
@@ -348,7 +303,7 @@
 								case 3:
 									{
 										/* 设置未连接 */
-										$me.$message.error('设备未连接')
+										// $me.$message.error('设备未连接')
 										break;
 									}
 								case 16:
