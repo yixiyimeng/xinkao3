@@ -28,7 +28,9 @@ exports.htmlPlugin = function () {
         filename: filename + `/index.html`,
         chunks: ['manifest', 'vendor', filename],
         inject: true,
-        nodeModules: path.resolve(__dirname, '../node_modules')
+		isBrowser: false,
+		isDevelopment: process.env.NODE_ENV !== 'production',
+		nodeModules: path.resolve(__dirname, '../node_modules')
       }
       if (process.env.NODE_ENV === 'production') {
         let productionConfig = {

@@ -94,7 +94,7 @@
 			<a href="javascript:;" class="offClass" @click="endClass">下课</a>
 		</div> -->
 		<!-- 工具栏 -->
-		<toolbar></toolbar>
+		<!-- <toolbar></toolbar> -->
 		<!-- <canvas id="draw" ref="draw" style="position: fixed; border: 1px solid #f00; z-index: 9999; top: 120px; left: 130px;" width="1000" height="500">您的浏览器不支持画布！</canvas> -->
 		
 	</div>
