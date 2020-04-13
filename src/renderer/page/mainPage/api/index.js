@@ -57,11 +57,11 @@ const api = {
 	uploadTestPaper: '/randomDetection/uploadTestPaper',
 	getAuthentication: '/platform/authentication', //获取题库地址
 	saveImgFullScreen:'/common/saveImgFullScreen',//截屏
-	saveImg:'/common/saveImg',//截图
+	saveImg:'/platform/saveWhiteboardImg',//截图
 	getHomeworkTitleList:'/homework/getHomeworkTitleList/',//查询课后作业试卷
 	assignHomework:'/homework/assignHomework',//发送课后作业
-	gatherHomework:'/homework/gatherHomework'
-	
+	gatherHomework:'/homework/gatherHomework',
+	saveQuestionImgAndSend:'/common/saveQuestionImgAndSend',//保存题干
 }
 export default api
 export function postAction(url, parameter, obj = {}) {

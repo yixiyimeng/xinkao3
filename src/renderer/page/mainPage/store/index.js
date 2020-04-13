@@ -14,6 +14,9 @@ export default new Vuex.Store({
 		alertCont: [],
 		directBroadcastCode:'',
 		loginInfo:null,//登录后保存的基本信息
+	countDown:localStorage.getItem('countDown')||10,
+	isCountDown:localStorage.getItem('isCountDown')||0,//是否启用倒计时
+	
 	},
 	getters: {
 		getisminimizeApp: (state) => {
@@ -53,9 +56,21 @@ export default new Vuex.Store({
 			state.isDanmu = isDanmu;
 			localStorage.setItem('isDanmu',isDanmu)
 		},
-		SET_danmuinfolist:(state, danmuinfolist)=>{
+		// SET_danmuinfolist:(state, danmuinfolist)=>{
+		// 	state.danmuinfolist = danmuinfolist;
+		// 	// localStorage.setItem('isDanmu',isDanmu)
+		// },
+		SET_danmuinfolist(state, danmuinfolist){
 			state.danmuinfolist = danmuinfolist;
-			// localStorage.setItem('isDanmu',isDanmu)
+			localStorage.setItem('danmuinfolist', JSON.stringify(danmuinfolist));
+		},
+		SET_countDown(state, countDown){
+			state.countDown = countDown;
+			localStorage.setItem('countDown', countDown);
+		},
+		SET_isCountDown(state, isCountDown){
+			state.isCountDown = isCountDown;
+			localStorage.setItem('isCountDown', isCountDown);
 		},
 		STAFF_UPDATEWEBSOCKET(state, websock) {
 			/* 更新websock */

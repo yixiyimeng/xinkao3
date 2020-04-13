@@ -86,6 +86,10 @@ function createWindow() {
 		win.webContents.send('isminimizeAppsub', false);
 
 	});
+	mainWindow.webContents.on('new-window', (event, url, frameName, disposition, options) => {
+	  mainWindow.webContents.send('iframeUrl',url);
+	  event.preventDefault()
+	})
 	/* 调试 */
 	globalShortcut.register('CTRL+T', () => {
 		//mainWindow.setFullScreen(false);

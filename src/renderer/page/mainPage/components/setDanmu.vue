@@ -3,32 +3,35 @@
 		<div v-if="isShowmenu">
 			<div class="setdanmu-hd flex flex-pack-justify flex-align-center"><span>弹幕设置</span>
 				<!-- <a-switch size="small"  /> -->
+				<a href="javascript:;" class="close" @click="close"></a>
 			</div>
 			<div class="setdanmu-bd">
 				<div class="flex flex-pack-justify" v-for="(item,index) in list" :key="index">
-					<span class="flex-1 name" @click="setDetails(index)">{{item.questionTypeName}}</span>
+					<span class="flex-1 name" @click.stop="setDetails(index)">{{item.questionTypeName=='语音测评'?'语音/跟读测评':item.questionTypeName}}</span>
 					<a-switch size="small" v-model="item.isOpenBarrageflag" />
+					<!-- <label>
+						<input type="checkbox" style="opacity: 0;" v-model="item.isOpenBarrageflag">
+						<div class="ant-switch ant-switch-small">
+							<span class="ant-switch-inner"></span>
+							<div class="ant-click-animating-node"></div>
+						</div>
+					</label> -->
 				</div>
-				<!-- <div class="flex flex-pack-justify">
-					<span class="flex-1 name">单题单选题</span>
-					<a-switch size="small" defaultChecked />
-				</div>
-				<div class="flex flex-pack-justify">
-					<span class="flex-1 name">单题单选题</span>
-					<a-switch size="small" defaultChecked />
-				</div>
-				<div class="flex flex-pack-justify">
-					<span class="flex-1 name">单题单选题</span>
-					<a-switch size="small" defaultChecked />
-				</div> -->
 			</div>
 			<div class="setdanmu-ft">
 				<a href="javascript:;" class="saveBtn" @click="saveAllinfo">确定</a>
 			</div>
 		</div>
 		<div v-if="!isShowmenu">
-			<div class="setdanmu-hd flex flex-pack-justify flex-align-center"><span>单题单选题设置</span>
+			<div class="setdanmu-hd flex flex-pack-justify flex-align-center"><span>{{setinfo.questionTypeName=='语音测评'?'语音/跟读测评':setinfo.questionTypeName}}设置</span>
 				<a-switch size="small" v-model="setinfo.isOpenBarrageflag" />
+				<!-- <label>
+					<input type="checkbox" style="opacity: 1;" v-model="setinfo.isOpenBarrageflag">
+					<div class="ant-switch ant-switch-small">
+						<span class="ant-switch-inner"></span>
+						<div class="ant-click-animating-node"></div>
+					</div>
+				</label> -->
 			</div>
 			<div class="setdanmu-bd">
 				<div>
@@ -36,21 +39,12 @@
 					<div>
 						<a-radio-group v-model="setinfo.location" class="checkbox">
 							<a-radio value="up">上</a-radio>
-							<a-radio value="centre">中</a-radio>
+							<a-radio value="center">中</a-radio>
 							<a-radio value="down">下</a-radio>
 							<a-radio value="full">全屏</a-radio>
 						</a-radio-group>
 					</div>
 				</div>
-				<!-- <div>
-					<span>弹幕方向</span>
-					<a-radio-group v-model="direction" class="small checkbox">
-						<a-radio :value="1" size="small">从左至右</a-radio>
-						<a-radio :value="2" size="small">从右至左</a-radio>
-						<a-radio :value="3" size="small">从上至下</a-radio>
-						<a-radio :value="4" size="small">从下至上</a-radio>
-					</a-radio-group>
-				</div> -->
 				<div>
 					<span>不透明度</span>
 					<div class="flex flex-pack-justify flex-align-center">
@@ -58,18 +52,12 @@
 						<span>{{setinfo.diaphaneity}}</span>
 					</div>
 				</div>
-				<!-- <div>
-					<span>字体大小</span>
-					<div class="flex flex-pack-justify flex-align-center">
-						<a-slider :defaultValue="30" class="flex-1" />
-						<span>12</span>
-					</div>
-				</div> -->
+
 			</div>
 			<div class="setdanmu-ft">
 				<a href="javascript:;" class="defaultBtn" @click="isShowmenu=true">取消</a>
 				<!-- <a href="javascript:;" class="defaultBtn">恢复默认值</a> -->
-				<a href="javascript:;" class="saveBtn" @click="saveOneInfo">确定</a>
+				<a href="javascript:;" class="onesaveBtn" @click="saveOneInfo">确定</a>
 			</div>
 		</div>
 	</div>
@@ -77,6 +65,8 @@
 
 <script>
 	import api from '@/page/mainPage/api';
+	import {
+		mapState} from 'vuex';
 	export default {
 		data() {
 			return {
@@ -92,16 +82,20 @@
 				}
 			};
 		},
-		components: {},
 		created() {
-			this.getDanmuinfo();
+			// this.getDanmuinfo();
+			this.list = this.danmuinfolist;
+		},
+		computed: {
+			...mapState(['danmuinfolist']),
 		},
 		mounted() {},
 		beforeDestroy() {},
 		methods: {
 			/* 查询弹幕设置 */
 			getDanmuinfo() {
-				this.$postAction(api.getDanmuinfo + '44').then(da => {
+				/* 查询弹幕设置 */
+				this.$postAction(api.getDanmuinfo).then(da => {
 					if (da && da.ret == 'success') {
 						var list = da.data;
 						if (list && list.length > 0) {
@@ -110,8 +104,7 @@
 								return item
 							})
 						}
-						this.list = da.data;
-						this.$store.commit('SET_danmuinfolist', this.list);
+						this.$store.commit('SET_danmuinfolist', list);
 					}
 				})
 			},
@@ -121,63 +114,78 @@
 				this.setindex = index;
 				this.setinfo = Object.assign({}, obj);
 			},
-			saveOneInfo(){
-				var param = {
-					hardwareVersion:'44',
-					teacHabitDOs: [
-						{
-							questionType: this.setinfo.questionType,
-							diaphaneity: this.setinfo.diaphaneity, //透明度
-							location: this.setinfo.location, //位置
-							isOpenBarrage: this.setinfo.isOpenBarrageflag ? 1 : 0, //是否开启弹幕
-						}
-					]
-				}
-				this.saveInfo(param)
+			saveOneInfo() {
+				this.list[this.setindex] = this.setinfo;
+				this.saveAllinfo();
 			},
-			saveAllinfo(){
-				var list=this.list;
-				if(list&&list.length>0){
-					list=this.list.map(item=>{
-						var obj={
+			saveAllinfo() {
+				var list = this.list;
+				if (list && list.length > 0) {
+					list = this.list.map(item => {
+						var obj = {
 							questionType: item.questionType,
 							isOpenBarrage: item.isOpenBarrageflag ? 1 : 0,
+							diaphaneity: item.diaphaneity, //透明度
+							location: item.location, //位置
 						}
 						return obj
 					})
 				}
 				var param = {
-					hardwareVersion:'44',
-					teacHabitDOs:list
+					hardwareVersion: '44',
+					teacHabitDOs: list
 				}
 				this.saveInfo(param)
 			},
 			saveInfo(param) {
-				
 				this.$postAction(api.setDanmuinfo, param).then(da => {
 					if (da && da.ret == 'success') {
 						this.$toast.center('修改成功!');
+						this.isShowmenu = true;
 						this.getDanmuinfo();
+						this.close();
 					}
 				})
 			},
-			
+			close() {
+				this.$emit('close')
+			}
+
 		}
 	};
 </script>
 
 <style scoped="scoped" lang="scss">
 	.setdanmu {
+		position: fixed;
+		bottom: 240px;
+		left: 40%;
+		transform: translateX(-50%);
 		background: #333;
 		border-radius: 10px;
+		overflow: hidden;
 		color: #fff;
 		width: 331px;
+		z-index: 9999;
 
 		& .setdanmu-hd {
 			height: 62px;
 			padding: 0 30px;
 			border-bottom: 1px solid #666;
 			font-size: 18px;
+			position: relative;
+
+			.close {
+				display: block;
+				height: 12px;
+				width: 12px;
+				background: url(../assets/img/close.png);
+				background-size: cover;
+				position: absolute;
+				right: 20px;
+				top: 50%;
+				transform: translateY(-50%);
+			}
 		}
 
 		& .setdanmu-bd {
@@ -198,20 +206,35 @@
 		}
 
 		.saveBtn,
-		.defaultBtn {
+			{
 			display: block;
 			background: #1890ff;
 			color: #fff;
 			line-height: 30px;
-			width: 221px;
+			width: 50%;
 			border-radius: 50px;
 			text-align: center;
 			margin: 20px auto 0;
 			font-size: 18px;
 		}
 
-		.defaultBtn {
+		// .defaultBtn {
+		// 	background: #999;
+		// }
+		.defaultBtn,
+		.onesaveBtn {
+			display: block;
+			width: 50% !important;
+			line-height: 51px;
+			float: left;
+			text-align: center;
+			color: #fff;
+			font-size: 18px;
 			background: #999;
+
+			&+a {
+				background: #1890ff;
+			}
 		}
 
 		.small /deep/ .ant-radio-wrapper {
@@ -224,12 +247,14 @@
 
 		.checkbox {
 			width: 100%;
+			margin-top: 20px;
 		}
 
 		.checkbox /deep/ .ant-radio-wrapper {
 			margin-right: 0;
 			width: 25%;
 			display: inline-block;
+			font-size: 14px;
 		}
 
 		/deep/ .ant-switch-checked {

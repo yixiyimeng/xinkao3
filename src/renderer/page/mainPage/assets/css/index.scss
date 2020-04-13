@@ -84,7 +84,7 @@
 		font-size: 14px;
 	}
 	.reback{
-		z-index: 9999;
+		z-index: 99999;
 	}
 }
 .theme1 .bg {
@@ -207,11 +207,12 @@
 		background: url(assets/img/theme4/reback.png) no-repeat center center;
 		background-size: cover;
 		position: fixed;
-		bottom: 40px;
+		bottom: 20px;
 		right: 35px;
 		@media screen and (max-width: 1360px){
 			height: 70px;
 			width:81px;
+			bottom: 20px;
 		}
 	}
 	.setbox{
@@ -918,20 +919,33 @@
 // 	}
 	 .mainmenu {
 		position: absolute;
-		z-index: 9999;
-		left:0;
-		bottom:120px;
+		z-index: 99999;
+		left:5px;
+		bottom:40px;
 		.setbtnlist {
+			.refresh{
+				height: 40px;
+				width: 40px;
+				display: block;
+				background: url(assets/img/refresh.png);
+				right: -50px;
+				position: absolute;
+				top: 5px;
+				cursor: pointer;
+				&.refresh2{
+					top: 65px;
+				}
+			}
 			a {
 				display:block;
 				background: #fff;
 				// background: #2459a0 no-repeat center center;
 				height: 50px;
-				width: 187px;
+				width: 160px;
 				border:1px solid #2459a0;
 				color:#2459a0;
 				font-size:24px;
-				padding-left:28px;
+				padding-left:14px;
 				 border-radius: 10px;
 				 i{
 					 display: inline-block;
@@ -965,7 +979,7 @@
 					}
 				}
 				&+a{
-					margin-top: 18px;
+					margin-top: 10px;
 				}
 				
 			}

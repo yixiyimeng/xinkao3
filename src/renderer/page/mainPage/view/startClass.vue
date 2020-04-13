@@ -1,46 +1,33 @@
 <template>
 	<div class="bg">
-		<div class="title" v-if="title.length>0">
-			<span v-for="(item,index) in title" :key="index">{{item}}</span>
+		<div class="title" v-if="title.length > 0">
+			<span v-for="(item, index) in title" :key="index">{{ item }}</span>
 		</div>
 		<!-- 切换菜单 -->
 		<div class="mainmenu">
 			<div class="setbtnlist" v-if="!isAnswering">
-				<a href="javascript:;" @click="shownamelist" class="resource" title="资源课件">
-					<i></i>
-					<span>资源课件</span>
-				</a>
-				<a href="javascript:;" @click="shownamelist" class="zujuan" title="组卷网">
+				<i class="refresh" @click="refreshResource(0)" v-if="isshowResource==1"></i>
+				<i class="refresh refresh2" @click="refreshResource(1)" v-if="isshowResource==2"></i>
+				<a href="javascript:;" @click="showResource(0)" class="zujuan" title="组卷网">
 					<i></i>
 					<span>组卷网</span>
 				</a>
-				<a href="javascript:;" @click="shownamelist" class="set" title="工具">
+				<a href="javascript:;" @click="showResource(1)" class="resource" title="资源课件">
 					<i></i>
-					<span>工具箱</span>
+					<span>资源课件</span>
 				</a>
 				<a href="javascript:;" @click="shownamelist" class="userlist" title="学生名单">
 					<i></i>
 					<span>学生名单</span>
 				</a>
-
+				<a href="javascript:;" @click.stop="showSet" class="set" title="工具">
+					<i></i>
+					<span>工具箱</span>
+				</a>
 				<!-- <router-link :to="'namelist'" class="userlist"></router-link> -->
 				<!-- <router-link :to="'set'" class="set" title="设置"></router-link> -->
 			</div>
-			<!-- <div class="set"></div>
-			<div class="setbtnlist">
-				<i class="lefttop"></i>
-				<i class="righttop"></i>
-				<i class="leftbottom"></i>
-				<i class="rightbottom"></i>
-				<a href="javascript:;" @click="shownamelist">
-					<i class="icon1"></i>
-					<p>学生名单</p>
-				</a>
-
-			</div> -->
 		</div>
-		<!-- 返回 -->
-		<!-- <a href="javascript:;" class="reback" @click="returnback"></a> -->
 		<!-- 学生名单 -->
 		<namelist :isAnswering="isAnswering" ref="namelist" @startName="startName" @stopName="stopName"></namelist>
 		<!-- 进度条 -->
@@ -58,7 +45,7 @@
 			<!-- 抢答 -->
 			<responder ref="quickAnswer" @returnback="returnback" @startQuickAnswer="startAnswer" @stopQuickAnswer="stopAnswer"></responder>
 			<!-- 弹幕 -->
-			<danmu ref="danmu" :style="{zIndex:isAnswering?999:-1}" v-show="isDanmu"></danmu>
+			<danmu ref="danmu" :isAnswering="isAnswering" :questionType="questionType"></danmu>
 			<!-- 课后作业 -->
 			<homework ref="homework" @returnback="returnback"></homework>
 			<div class="classbox" v-if="isShowClassMenu">
@@ -89,18 +76,24 @@
 				</div>
 			</div>
 		</div>
-		<!-- <div class="btnlist">
-			<a href="javascript:;" class="signIn" v-if="isShowClassMenu&&!isAnswering" @click="showSingInlist">签到</a>
-			<a href="javascript:;" class="offClass" @click="endClass">下课</a>
-		</div> -->
 		<!-- 工具栏 -->
-		<!-- <toolbar></toolbar> -->
-		<!-- <canvas id="draw" ref="draw" style="position: fixed; border: 1px solid #f00; z-index: 9999; top: 120px; left: 130px;" width="1000" height="500">您的浏览器不支持画布！</canvas> -->
-		
+		<toolbar :ifTemporary="isAnswering" ref="toolbar"></toolbar>
+		<div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; background: #fff;" v-show="isshowResource != 0">
+			<a-spin tip="正在加载..." :spinning="spinning" style="height: 100%;" size="large">
+				<iframe ref="iframe1" :src="iframeUrl" frameborder="0" style="width: 100%; height: 100%;" v-show="isshowResource == 1"></iframe>
+				<iframe ref="iframe2" :src="iframeUrl2" frameborder="0" style="width: 100%; height: 100%;" v-show="isshowResource == 2"></iframe>
+			</a-spin>
+		</div>
 	</div>
 </template>
 
 <script>
+	function GetQueryString(searchurl, name) {
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+		var r = searchurl.match(reg);
+		if (r != null) return unescape(r[2]);
+		return null;
+	}
 	import namelist from '@/page/mainPage/components/namelist';
 	import startAnswer from '@/page/mainPage/components/startAnswer';
 	import load from '@/page/mainPage/components/load';
@@ -127,8 +120,7 @@
 			score,
 			responder,
 			toolbar,
-			homework,
-			
+			homework
 		},
 		data() {
 			return {
@@ -141,21 +133,48 @@
 				isChoice: false, //是否选择题
 				directBroadcastCode: '',
 				isShowName: false, // 显示学生名单
-				
+				questionType: 0, //答题类型编号
+				isshowResource: 0, //题库资源
+				spinning: false,
+				resourceUrllist: ['', 'http://zkxl.school.zxxk.com/ThirdParty/CustomJump?_m=http://localhost:8080'],
+				iframeUrl: '', //组卷网
+				iframeUrl2: '' //资源
 			};
 		},
 		computed: {
-			...mapState(['isDanmu', 'danmuinfolist']),
+			...mapState(['danmuinfolist', 'isCountDown'])
 			// ...mapGetters(['onEvent'])
 		},
 		created() {
 			this.sendInfo = JSON.parse(this.$route.query.sendInfo);
 			this.title = this.sendInfo.className.trim();
 			this.directBroadcastCode = this.sendInfo.directBroadcastCode;
-			this.$store.state.directBroadcastCode = this.directBroadcastCode
+			this.$store.state.directBroadcastCode = this.directBroadcastCode;
 			/* 开始上课 */
 			this.$electron.ipcRenderer.send('onlinedirebro', true);
 			this.getAuthentication();
+			/* 获取弹幕设置列表 */
+			this.getDanmuinfo();
+			let $me = this;
+			/* 监听 资源网 打开新窗口 */
+			this.$electron.ipcRenderer.on('iframeUrl', (event, iframeUrl) => {
+				if (iframeUrl) {
+					if ($me.isshowResource == 2) {
+						if (iframeUrl.split('?')[0] == 'http://localhost:8080/tabframe') {
+							let search = iframeUrl.split('?')[1];
+							var wxtpath = GetQueryString(search, 'wxtpath');
+							iframeUrl = 'http://zkxl.school.zxxk.com' + wxtpath;
+						}
+					}
+					if ($me.isshowResource == 1) {
+						this.iframeUrl = iframeUrl
+					} else {
+						this.iframeUrl2 = iframeUrl;
+					}
+				}
+				/* 赋值地址后，主动将悬浮窗置为顶层 */
+				this.$electron.ipcRenderer.send('moveTop');
+			});
 		},
 		mounted() {
 			this.getWebSocket();
@@ -166,14 +185,14 @@
 				this.ws = null;
 			}
 		},
-		
+
 		methods: {
 			shownamelist() {
 				/* 显示学生名单 */
 				this.$refs.namelist.shownamelist();
 				this.isShowName = true;
 				//this.isShowClassMenu = false;
-				this.title = '学生名单'
+				this.title = '学生名单';
 			},
 			startName() {
 				/* 关闭学生名单 */
@@ -184,7 +203,7 @@
 				this.isAnswering = false;
 				this.isChoice = false;
 				this.rate = 0; //清空进度条数据
-				this.title = this.sendInfo.className.trim();;
+				this.title = this.sendInfo.className.trim();
 				this.isShowName = false;
 				// this.isShowClassMenu = true;
 			},
@@ -192,17 +211,17 @@
 				this.$refs.startAnswer.showAnswer();
 				this.isShowClassMenu = false;
 			},
-			startAnswer(isChoice) {
+			startAnswer(isChoice, questionType) {
 				/* 开始答题 */
 				this.isAnswering = true;
 				this.isChoice = isChoice == 1;
 				if (isChoice == 1) {
-					this.title = ''
+					this.title = '';
 				} else if (isChoice == 0) {
 					this.title = '随堂检测';
 				}
+				this.questionType = questionType || 0;
 				this.$refs.danmu.starDanmu();
-
 			},
 			stopAnswer() {
 				/* 结束答题 */
@@ -210,29 +229,29 @@
 				this.isChoice = false;
 				this.rate = 0; //清空进度条数据
 				/* 结束答题后，清空弹幕 */
+				this.questionType = 0;
 				this.$refs.danmu.clearDanmu();
-
 			},
 
 			showStartVote() {
 				this.$refs.vote.show();
 				this.isShowClassMenu = false;
-				this.title = '投票统计'
+				this.title = '投票统计';
 			},
 			showStartScore() {
 				this.$refs.score.show();
 				this.isShowClassMenu = false;
-				this.title = '评分统计'
+				this.title = '评分统计';
 			},
 			showQuickAnswer() {
 				this.$refs.quickAnswer.show();
 				this.isShowClassMenu = false;
-				this.title = '抢答'
+				this.title = '抢答';
 			},
 			showStarthomeWork() {
 				this.$refs.homework.show();
 				this.isShowClassMenu = false;
-				this.title = '课后作业'
+				this.title = '课后作业';
 			},
 			returnback(isOnlyShowClassName) {
 				/* 返回 */
@@ -245,7 +264,6 @@
 						this.isShowClassMenu = true;
 					}
 					this.title = this.sendInfo.className.trim();
-
 				}
 			},
 			showClassName() {
@@ -262,7 +280,7 @@
 							$me.rate = parseInt((list.answerNumber / list.totalNumber) * 100);
 						}
 					}
-				})
+				});
 			},
 			getWebSocket() {
 				const $me = this;
@@ -280,13 +298,14 @@
 								case 0:
 									{
 										if ($me.isDanmu) {
-											$me.$refs.danmu.addDanmu(obj)
+											$me.$refs.danmu.addDanmu(obj);
 										}
 
 										break;
 									}
 								case 1:
-									{ /*刷新名单*/
+									{
+										/*刷新名单*/
 										for (var i = 0; i < msg.urlPaths.length; i++) {
 											if (msg.urlPaths[i].method == 'getNamelist') {
 												$me.$refs.namelist.getNamelist();
@@ -309,18 +328,18 @@
 								case 16:
 									{
 										/* 显示抢答名单 */
-										$me.$refs.quickAnswer.setName(obj.stuName)
+										$me.$refs.quickAnswer.setName(obj.stuName);
 										break;
 									}
 								case 17:
 									{
 										/* 接收器编号 */
-										$me.$refs.namelist.setCode(obj)
+										$me.$refs.namelist.setCode(obj);
 										break;
 									}
 							}
 						}
-					}
+					};
 					$me.ws.onclose = function() {
 						// 关闭 websocket
 						$me.ws = null;
@@ -342,10 +361,8 @@
 				};
 				this.$loading('正在下课...');
 				$me.$postAction(api.endClass, param).then(da => {
-					if (da && da.ret == 'success') {
-
-					}
-				})
+					if (da && da.ret == 'success') {}
+				});
 				setTimeout(function() {
 					$me.$router.push({
 						//页面跳转
@@ -358,12 +375,98 @@
 				}, 5000);
 			},
 			getAuthentication() {
-				this.$postAction(api.getAuthentication, {}).then(da => {
-					console.log(da.data)
-					this.iframeUrl = da.data;
+				const $me = this;
+				this.$postAction(api.getAuthentication, {
+					serviceType: 3
+				}).then(da => {
+					// this.iframeUrl = da.data;
+					if (da.ret == 'success') {
+						$me.$set($me.resourceUrllist, 0, da.data);
+
+					} else {
+						$me.$toast.center(da.message);
+						if (da.code == 401) {
+							// setTimeout(function() {
+							// 	$me.returnback()
+							// }, 500)
+						}
+					}
+				});
+			},
+			getDanmuinfo() {
+				/* 查询弹幕设置 */
+				this.$postAction(api.getDanmuinfo).then(da => {
+					if (da && da.ret == 'success') {
+						var list = da.data;
+						if (list && list.length > 0) {
+							list = list.map(item => {
+								item.isOpenBarrageflag = item.isOpenBarrage == 1;
+								return item;
+							});
+						}
+						this.$store.commit('SET_danmuinfolist', list);
+					}
+				});
+			},
+			showSet() {
+				/* 打开工具箱 */
+				this.$refs.toolbar.changeShow();
+
+			},
+			showResource(type) {
+				/* 显示资源 */
+				if (this.isshowResource == (type + 1)) {
+					this.isshowResource = 0;
+					return false;
+				}
+				this.isshowResource = (type + 1);
+				if ((type == 0 && this.iframeUrl == '')) {
+					this.iframeUrl = this.resourceUrllist[type]
+					this.loadResouce(type);
+				} else if (type == 1 && this.iframeUrl2 == '') {
+					this.iframeUrl2 = this.resourceUrllist[type]
+					this.loadResouce(type);
+				}
+
+			},
+			refreshResource(type) {
+				if (type == 0) {
+					this.iframeUrl = '';
+				} else if (type == 1) {
+					this.iframeUrl2 = ''
+				}
+				if ((type == 0 && this.iframeUrl == '')) {
+					this.iframeUrl = this.resourceUrllist[type]
+				} else if (type == 1 && this.iframeUrl2 == '') {
+					this.iframeUrl2 = this.resourceUrllist[type]
+				}
+			},
+			loadResouce(type) {
+				const $me = this;
+				$me.spinning = true;
+				this.$nextTick(() => {
+					try {
+						let iframe = $me.$refs['iframe' + (type == 0 ? '1' : '2')];
+						console.log(iframe)
+						if (iframe) {
+							if (iframe.attachEvent) {
+								iframe.attachEvent("onload", function() {
+									$me.spinning = false;
+								});
+							} else {
+								iframe.onload = function() {
+									$me.spinning = false;
+								};
+							}
+						} else {
+							$me.spinning = false;
+						}
+					} catch (e) {
+						//TODO handle the exception
+						$me.spinning = false;
+					}
 				})
 			}
-
 		}
 	};
 </script>
@@ -373,8 +476,11 @@
 		z-index: 999;
 	}
 
-	.bg {
+	/deep/ .ant-spin-container {
+		height: 100%;
+	}
 
+	.bg {
 		.menu a {
 			.icon {
 				height: 42px;
@@ -385,27 +491,22 @@
 
 				&.icon1 {
 					background-image: url(../assets/img/icon1.png);
-
 				}
 
 				&.icon2 {
 					background-image: url(../assets/img/icon2.png);
-
 				}
 
 				&.icon3 {
 					background-image: url(../assets/img/icon3.png);
-
 				}
 
 				&.icon4 {
 					background-image: url(../assets/img/icon4.png);
-
 				}
 
 				&.icon5 {
 					background-image: url(../assets/img/icon5.png);
-
 				}
 			}
 
@@ -452,7 +553,6 @@
 					&>span,
 					&>img {
 						vertical-align: middle;
-
 					}
 				}
 			}
@@ -464,7 +564,7 @@
 		// 			bottom: 35px;
 		// 			right: 35px;
 		// 			z-index: 999;
-		// 
+		//
 		// 			a {
 		// 				height: 56px;
 		// 				width: 56px;
@@ -475,12 +575,12 @@
 		// 				background-size: cover;
 		// 				font-family: 'hxfont';
 		// 				font-size: 18px;
-		// 
+		//
 		// 				&.signIn {
 		// 					background-image: url(../assets/img/theme1/btn1.png);
 		// 					color: #6699cc;
 		// 				}
-		// 
+		//
 		// 				&.offClass {
 		// 					background-image: url(../assets/img/theme1/btn2.png);
 		// 					color: #fff;
@@ -547,7 +647,7 @@
 		// 			bottom: 35px;
 		// 			right: 35px;
 		// 			z-index: 999;
-		// 
+		//
 		// 			a {
 		// 				width: 100px;
 		// 				height: 34px;
@@ -557,12 +657,12 @@
 		// 				background: no-repeat center center;
 		// 				background-size: cover;
 		// 				font-size: 18px;
-		// 
+		//
 		// 				&.signIn {
 		// 					background-image: url(../assets/img/theme2/btn1.png);
 		// 					color: #6699cc;
 		// 				}
-		// 
+		//
 		// 				&.offClass {
 		// 					background-image: url(../assets/img/theme2/btn2.png);
 		// 					color: #fff;
@@ -577,12 +677,10 @@
 
 		.classbox {
 			position: absolute;
-			top: .7rem;
+			top: 0.7rem;
 			left: 35px;
 			right: 35px;
 			bottom: 0;
-
-
 
 			.menu {
 				text-align: center;
@@ -612,7 +710,7 @@
 						position: absolute;
 						top: 65px;
 						left: 50%;
-						transform: scale(.8, .8) translateX(-60%);
+						transform: scale(0.8, 0.8) translateX(-60%);
 					}
 				}
 			}
@@ -620,7 +718,7 @@
 
 		// 		.btnlist {
 		// 			text-align: right;
-		// 
+		//
 		// 			a {
 		// 				width: 100px;
 		// 				height: 41px;
@@ -632,7 +730,7 @@
 		// 				background: rgba($color: #07f8ff, $alpha: 0.3);
 		// 				border: 1px solid #07f8ff;
 		// 				border-radius: 5px;
-		// 
+		//
 		// 				&.offClass {
 		// 					margin-left: 10px;
 		// 				}
@@ -759,30 +857,24 @@
 							.icon {
 								&.icon1 {
 									background-image: url(../assets/img/theme4/sicon1.png);
-
 								}
 
 								&.icon2 {
 									background-image: url(../assets/img/theme4/sicon2.png);
-
 								}
 
 								&.icon3 {
 									background-image: url(../assets/img/theme4/sicon3.png);
-
 								}
 
 								&.icon4 {
 									background-image: url(../assets/img/theme4/sicon4.png);
-
 								}
 
 								&.icon5 {
 									background-image: url(../assets/img/theme4/sicon5.png);
-
 								}
 							}
-
 						}
 
 						&>span {
@@ -802,33 +894,25 @@
 
 							&.icon1 {
 								background-image: url(../assets/img/theme4/icon1.png);
-
 							}
 
 							&.icon2 {
 								background-image: url(../assets/img/theme4/icon2.png);
-
 							}
 
 							&.icon3 {
 								background-image: url(../assets/img/theme4/icon3.png);
-
 							}
 
 							&.icon4 {
 								background-image: url(../assets/img/theme4/icon4.png);
-
 							}
 
 							&.icon5 {
 								background-image: url(../assets/img/theme4/icon5.png);
-
 							}
-
-
 						}
 					}
-
 				}
 			}
 		}
@@ -838,7 +922,7 @@
 		// 			bottom: 15px;
 		// 			right: 35px;
 		// 			z-index: 999;
-		// 
+		//
 		// 			.offClass,
 		// 			.signIn {
 		// 				width: 116px;
@@ -856,7 +940,7 @@
 		// 					line-height: 70px;
 		// 					font-size: 24px;
 		// 				}
-		// 
+		//
 		// 				&.offClass {
 		// 					margin-left: 30px;
 		// 					@media screen and (max-width: 1360px) {
@@ -864,7 +948,7 @@
 		// 					}
 		// 				}
 		// 			}
-		// 
+		//
 		// 		}
 	}
 

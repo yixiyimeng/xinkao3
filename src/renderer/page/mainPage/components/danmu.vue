@@ -1,85 +1,109 @@
 <template>
-	<div id="danmu"></div>
+	<div id="danmu" :style="{ zIndex: isAnswering ? 999 : -1 }" v-show="isShowDanmu"></div>
 </template>
 
 <script>
-	import $ from '@/page/mainPage/assets/js/jquery-vendor';
-	import '@/page/mainPage/assets/js/jquery.danmu';
-	export default {
-		components: {
-
+import $ from '@/page/mainPage/assets/js/jquery-vendor';
+import '@/page/mainPage/assets/js/jquery.danmu';
+import { mapState } from 'vuex';
+export default {
+	components: {},
+	data() {
+		return {
+			isShowDanmu: false
+		};
+	},
+	computed: {
+		...mapState(['danmuinfolist'])
+	},
+	props: {
+		/* 是否开始答题 */
+		isAnswering: {
+			type: Boolean,
+			default: false
 		},
-		data() {
-			return {
-				type: 0,
-				isShowAnswer: false
-			};
-		},
-		mounted() {
-			// this.starDanmu();
-		},
-		methods: {
-			addDanmu(obj) {
-				var time = $('#danmu').data('nowTime') + 1;
-				/*当渲染弹幕过多的时候,延迟处理弹幕*/
-				if ($('#danmu .danmaku').length > 500) {
-					time += 200; //2000毫秒。
-				}
-				$('#danmu').danmu('addDanmu', [{
+		questionType: {
+			type: [String, Number],
+			default: 0
+		}
+	},
+	mounted() {
+		// this.starDanmu();
+	},
+	methods: {
+		addDanmu(obj) {
+			var time = $('#danmu').data('nowTime') + 1;
+			/*当渲染弹幕过多的时候,延迟处理弹幕*/
+			if ($('#danmu .danmaku').length > 500) {
+				time += 200; //2000毫秒。
+			}
+			$('#danmu').danmu('addDanmu', [
+				{
 					text: obj.stuName,
 					color: 'white',
 					size: 0,
 					position: 0,
 					time: time
-				}]);
-			},
-			clearDanmu() {
-				$('#danmu').data('danmuList', {});
-				$('#danmu').danmu('danmuStop');
-			},
-			starDanmu() {
-				$('#danmu').danmu('danmuStart');
-				$('#danmu').data('danmuList', {});
+				}
+			]);
+		},
+		clearDanmu() {
+			$('#danmu').data('danmuList', {});
+			$('#danmu').danmu('danmuStop');
+		},
+		starDanmu() {
+			let index = this.danmuinfolist.findIndex(item => item.questionType == this.questionType);
+			if (index >= 0) {
+				this.isShowDanmu = true;
+				let danmuinfo = this.danmuinfolist[index];
+				if (danmuinfo.isOpenBarrageflag) {
+					$('#danmu').data('danmuList', {});
+					$('#danmu').danmu('danmuStart');
+					/* 设置弹幕位置和透明度 */
+					$('#danmu').danmu('setOpacity', danmuinfo.diaphaneity / 100);
+					$('#danmu').danmu('setLocation', danmuinfo.location);
+				}
+			} else {
+				this.isShowDanmu = false;
 			}
 		}
-	};
+	}
+};
 </script>
 
 <style>
-	#danmu {
-		position: fixed;
-		top: 100px;
-		bottom: 200px;
-		left: 0;
-		right: 0;
+#danmu {
+	position: fixed;
+	top: 100px;
+	bottom: 200px;
+	left: 0;
+	right: 0;
+}
 
-	}
+.danmaku .avatar,
+.danmaku .avatar + span {
+	vertical-align: middle;
+	display: inline-block;
+}
 
-	.danmaku .avatar,
-	.danmaku .avatar+span {
-		vertical-align: middle;
-		display: inline-block;
-	}
+.danmaku .avatar + span {
+	padding: 0 10px;
+}
 
-	.danmaku .avatar+span {
-		padding: 0 10px;
-	}
+.danmaku {
+	background: rgba(0, 0, 0, 0.4);
+	border-radius: 50px;
+	display: inline-block;
+	padding-right: 20px;
+	transform: translateX(0);
+	-webkit-transform: translateX(0);
+}
 
-	.danmaku {
-		background: rgba(0, 0, 0, .4);
-		border-radius: 50px;
-		display: inline-block;
-		padding-right: 20px;
-		transform: translateX(0);
-		-webkit-transform: translateX(0);
-	}
-
-
-	.danmaku .avatar {
-		display: inline-block;
-		height: 2.4em;
-		width: 2.4em;
-		background: url(../assets/img/1.png) no-repeat center center;
-		background-size: cover;
-	}
+.danmaku .avatar {
+	display: inline-block;
+	height: 2.4em;
+	width: 2.4em;
+	background: url(../assets/img/1.png) no-repeat center center;
+	background-size: cover;
+}
 </style>
