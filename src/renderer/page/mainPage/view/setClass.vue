@@ -51,9 +51,11 @@
 							</a-select>
 						</div> -->
 					</div>
-					<a-button class="startClass" :loading="loading" html-type="submit">
-						开始上课
-					</a-button>
+					<div class="loginBtnbox">
+						<a-button class="startClass" :loading="loading" html-type="submit">
+							开始上课
+						</a-button>
+					</div>
 				</a-form>
 			</div>
 			<!-- <a href="javascript:;" class="startClass" ></a> -->
@@ -111,7 +113,8 @@
 			document.body.removeEventListener('keyup', this.keyEnter, false)
 		},
 		created() {
-			this.sendInfo = JSON.parse(this.$route.query.sendInfo);
+			// this.sendInfo = JSON.parse(this.$route.query.sendInfo);
+			this.sendInfo = JSON.parse(sessionStorage.getItem('loginSendInfo'))
 			this.schoolCode = this.sendInfo.schoolCode;
 			this.getClasslist();
 			this.getSubjectlist();
@@ -142,7 +145,7 @@
 				this.formData.questionId = '';
 				this.formData.tempQuestionId = '';
 				/* 清除空格 */
-				this.formData.topicName=this.formData.topicName.trim();
+				this.formData.topicName = this.formData.topicName.trim();
 			},
 			/* 查询班级 */
 			getClasslist() {
@@ -188,7 +191,7 @@
 			/*获取课程名*/
 			getTopicTitle() {
 				const $me = this;
-				if(!this.formData.classCode||!this.formData.subjectCode){
+				if (!this.formData.classCode || !this.formData.subjectCode) {
 					return false
 				}
 				this.$postAction(api.getTopicTitle, {
@@ -296,7 +299,7 @@
 			returnback() {
 				this.$router.push('/login');
 			},
-			sendClassInfo(){
+			sendClassInfo() {
 				const $me = this;
 				/* 先判断是否loading，防止重复提交 */
 				if ($me.loading) {
@@ -337,7 +340,7 @@
 				let code = e.charCode || e.keyCode;
 				if (code == 13) {
 					$me.sendClassInfo();
-			
+
 				}
 			},
 			getDanmuinfo() {
@@ -611,6 +614,10 @@
 					&:active {
 						border: none;
 					}
+				}
+
+				.loginBtnbox {
+					padding-left: 92px;
 				}
 
 			}

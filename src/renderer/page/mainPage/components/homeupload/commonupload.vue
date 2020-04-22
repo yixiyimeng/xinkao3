@@ -303,7 +303,7 @@
 					formData.append('subjectCode', $me.sendInfo.subjectCode);
 					formData.append('subjectName', $me.sendInfo.subjectName);
 					formData.append('type', $me.type);
-					postActionUpload(api.importQuesrions, formData).then(da => {
+					postActionUpload(api.importTestQuestions, formData).then(da => {
 						if (da.ret == 'success') {
 							$me.$toast.center('上传成功');
 							$me.close();

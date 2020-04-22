@@ -51,7 +51,7 @@ const api = {
 	getSpeedKingList: '/answer/statistics/getSpeedKingList', //答题速度王
 	nameStart: '/bindingCard/nameStart',
 	nameStop: '/bindingCard/nameStop',
-	getDanmuinfo: '/teacherHabit/queryTeacHabit/',
+	getDanmuinfo: '/teacherHabit/queryTeacHabit/44',
 	setDanmuinfo: '/teacherHabit/save',
 	importQuesrions: '/randomDetection/importQuesrions',
 	uploadTestPaper: '/randomDetection/uploadTestPaper',
@@ -60,8 +60,10 @@ const api = {
 	saveImg:'/platform/saveWhiteboardImg',//截图
 	getHomeworkTitleList:'/homework/getHomeworkTitleList/',//查询课后作业试卷
 	assignHomework:'/homework/assignHomework',//发送课后作业
-	gatherHomework:'/homework/gatherHomework',
+	gatherHomework:'/homework/gatherHomework',//获取课后作业
+	stopHomework:'/homework/stopHomework',//停止发试卷
 	saveQuestionImgAndSend:'/common/saveQuestionImgAndSend',//保存题干
+	importTestQuestions:'/platform/importTestQuestions'//上传家庭作业试卷
 }
 export default api
 export function postAction(url, parameter, obj = {}) {

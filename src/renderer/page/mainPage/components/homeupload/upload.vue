@@ -3,7 +3,7 @@
 		<div class="upload-bd">
 			<a href="javascript:;" class="close" @click="close()"></a>
 			<div>
-				<div class="upload-title">普通模式堂测标准答案设置</div>
+				<div class="upload-title">套题模式堂测标准答案设置</div>
 				<div class="upload-btnbar flex flex-pack-justify flex-align-center">
 					<div>
 						<label>标题</label>
@@ -18,27 +18,45 @@
 					</div>
 				</div>
 				<div class="mt10">
-					<a-form :form="form" autocomplete="off" class="flex flex-align-top">
+					<a-form :form="form" autocomplete="off" class="flex flex-align-top formbox">
 						<a-row :gutter="24" class="mb10 flex-1">
-							<a-col :span="6">
+							<a-col :span="5">
+								<a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="大题题号">
+									<a-input-number v-decorator="['maxNum',{rules: [{ required: true, message: '请输入大题题号' }]}]" :min="1" class="w100" />
+								</a-form-item>
+							</a-col>
+							<a-col :span="5">
 								<a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="小题总数">
 									<a-input-number v-decorator="['totalnum',{rules: [{ required: true, message: '请输入小题总数' }]}]" :min="1" class="w100" />
 								</a-form-item>
 							</a-col>
-							<a-col :span="6">
+							<a-col :span="5">
 								<a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="题目得分">
 									<a-input-number v-decorator="['totalscore',{rules: [{ required: true, message: '请输入题目得分' }]}]" :min="0" class="w100" />
 								</a-form-item>
 							</a-col>
-							<a-col :span="6">
+							<a-col :span="5">
 								<a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="题目类型">
 									<a-select v-decorator="['totaltype',{rules: [{ required: true, message: '请选择题目类型' }]}]" @change="changeQuestionType">
 										<a-select-option :value="item.value" v-for="(item,index) in totaltypeList" :key="index">{{item.name}}</a-select-option>
 									</a-select>
 								</a-form-item>
 							</a-col>
-							<a-col :span="6">
-								<a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="答案">
+							<a-col :span="4">
+								<a-form-item :labelCol="{xs: {
+						span: 24
+					},
+					sm: {
+						span: 8
+					},}" :wrapperCol="{
+						xs: {
+							span: 24
+						},
+						sm: {
+							span: 16
+						},
+					}"
+								 label="答案">
 									<a-input placeholder="题目答案" v-decorator="[ 'totaltrueanswer',{rules: [{pattern:pattern, message: '请输入正确的答案' }]}]"
 									 @change="changetotaltrueanswer" />
 								</a-form-item>
@@ -49,7 +67,8 @@
 					<!--表格-->
 					<a-table :columns="columns" :dataSource="list" bordered class="mt20" bordered size="middle" :pagination="false">
 						<span slot="serial" slot-scope="text, record, index">
-							{{ index + 1 }}
+							<!-- {{ index + 1 }} -->
+							{{listmap&&listmap[record.maxNum]&&listmap[record.maxNum].length>1?record.num:record.maxNum}}
 						</span>
 						<a-select slot="questionType" slot-scope="text,record" v-model="record.questionType" class="w100" @change="changeOneQuestionType(record)">
 							<a-select-option :value="item.value" v-for="(item,index) in totaltypeList" :key="index">{{item.name}}</a-select-option>
@@ -193,10 +212,34 @@
 				this.visible = true;
 				this.type = type
 			},
-	
+
+			renderData(list) {
+				console.log(list);
+				this.listmap = {};
+				if (list && list.length > 0) {
+					list = list.map(item => {
+						let maxNum = 0;
+						if (item.maxNum) {
+							maxNum = item.maxNum;
+						} else {
+							maxNum = item.questionId.split('-')[0];
+						}
+						item.maxNum = maxNum;
+						if (!this.listmap.hasOwnProperty(maxNum)) {
+							this.listmap[maxNum] = []
+						}
+						this.listmap[maxNum].push(item);
+						item.num = maxNum + '-' + this.listmap[maxNum].length;
+						return item
+					})
+				}
+				this.list = list.sort(function(a, b) {
+					return a.maxNum - b.maxNum
+				});
+			},
 			close() {
 				this.visible = false;
-				this.list=[];
+				this.list = [];
 				this.form.resetFields();
 				this.$emit('close');
 			},
@@ -213,6 +256,7 @@
 					okType: 'danger',
 					onOk() {
 						$me.list.splice(index, 1)
+						$me.renderData($me.list)
 					},
 					onCancel() {},
 				});
@@ -230,7 +274,8 @@
 								maxNum: values['maxNum'],
 							}
 							let list = [...this.list, item];
-							this.list.push(item)
+							this.renderData(list);
+							// this.list.push(item)
 						}
 					}
 				})
@@ -308,10 +353,24 @@
 							$me.$toast.center('上传成功');
 							$me.close();
 						} else {
-							$me.$toast.center(da.message);
+							$me.$toast.center(da.data.message);
 						}
 					})
-				
+					// this.$http({
+					// 	method: 'post',
+					// 	url: urlPath + '/teacher-client/platform/importQuesrions',
+					// 	data: formData,
+					// 	processData: false, // jQuery不要去处理发送的数据
+					// 	contentType: false
+					// }).then(da => {
+					// 	if (da.ret == 'success') {
+					// 		$me.$toast.center('上传成功');
+					// 		$me.close();
+					// 	} else {
+					// 		$me.$toast.center(da.data.message);
+					// 	}
+					// });
+
 					file.value = '';
 				} else {
 					this.$toast.center('请选择文件');
@@ -338,7 +397,7 @@
 						return false;
 					}
 					var param = {
-						questionId:i+1,
+						questionId: this.listmap && this.listmap[item.maxNum] && this.listmap[item.maxNum].length > 1 ? item.num : item.maxNum,
 						questionType: item.questionType,
 						score: item.score,
 						trueAnswer: item.trueAnswer
@@ -363,7 +422,7 @@
 						$me.$toast.center('保存成功');
 						$me.close();
 					} else {
-						$me.$toast.center(da.message);
+						$me.$toast.center(da.data.message);
 					}
 				});
 			},
@@ -376,7 +435,7 @@
 	.ml20 {
 		margin-left: 20px;
 	}
-	
+
 	.bg {
 		position: fixed;
 		top: 0;
@@ -385,13 +444,13 @@
 		bottom: 0;
 		z-index: 999;
 	}
-	
+
 	.theme4 .bg>.upload-bd /deep/ .ant-form {
 		width: 100%;
 	}
+
 	
-	
-	
+
 	// .bg .mask {
 	// 	background: rgba(0, 0, 0, 0.4);
 	// 	height: 100%;
@@ -408,7 +467,7 @@
 		padding: 40px 0;
 		box-sizing: border-box;
 		box-shadow: 0 0 10px rgba($color: #2459a0, $alpha: .3);
-	
+
 		@media screen and (max-width: 1360px) {
 			left: 40px;
 			right: 40px;
@@ -416,20 +475,20 @@
 			bottom: 30px;
 		}
 	}
-	
+
 	.theme1 .bg>.upload-bd {
 		left: 135px;
 		right: 135px;
 		top: 140px;
 		bottom: 120px;
 	}
-	
+
 	.bg>.upload-bd>div {
 		overflow-y: auto;
 		height: 100%;
 		padding: 0 40px;
 	}
-	
+
 	.ant-btn-success,
 	.ant-btn-success:hover,
 	.ant-btn-success:active {
@@ -437,7 +496,7 @@
 		color: #fff;
 		boder: 1px solid #3bb1c2
 	}
-	
+
 	.bg>.upload-bd .upload-title {
 		color: #2459a0;
 		font-size: 16px;
@@ -446,7 +505,7 @@
 		text-align: left;
 		border-bottom: 1px solid #cfdbec;
 	}
-	
+
 	.bg>.upload-bd .upload-btnbar .upload,
 	.totalbar .btn {
 		position: relative;
@@ -459,7 +518,7 @@
 		display: inline-block;
 		margin-left: 10px;
 	}
-	
+
 	.bg>.upload-bd .upload-btnbar .upload input[type='file'] {
 		position: absolute;
 		top: 0;
@@ -467,31 +526,31 @@
 		font-size: 400px;
 		opacity: 0;
 	}
-	
+
 	.w100 {
 		width: 100%;
 	}
-	
+
 	/deep/ .ant-table-wrapper .operation {
 		a {
 			&.del {
 				color: #d43030;
 			}
-	
+
 			&.add {
 				color: #00baad;
 			}
 		}
 	}
-	
+
 	/deep/ .ant-form-item {
 		margin-bottom: 0;
 	}
-	
+
 	.link {
 		color: #1890ff;
 	}
-	
+
 	.close {
 		color: #fff;
 		font-size: 40px;
@@ -504,14 +563,14 @@
 		text-align: center;
 		background: url(../../assets/img/close2.png);
 	}
-	
+
 	.totalbar {
 		position: absolute;
 		right: 40px;
 		bottom: 5px;
 		line-height: 28px
 	}
-	
+
 	.totalbar span,
 	.totalbar .btn {
 		vertical-align: middle;

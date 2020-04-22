@@ -32,14 +32,14 @@
 						<a-button type="primary" html-type="submit" class="loginBtn">立即登录</a-button>
 					</a-form>
 				</div>
-				
+
 			</div>
 		</div>
 		<div style="position: absolute; top: 0; left: 0; height: 200px; width: 200px;">
 			<img :src="imgUrl" alt="">
 		</div>
 		<!-- <iframe :src="iframeUrl" frameborder="0" style="position: fixed; top: 0;left: 0; right: 0; bottom: 0; height: 100%; width: 100%; z-index: -1;"></iframe> -->
-		
+
 	</div>
 </template>
 
@@ -58,10 +58,11 @@
 				password: '',
 				loginInfolist: [],
 				isRemeber: true,
-				iframeUrl:'http://www.baidu.com',
-				imgUrl:''
+				iframeUrl: 'http://www.baidu.com',
+				imgUrl: ''
 			};
-		},components:{
+		},
+		components: {
 			setDanmu,
 			timeswiper
 		},
@@ -110,50 +111,54 @@
 					this.$postAction(api.Login, JSON.stringify(param))
 						.then(da => {
 							// if (da && da.ret == 'success') {
-								if ($me.isRemeber) {
-									var useritem = {
-										username: $me.username,
-										password: $me.password
-									}
-									if ($me.loginInfolist && $me.loginInfolist.length > 0) {
-										const index = $me.loginInfolist.findIndex(item => item.username == $me.username);
-										if (index > -1) {
-											$me.loginInfolist[index] = useritem
-										} else {
-											$me.loginInfolist.unshift(useritem)
-											if ($me.loginInfolist.length > 10) {
-												$me.loginInfolist.pop();
-											}
-
-										}
-									} else {
-										$me.loginInfolist = [useritem]
-									}
-
-									localStorage.setItem(
-										'loginStore',
-										JSON.stringify($me.loginInfolist)
-									);
-								} else {
-									localStorage.removeItem('loginStore')
+							if ($me.isRemeber) {
+								var useritem = {
+									username: $me.username,
+									password: $me.password
 								}
-								$me.sendInfo = {
-									schoolCode: da.data.schoolCode,
-									schoolName: da.data.schoolName,
-									teacAssistantCode: da.data.userId,
-									teacAssistantName: da.data.name,
-									teacherCode: da.data.userId,
-									teacherName: da.data.name
-								};
-								// $me.getAuthentication();
-								$me.$router.push({
-									//页面跳转
-									path: 'class',
-									query: {
-										sendInfo: JSON.stringify($me.sendInfo)
+								if ($me.loginInfolist && $me.loginInfolist.length > 0) {
+									const index = $me.loginInfolist.findIndex(item => item.username == $me.username);
+									if (index > -1) {
+										$me.loginInfolist[index] = useritem
+									} else {
+										$me.loginInfolist.unshift(useritem)
+										if ($me.loginInfolist.length > 10) {
+											$me.loginInfolist.pop();
+										}
+
 									}
-								});
-								
+								} else {
+									$me.loginInfolist = [useritem]
+								}
+
+								localStorage.setItem(
+									'loginStore',
+									JSON.stringify($me.loginInfolist)
+								);
+							} else {
+								localStorage.removeItem('loginStore')
+							}
+							$me.sendInfo = {
+								schoolCode: da.data.schoolCode,
+								schoolName: da.data.schoolName,
+								teacAssistantCode: da.data.userId,
+								teacAssistantName: da.data.name,
+								teacherCode: da.data.userId,
+								teacherName: da.data.name
+							};
+							sessionStorage.setItem(
+								'loginSendInfo',
+								JSON.stringify($me.sendInfo)
+							);
+							// $me.getAuthentication();
+							$me.$router.push({
+								//页面跳转
+								path: 'class',
+								query: {
+									sendInfo: JSON.stringify($me.sendInfo)
+								}
+							});
+
 							// }
 						})
 						.finally(() => {
@@ -178,22 +183,22 @@
 				this.username = userInfo.username;
 				this.password = userInfo.password
 			},
-			getAuthentication(){
-				this.$postAction(api.getAuthentication,{}).then(da=>{
+			getAuthentication() {
+				this.$postAction(api.getAuthentication, {}).then(da => {
 					console.log(da.data)
-					this.iframeUrl=da.data;
+					this.iframeUrl = da.data;
 				})
 			},
-			saveImgFullScreen(){
-				var param={
-					x:0,
-					y:0,
-					width:100,
-					height:100
+			saveImgFullScreen() {
+				var param = {
+					x: 0,
+					y: 0,
+					width: 100,
+					height: 100
 				};
-				this.$postAction(api.saveImg,param).then(da=>{
+				this.$postAction(api.saveImg, param).then(da => {
 					// console.log(da.data)
-				this.imgUrl='data:image/jpg;base64,'+da.data
+					this.imgUrl = 'data:image/jpg;base64,' + da.data
 				})
 			}
 		}
@@ -437,6 +442,8 @@
 
 		}
 
+		
+
 		.loginBtn {
 			background: #ffd941;
 			color: #fff;
@@ -458,6 +465,7 @@
 			}
 		}
 	}
+
 	.countDownbox {
 		position: absolute;
 		left: 400px;
