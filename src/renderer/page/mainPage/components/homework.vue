@@ -7,14 +7,18 @@
 					<div class="subtitle flex flex-pack-justify flex-align-center">
 						<div><img src="../assets/img/gou.png" alt="" v-if="theme!='theme4'" />
 							<img src="../assets/img/gou2.png" alt="" v-if="theme=='theme4'" />
-							<span class="ml10">请选择试卷</span></div>
+							<span class="ml10">请选择作业</span></div>
 						<div>
 							<!-- <div class="subtablink">
 								<a href="javascript:;" @click="changeType(1)" :class="{'active':type==1}">普通模式</a>
 								<span>|</span>
 								<a href="javascript:;" @click="changeType(2)" :class="{'active':type==2}">套题模式</a>
 							</div> -->
-							<a href="javascript:;" class="addBtn" @click="addPaper">添加试卷</a>
+							<div  class="addBtn">
+								<span>导入Excel标准答案</span>
+								<input type="file" @change="addPaper" id="upload" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+							</div>
+							<!-- <a href="javascript:;" class="addBtn" @click="addPaper">导入作业</a> -->
 						</div>
 					</div>
 					<div class="tablelist mt20" ref="setbox">
@@ -23,14 +27,14 @@
 							<span slot="serial" slot-scope="text, record, index">
 								{{ index + 1 }}
 							</span>
-							<span slot="testPaperStatus" slot-scope="text, record, index">{{text==0?'未发卷':(text==1?'已发卷':'已收取')}}</span>
-							<a-tag :color="state==0?'#00a095':(state==1?'#ff8d1a':'#d43030')" slot="testPaperStatus" slot-scope="state">{{ state==0?'未发送':(state==1?'已发送':'已收卷')}}</a-tag>
+							<span slot="testPaperStatus" slot-scope="text, record, index">{{text==0?'未发送':(text==1?'已发送':'已收取')}}</span>
+							<a-tag :color="state==0?'#00a095':(state==1?'#ff8d1a':'#d43030')" slot="testPaperStatus" slot-scope="state">{{ state==0?'未发送':(state==1?'已发送':'已收取')}}</a-tag>
 							<!-- <a-tag :color="text==0?'#2db7f5':(text==1?'#87d068':'#f50')" slot="testPaperStatus" slot-scope="text, record, index">{{text==0?'未发卷':(text==1?'已发卷':'已收取')}}</a-tag> -->
 							<span slot="action" slot-scope="text, record, index">
-								<a href="javascript:;" v-if="record.testPaperStatus==0" @click="assignHomework(record)">发卷</a>
-								<a href="javascript:;" v-if="record.testPaperStatus!=0" @click="confimAssignHomework(record)">重发试卷</a>
-								<a href="javascript:;" v-if="record.testPaperStatus==1&&(record.instructionsStatus==0)" @click="gatherHomework(record)">收卷</a>
-								<a href="javascript:;" v-if="record.testPaperStatus==1&&(record.instructionsStatus==1)" @click="stopgatherHomework(record)">停止收卷</a>
+								<a href="javascript:;" v-if="record.testPaperStatus==0" @click="assignHomework(record)">发作业</a>
+								<a href="javascript:;" v-if="record.testPaperStatus!=0" @click="confimAssignHomework(record)">重发作业</a>
+								<a href="javascript:;" v-if="record.testPaperStatus==1&&(record.instructionsStatus==0)" @click="gatherHomework(record)">收作业</a>
+								<a href="javascript:;" v-if="record.testPaperStatus==1&&(record.instructionsStatus==1)" @click="stopgatherHomework(record)">停止收作业</a>
 								<!-- <a href="javascript:;" v-if="record.testPaperStatus==2">已收卷</a> -->
 							</span>
 						</a-table>
@@ -48,7 +52,9 @@
 		mapState
 	} from 'vuex';
 	import api from '@/page/mainPage/api';
-	// import upload from '@/page/mainPage/components/upload/upload';
+	import {
+		postActionUpload
+	} from '@/page/mainPage/api';
 	import commonupload from '@/page/mainPage/components/homeupload/commonupload';
 	const columns = [{
 			title: '序号',
@@ -93,7 +99,7 @@
 				dataSource: [],
 				columns,
 				selectedRowKeys: [],
-				scrolly: 100,
+				scrolly: 200,
 				pagination: {},
 				type: 1,
 				showHomework: false,
@@ -189,10 +195,49 @@
 				this.getlistPaper()
 			},
 			addPaper() {
-				if (this.type == 1) {
-					this.$refs.commonupload.show('common')
+				// if (this.type == 1) {
+				// 	this.$refs.commonupload.show('common')
+				// } else {
+				// 	this.$refs.upload.show('classify');
+				// }
+				const $me = this;
+				var file = $('#upload')[0];
+				
+				if (file.files[0] && $me.sendInfo) {
+					var strFileName = $('#upload')
+						.val()
+						.replace(/^.+?\\([^\\]+?)(\.[^\.\\]*?)?$/gi, '$1'); //正则表达式获取文件名，不带后缀
+					var FileExt = $('#upload')
+						.val()
+						.replace(/.+\./, ''); //正则表达式获取后缀
+					var formData = new FormData();
+					if (FileExt != 'xls' && FileExt != 'xlsx') {
+						$me.$toast.center('请上传excel文件');
+						return false;
+					}
+					if (!$me.titleName) {
+						$me.titleName = strFileName;
+					}
+					formData.append('file', file.files[0]);
+					formData.append('titleName', $me.titleName);
+					formData.append('classCode', $me.sendInfo.classCode);
+					formData.append('className', $me.sendInfo.className);
+					formData.append('subjectCode', $me.sendInfo.subjectCode);
+					formData.append('subjectName', $me.sendInfo.subjectName);
+					formData.append('type', $me.type);
+					postActionUpload(api.importTestQuestions, formData).then(da => {
+						if (da.ret == 'success') {
+							$me.$toast.center('上传成功');
+							/* 重新查询 */
+							this.getlistPaper()
+						} else {
+							$me.$toast.center(da.message);
+						}
+					})
+				
+					file.value = '';
 				} else {
-					this.$refs.upload.show('classify');
+					this.$toast.center('请选择文件');
 				}
 
 
@@ -328,7 +373,7 @@
 		vertical-align: middle;
 	}
 
-	.subtablink+.addBtn {
+	.addBtn {
 		color: #fff;
 		font-size: 16px;
 		background: #3bb1c2;
@@ -336,5 +381,14 @@
 		padding: 2px 10px;
 		display: inline-block;
 		margin-left: 22px;
+		position: relative;
+		overflow: hidden;
+	}
+	.addBtn input{
+		opacity: 0;
+		font-size: 400px;
+		position: absolute;
+		top: 0;
+		right: 0;
 	}
 </style>

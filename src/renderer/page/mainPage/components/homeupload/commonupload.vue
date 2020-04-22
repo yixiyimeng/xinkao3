@@ -3,7 +3,7 @@
 		<div class="upload-bd">
 			<a href="javascript:;" class="close" @click="close()"></a>
 			<div>
-				<div class="upload-title">普通模式堂测标准答案设置</div>
+				<div class="upload-title">课后作业标准答案设置</div>
 				<div class="upload-btnbar flex flex-pack-justify flex-align-center">
 					<div>
 						<label>标题</label>
