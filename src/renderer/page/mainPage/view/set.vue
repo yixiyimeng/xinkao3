@@ -28,10 +28,10 @@
 					<a href="javascript:;" @click="setChannel">设置</a>
 					<a href="javascript:;" @click="defaultSet">设为默认值</a>
 				</div>
-				<div class="mt15 inputtxt flex flex-align-center flex-pack-justify pr20">
+				<!-- <div class="mt15 inputtxt flex flex-align-center flex-pack-justify pr20">
 					<label>弹幕模式</label>
 					<a-switch v-model="isCheck" @change="onChange" />
-				</div>
+				</div> -->
 				<div class="mt15 inputtxt flex flex-align-center">
 					<label>换肤</label>
 					<a-select class="select flex-1" size="large" v-model="defaulttheme" @change="changeTheme">

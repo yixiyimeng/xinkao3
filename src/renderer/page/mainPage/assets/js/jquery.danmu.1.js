@@ -333,11 +333,6 @@ var cyntax = {
 		};
 		me.checkRow = function(me) {
 			for (var i in me.rows) {
-				// 				if (me.rows[i] !== 0 && typeof($("#" + me.rows[i]).position()) !== "undefined" && ($("#" + me.rows[i]).position()
-				// 						.left < (me.$element.width() - $("#" + me.rows[i]).width()))) {
-				// 					me.rows[i] = 0;
-				// 
-				// 				}
 				if (me.rows[i] !== 0) {
 					try {
 						var reg = /matrix.((.+([, ]+)?){6})./g;
@@ -434,7 +429,7 @@ var cyntax = {
 									}
 
 								}
-								console.log('delaywidth' + delaywidth);
+								//console.log('delaywidth' + delaywidth);
 								var imgpath = options.imgpath ? options.imgpath : "static/img/1.png";
 								a_danmu.css({
 									"color": danmaku.color,
@@ -500,7 +495,7 @@ var cyntax = {
 		left: 0,
 		top: '10%',
 		height: '80%',
-		bottom:'10%',
+		bottom:'120px',
 		width: '100%',
 		zindex: -1,
 		speed: 8000,
@@ -566,38 +561,6 @@ var cyntax = {
 		$("#" + this.id + ' .danmaku').css("opacity", arg);
 		this.$element.data("opacity", arg);
 
-	};
-	Danmu.prototype.setLocation = function(type) {
-		var top='10%',bottom='10%'
-		switch(type){
-			case 'full':{
-				top='10%';
-				bottom='10%';
-				break;
-			}
-			case 'up':{
-				top='10%';
-				bottom='50%';
-				break;
-			}
-			case 'center':{
-				top='30%';
-				bottom='30%';
-				break;
-			}
-			case 'down':{
-				top='50%';
-				bottom='10%';
-				break;
-			}
-			
-		}
-		$("#" + this.id).css({
-			top,
-			bottom
-		});
-		this.$element.data("location", type);
-	
 	};
 
 

@@ -2,8 +2,8 @@
 	<div class="bg" v-if="showHomework">
 		<a href="javascript:;" class="reback" @click="returnback"></a>
 		<div class="setbox">
-			<div>
-				<div class="modbox" ref="modbox" style="margin: 0 20px;">
+			<div style="padding-bottom: 0;">
+				<div class="modbox flex flex-v" ref="modbox" style="margin: 0 20px; height: 100%;">
 					<div class="subtitle flex flex-pack-justify flex-align-center">
 						<div><img src="../assets/img/gou.png" alt="" v-if="theme!='theme4'" />
 							<img src="../assets/img/gou2.png" alt="" v-if="theme=='theme4'" />
@@ -21,7 +21,7 @@
 							<!-- <a href="javascript:;" class="addBtn" @click="addPaper">导入作业</a> -->
 						</div>
 					</div>
-					<div class="tablelist mt20" ref="setbox">
+					<div class="tablelist mt20 flex-1" ref="setbox">
 						<a-table style="height: 100%;" rowKey="titleCode" :columns="columns" :dataSource="dataSource" :scroll="{ x: 700, y: scrolly }"
 						 size="middle" :pagination="pagination" @change="handleTableChange">
 							<span slot="serial" slot-scope="text, record, index">
@@ -252,7 +252,7 @@
 					if (da && da.ret == 'success') {
 						this.getlistPaper();
 
-						this.$message.success('试卷下发成功');
+						this.$toast.center('试卷下发成功');
 					}
 				})
 			},
@@ -264,7 +264,7 @@
 				}).then(da => {
 					if (da && da.ret == 'success') {
 						record.instructionsStatus = 1;
-						this.$message.success('开始收取试卷');
+						this.$toast.center('开始收取试卷');
 					}
 				})
 			},
@@ -277,7 +277,7 @@
 					if (da && da.ret == 'success') {
 						record.instructionsStatus = 0;
 						this.getlistPaper();
-						this.$message.success('收取试卷成功');
+						this.$toast.center('收取试卷成功');
 					}
 				})
 			},

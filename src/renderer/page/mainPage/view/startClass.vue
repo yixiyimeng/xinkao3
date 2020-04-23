@@ -5,22 +5,24 @@
 		</div>
 		<!-- 切换菜单 -->
 		<div class="mainmenu">
-			<div class="setbtnlist" v-if="!isAnswering">
-				<i class="refresh" @click="refreshResource(0)" v-if="isshowResource==1"></i>
-				<i class="refresh refresh2" @click="refreshResource(1)" v-if="isshowResource==2"></i>
-				<a href="javascript:;" @click="showResource(0)" class="zujuan" title="组卷网">
-					<i></i>
-					<span>组卷网</span>
-				</a>
-				<a href="javascript:;" @click="showResource(1)" class="resource" title="资源课件">
-					<i></i>
-					<span>资源课件</span>
-				</a>
-				<a href="javascript:;" @click="shownamelist" class="userlist" title="学生名单">
-					<i></i>
-					<span>学生名单</span>
-				</a>
-				<a href="javascript:;" @click.stop="showSet" class="set" title="工具">
+			<div class="setbtnlist">
+				<div v-if="!isAnswering">
+					<i class="refresh" @click="refreshResource(0)" v-if="isshowResource==1"></i>
+					<i class="refresh refresh2" @click="refreshResource(1)" v-if="isshowResource==2"></i>
+					<a href="javascript:;" @click="showResource(0)" class="zujuan" title="组卷网">
+						<i></i>
+						<span>组卷网</span>
+					</a>
+					<a href="javascript:;" @click="showResource(1)" class="resource" title="资源课件">
+						<i></i>
+						<span>资源课件</span>
+					</a>
+					<a href="javascript:;" @click="shownamelist" class="userlist" title="学生名单">
+						<i></i>
+						<span>学生名单</span>
+					</a>
+				</div>
+				<a href="javascript:;" @click.stop="showSet" class="set" title="工具" style="margin-top: 10px;">
 					<i></i>
 					<span>工具箱</span>
 				</a>
@@ -220,8 +222,9 @@
 				} else if (isChoice == 0) {
 					this.title = '随堂检测';
 				}
+
 				this.questionType = questionType || 0;
-				this.$refs.danmu.starDanmu();
+				this.$refs.danmu.starDanmu(this.questionType);
 			},
 			stopAnswer() {
 				/* 结束答题 */
@@ -229,7 +232,7 @@
 				this.isChoice = false;
 				this.rate = 0; //清空进度条数据
 				/* 结束答题后，清空弹幕 */
-				this.questionType = 0;
+				// this.questionType = 0;
 				this.$refs.danmu.clearDanmu();
 			},
 
@@ -322,7 +325,7 @@
 								case 3:
 									{
 										/* 设置未连接 */
-										// $me.$message.error('设备未连接')
+										// $me.$toast.center('设备未连接')
 										break;
 									}
 								case 16:

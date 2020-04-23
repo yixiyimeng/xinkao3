@@ -51,8 +51,8 @@ export default {
 			$('#danmu').data('danmuList', {});
 			$('#danmu').danmu('danmuStop');
 		},
-		starDanmu() {
-			let index = this.danmuinfolist.findIndex(item => item.questionType == this.questionType);
+		starDanmu(questionType) {
+			let index = this.danmuinfolist.findIndex(item => item.questionType == questionType);
 			if (index >= 0) {
 				this.isShowDanmu = true;
 				let danmuinfo = this.danmuinfolist[index];

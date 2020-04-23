@@ -277,6 +277,8 @@
 				$me.$postAction(api.startClass, $me.sendInfo).then(da => {
 					if (da && da.ret == 'success') {
 						$me.gotoPage();
+					}else{
+						$me.$toast.center(da.message);
 					}
 				}).finally(() => {
 					$me.loading = false;

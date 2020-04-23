@@ -13,7 +13,7 @@
 				<a href="javascript:;" class="addBtn" @click="addPaper">添加试卷</a>
 			</div>
 		</div>
-		<div class="tablelist mt20" ref="setbox">
+		<div class="tablelist mt20" ref="setbox" :style="{'height':tabheight+'px'}">
 			<a-table style="height: 100%;" rowKey="titleCode" :columns="columns" :dataSource="dataSource" :scroll="{ x: 700, y: scrolly }"
 			 size="middle" :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange ,type:'radio'}"
 			 :pagination="pagination" @change="handleTableChange">
@@ -66,9 +66,10 @@
 				dataSource: [],
 				columns,
 				selectedRowKeys: [],
-				scrolly: 100,
+				scrolly: 300,
 				pagination: {},
-				type: 1
+				type: 1,
+				tabheight:100
 			};
 		},
 		components: {
@@ -83,12 +84,18 @@
 		},
 		mounted() {
 			const that = this;
-			that.scrolly = that.$refs.modbox.offsetHeight - 100;
+			// that.scrolly = that.$refs.modbox.offsetHeight - 100;
 			// that.scrolly = document.body.offsetHeight * .6 - 180;
 			window.onresize = function() {
 				// that.scrolly = document.body.offsetHeight * .6 - 180;
-				that.scrolly = that.$refs.modbox.offsetHeight - 100;
+				that.tabheight = that.$refs.modbox.offsetHeight - 150;
 			};
+			this.$nextTick(() => {
+				if (this.$refs.modbox) {
+					this.tabheight= this.$refs.modbox.offsetHeight - 150;
+					console.log('高度' + this.scrolly)
+				}
+			})
 		},
 		destroyed() {
 			window.onresize = null;

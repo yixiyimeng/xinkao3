@@ -173,7 +173,7 @@ export default {
 		showDeleteAllConfirm() {
 			/* 判断长度 */
 			if (this.selectedRowKeys.length <= 0) {
-				this.$message.warn('请至少选择一条数据');
+				this.$toast.center('请至少选择一条数据');
 				return false;
 			}
 			this.$confirm({
