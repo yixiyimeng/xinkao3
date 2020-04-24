@@ -47,7 +47,10 @@
 			<a href="javascript:;" @click="save" class="save" title="保存"><i></i></a>
 			<a href="javascript:;" @click="cancel" class="cancel" title="取消"><i></i></a>
 			<textarea name="" id="" cols="30" rows="4" ref="canvastextarea" :style="{color:pColor,borderColor: pColor,fontSize:fontSize+'px'}"
-			 :auto-focus="true" class="canvastextarea" v-show="iseditFont"></textarea>
+			 :auto-focus="true" class="canvastextarea" v-show="iseditFont" id="canvastextarea"></textarea>
+			<!-- <textarea name="" id="" cols="30" rows="4" ref="checkcanvastextarea" :style="{fontSize:fontSize+'px'}" :auto-focus="true"
+			 v-model="testSpanForCheck"></textarea> -->
+			<span style="white-space: nowrap;visibility:hidden" id='checkcanvastextarea' ref="checkcanvastextarea" :style="{fontSize:fontSize+'px'}"></span>
 		</div>
 	</div>
 </template>
@@ -69,7 +72,8 @@
 				iseditFont: false,
 				showeditfont: false,
 				fontSize: 20,
-				isFont: false
+				isFont: false,
+				testSpanForCheck: 'abc'
 			}
 		},
 		/* 画图 */
@@ -208,7 +212,7 @@
 			save() {
 				this.$emit('save')
 			},
-			cancel(){
+			cancel() {
 				this.$emit('cancel')
 			},
 			drawfont() {
@@ -224,7 +228,8 @@
 					m_top = that.fontSize;
 					ctx.fillStyle = that.pColor;
 					let valueArr = textarea.value.split(/[(\r\n)\r\n]+/);
-					valueArr.forEach(function(v, i, arr) {
+					let result = this.gettext(valueArr).split('#')
+					result.forEach(function(v, i, arr) {
 						ctx.fillText(v, textarea.offsetLeft + 1, top + (m_top * (i + 1)));
 					});
 					that.iseditFont = false;
@@ -233,6 +238,59 @@
 				} else {
 					that.iseditFont = false;
 				}
+			},
+			gettext(content) {
+				// let contentWidth = this.$refs.canvastextarea.offsetWidth;
+				let contentWidth=document.getElementById('canvastextarea').offsetWidth;
+				let result = '';
+				this.testSpanForCheck = '';
+				document.getElementById('checkcanvastextarea').innerText='';
+				let that = this;
+				$.each(content, function(i, val) {
+					var valLength = val.length;
+					if (valLength == 0) {
+						result += "#";
+					} else {
+						var pre = "",
+							innerVal, tempWidth;
+						for (var innerI = 0; innerI < valLength; innerI++) {
+							innerVal = val.charAt(innerI);
+							if (innerVal == " ") {
+								// $("#testSpanForCheck").text($("#testSpanForCheck").text() + "a"); //追加字符，如果为空格则追加为a(innerText方法会将多个空格合并为一个，所以需要转换)
+								that.testSpanForCheck = that.testSpanForCheck + 'a'
+							} else {
+								// $("#tempContent").text($("#tempContent").text() + innerVal); //非空格则直接追加
+								that.testSpanForCheck = that.testSpanForCheck + innerVal
+							}
+							document.getElementById('checkcanvastextarea').innerText=that.testSpanForCheck
+							// that.$nextTick(() => { //使用nextTick为了保证dom元素都已经渲染完毕 
+								// tempWidth = that.$refs.checkcanvastextarea.offsetWidth;
+								console.log(document.getElementById('checkcanvastextarea'))
+								tempWidth=document.getElementById('checkcanvastextarea').offsetWidth;
+								//获取添加字符后隐藏域的宽度
+								console.log(tempWidth)
+								if (tempWidth > contentWidth) {
+									result += pre; //如果追加字符后隐藏域宽度大于TextArea宽度，则表明该字符为下一行字符，
+									result += "#";
+									that.testSpanForCheck = innerVal
+									pre = innerVal;
+								} else if (innerI == valLength - 1) {
+									result += pre + innerVal; //最后一个字符
+									result += "#";
+									// that.testSpanForCheck = ''
+									pre = "";
+								} else {
+									pre += innerVal; //依次追加到pre变量中
+								}
+
+							// });
+
+
+						}
+					}
+				});
+				console.log(result)
+				return result;
 			}
 
 		}
@@ -245,6 +303,7 @@
 		position: absolute;
 		left: 200px;
 		bottom: 30px;
+
 		&>a {
 			background: url(../assets/img/drawbtn.png) no-repeat center top;
 			background-size: 50px auto;
@@ -304,8 +363,10 @@
 					transform: scaleX(-1);
 				}
 			}
-			&.cancel{
+
+			&.cancel {
 				padding-top: 13px;
+
 				&>i {
 					background-image: url(../assets/img/cancel.png);
 				}
