@@ -750,8 +750,8 @@
 		.thememodbox {
 			bottom: 20px;
 			width: auto;
-			left: 135px;
-			right: 135px;
+			left: 175px;
+			right: 175px;
 			transform: translate(0, 0);
 		}
 

@@ -30,7 +30,7 @@
 				</div>
 			</div>
 			<div v-if="viewState==2" ref="tablebox">
-				<div>姓名：<span>{{studentInfo}}</span></div>
+				<div>姓名：<span>{{studentInfo.stuName}}</span></div>
 				<a-table rowKey="questionId" :columns="columns" :dataSource="dataSource" :scroll="{ y: scrolly }" size="middle"
 				 :pagination="false">
 					<span slot="serial" slot-scope="text, record, index">
@@ -258,7 +258,7 @@
 		},
 		{
 			title: '按键答案',
-			dataIndex: 'answer',
+			dataIndex: 'answerResult',
 			align: 'center',
 			width: '25%',
 			scopedSlots: {
@@ -343,12 +343,12 @@
 			setCountlist(res) {
 				this.viewState = 1;
 				let that = this;
-				this.$nextTick(() => {
-					that.scrolly = that.$refs.chartbox.offsetHeight - 100;
-					window.onresize = function() {
-						that.scrolly = that.$refs.chartbox.offsetHeight - 100;
-					};
-				})
+				// this.$nextTick(() => {
+				// 	that.scrolly = that.$refs.chartbox.offsetHeight - 100;
+				// 	window.onresize = function() {
+				// 		that.scrolly = that.$refs.chartbox.offsetHeight - 100;
+				// 	};
+				// })
 				this.res = res;
 				let ratexAxis = [];
 				this.titleNames = [];
@@ -457,18 +457,18 @@
 				}
 				this.dataSource = this.detailslist[index].recordList;
 				this.studentInfo = this.detailslist[index].studentInfo;
-				this.viewState = 1;
+				this.viewState = 2;
 				let that = this;
 				this.$nextTick(() => {
 					console.log(that.$refs.tablebox.offsetHeight)
-					// that.scrolly = that.$refs.tablebox.offsetHeight - 100;
-					// window.onresize = function() {
-					// 	that.scrolly = that.$refs.tablebox.offsetHeight - 100;
-					// };
+					that.scrolly = that.$refs.tablebox.offsetHeight - 100;
+					window.onresize = function() {
+						that.scrolly = that.$refs.tablebox.offsetHeight - 100;
+					};
 				})
 			},
 			returnback() {
-				this.viewState = 1;
+				this.viewState = 0;
 			},
 			showStuDetail(record) {
 				this.viewState = 2;

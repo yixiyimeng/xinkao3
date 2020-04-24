@@ -5,11 +5,11 @@
 				<img src="../assets/img/gou2.png" alt="" v-if="theme=='theme4'" />
 				<span class="ml10">请选择试卷</span></div>
 			<div>
-				<div class="subtablink">
+				<!-- <div class="subtablink">
 					<a href="javascript:;" @click="changeType(1)" :class="{'active':type==1}">普通模式</a>
 					<span>|</span>
 					<a href="javascript:;" @click="changeType(2)" :class="{'active':type==2}">套题模式</a>
-				</div>
+				</div> -->
 				<a href="javascript:;" class="addBtn" @click="addPaper">添加试卷</a>
 			</div>
 		</div>

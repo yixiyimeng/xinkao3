@@ -103,10 +103,14 @@
 						if (da && da.ret == 'success') {
 							/*收取试卷 */
 							$me.isAnswering = false;
+							/* 清空倒计时 */
+							if (this.isCountDown == 1) {
+								this.$refs.countdown.clearCount();
+							}
 							$me.viewState = 2;
 							$me.$emit('stopAnswer');
-							// $me.$refs.startClassTesting.setDetailslist(da.data)
-							$me.$refs.startClassTesting.setCountlist(da);
+							$me.$refs.startClassTesting.setDetailslist(da.data)
+							// $me.$refs.startClassTesting.setCountlist(da);
 							// clearInterval($me.timer);
 							// $me.timer = null;
 						}
@@ -191,7 +195,11 @@
 				$me.$postAction(api.startSingleAnswer, param).then(da => {
 					if (da && da.ret == 'success') {
 						/* 开始答题 */
-						$me.timeDown();
+						/* 清空倒计时 */
+						/* 开始倒计时 */
+						if ($me.isCountDown == 1) {
+							$me.timeDown();
+						}
 						$me.isAnswering = true;
 						$me.viewState = 1;
 						$me.$emit('startAnswer', 1, $me.questionType);
@@ -263,6 +271,18 @@
 						$me.$toast.center(da.message);
 					}
 				});
+			},
+			resumeCountDown(type){
+				/* 暂停或者重启倒计时 */
+				if(this.isShowAnswer){
+					if (this.isCountDown == 1 && this.isAnswering) {
+						if (type == 1) {
+							this.$refs.countdown.resume();
+						} else {
+							this.$refs.countdown.clearCount();
+						}
+					}
+				}
 			}
 		}
 	};

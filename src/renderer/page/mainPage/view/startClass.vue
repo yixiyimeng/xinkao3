@@ -79,7 +79,7 @@
 			</div>
 		</div>
 		<!-- 工具栏 -->
-		<toolbar :ifTemporary="isAnswering" ref="toolbar"></toolbar>
+		<toolbar :ifTemporary="isAnswering" ref="toolbar" @resumeCountDown="resumeCountDown"></toolbar>
 		<div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; background: #fff;" v-show="isshowResource != 0">
 			<a-spin tip="正在加载..." :spinning="spinning" style="height: 100%;" size="large">
 				<iframe ref="iframe1" :src="iframeUrl" frameborder="0" style="width: 100%; height: 100%;" v-show="isshowResource == 1"></iframe>
@@ -300,10 +300,7 @@
 							switch (msg.reqType) {
 								case 0:
 									{
-										if ($me.isDanmu) {
-											$me.$refs.danmu.addDanmu(obj);
-										}
-
+										$me.$refs.danmu.addDanmu(obj);
 										break;
 									}
 								case 1:
@@ -469,6 +466,10 @@
 						$me.spinning = false;
 					}
 				})
+			},
+			resumeCountDown(type){
+				/* 开始截屏后，暂停答题器 */
+				this.$refs.startAnswer.resumeCountDown(type);
 			}
 		}
 	};
