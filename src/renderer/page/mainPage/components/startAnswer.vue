@@ -119,6 +119,9 @@
 					$me.$postAction(api.stopAnswer).then(da => {
 						if (da && da.ret == 'success') {
 							/*结束答题 */
+							if (this.isCountDown == 1) {
+								this.$refs.countdown.clearCount();
+							}
 							$me.isAnswering = false;
 							$me.viewState = 2;
 							$me.$emit('stopAnswer');
@@ -202,7 +205,7 @@
 						}
 						$me.isAnswering = true;
 						$me.viewState = 1;
-						$me.$emit('startAnswer', 1, $me.questionType);
+						$me.$emit('startAnswer',$me.questionType, 1);
 						$me.$nextTick(() => {
 							setTimeout(() => {
 								$me.saveImgFullScreen();
@@ -219,7 +222,7 @@
 					if (da && da.ret == 'success') {
 						$me.isAnswering = true;
 						$me.viewState = 1;
-						$me.$emit('startAnswer', 0);
+						$me.$emit('startAnswer',5, 0);
 						$me.$refs.startClassTesting.show();
 						$me.answerPercent();
 						/* 开始倒计时 */
@@ -272,9 +275,9 @@
 					}
 				});
 			},
-			resumeCountDown(type){
+			resumeCountDown(type) {
 				/* 暂停或者重启倒计时 */
-				if(this.isShowAnswer){
+				if (this.isShowAnswer) {
 					if (this.isCountDown == 1 && this.isAnswering) {
 						if (type == 1) {
 							this.$refs.countdown.resume();

@@ -240,7 +240,7 @@
 										$me.voteInfo = voteInfo;
 										// $me.isAnswering = true;
 										$me.viewState = 1;
-										$me.$emit('startVote')
+										$me.$emit('startVote',7)
 									}
 								})
 							}
