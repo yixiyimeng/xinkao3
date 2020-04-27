@@ -40,8 +40,8 @@
 					<span slot="questionType" slot-scope="text, record, index">
 						{{ text|typefilter}}
 					</span>
-					<a-tag slot="answer" slot-scope="text, record, index" v-if="text" :color="record.answerResult=='true'?'#87d068':'#f00'">{{ text|Answerfilter}}</a-tag>
-					<span slot="answer" v-else style="color: #ff0;">--</span>
+					<a-tag slot="answer" slot-scope="text, record, index" v-if="text" :color="record.result?'#87d068':'#f00'">{{ text|Answerfilter}}</a-tag>
+					<span slot="answer" v-else style="color: #f00;">--</span>
 					<span slot="trueAnswer" slot-scope="text, record, index">
 						{{ text|Answerfilter}}
 					</span>
