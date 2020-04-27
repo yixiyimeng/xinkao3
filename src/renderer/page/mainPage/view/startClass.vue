@@ -9,8 +9,10 @@
 				<div v-if="!isAnswering">
 					<i class="refresh" @click="refreshResource(0)" v-if="isshowResource==1" title="刷新"></i>
 					<i class="refresh refresh2" @click="refreshResource(1)" v-if="isshowResource==2" title="刷新"></i>
-					<i class="refresh isMoveTop" :class="{active:isMoveTop}" style="right:-100px" @click="isMoveTop=!isMoveTop" v-if="isshowResource==1" :title="isMoveTop?'置底':'置顶'"></i>
-					<i class="refresh isMoveTop refresh2" :class="{active:isMoveTop}" style="right:-100px" @click="isMoveTop=!isMoveTop"v-if="isshowResource==2" :title="isMoveTop?'置底':'置顶'"></i>
+					<i class="refresh isMoveTop" :class="{active:isMoveTop}" style="right:-100px" @click="isMoveTop=!isMoveTop" v-if="isshowResource==1"
+					 :title="isMoveTop?'置底':'置顶'"></i>
+					<i class="refresh isMoveTop refresh2" :class="{active:isMoveTop}" style="right:-100px" @click="isMoveTop=!isMoveTop"
+					 v-if="isshowResource==2" :title="isMoveTop?'置底':'置顶'"></i>
 					<a href="javascript:;" @click="showResource(0)" class="zujuan" title="组卷网">
 						<i></i>
 						<span>组卷网</span>
@@ -82,7 +84,8 @@
 		</div>
 		<!-- 工具栏 -->
 		<toolbar :ifTemporary="isAnswering" ref="toolbar" @resumeCountDown="resumeCountDown"></toolbar>
-		<div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; background: #fff;" v-show="isshowResource != 0" :style="{zIndex:(isMoveTop&&isshowResource != 0)?999:-1}">
+		<div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; background: #fff;" v-show="isshowResource != 0"
+		 :style="{zIndex:(isMoveTop&&isshowResource != 0)?999:-1}">
 			<a-spin tip="正在加载..." :spinning="spinning" style="height: 100%;" size="large">
 				<iframe ref="iframe1" :src="iframeUrl" frameborder="0" style="width: 100%; height: 100%;" v-show="isshowResource == 1"></iframe>
 				<iframe ref="iframe2" :src="iframeUrl2" frameborder="0" style="width: 100%; height: 100%;" v-show="isshowResource == 2"></iframe>
@@ -142,8 +145,8 @@
 				spinning: false,
 				resourceUrllist: ['', 'http://zkxl.school.zxxk.com/ThirdParty/CustomJump?_m=http://localhost:8080'],
 				iframeUrl: '', //组卷网
-				iframeUrl2: '' ,//资源
-				isMoveTop:false
+				iframeUrl2: '', //资源
+				isMoveTop: false
 			};
 		},
 		computed: {
@@ -216,13 +219,13 @@
 				this.$refs.startAnswer.showAnswer();
 				this.isShowClassMenu = false;
 			},
-			startAnswer(questionType,isChoice) {
+			startAnswer(questionType, isChoice) {
 				/* 开始答题 */
 				this.isAnswering = true;
 				this.isChoice = isChoice == 1;
 				if (isChoice == 0) {
 					this.title = '随堂检测';
-				} else{
+				} else {
 					this.title = '';
 				}
 
@@ -243,13 +246,13 @@
 				this.$refs.vote.show();
 				this.isShowClassMenu = false;
 				this.title = '投票统计';
-				
+
 			},
 			showStartScore() {
 				this.$refs.score.show();
 				this.isShowClassMenu = false;
 				this.title = '评分统计';
-				
+
 			},
 			showQuickAnswer() {
 				this.$refs.quickAnswer.show();
@@ -379,7 +382,7 @@
 					$me.$loading.close();
 				}, 5000);
 			},
-			getAuthentication() {
+			getAuthentication(type) {
 				const $me = this;
 				this.$postAction(api.getAuthentication, {
 					serviceType: 3
@@ -387,7 +390,10 @@
 					// this.iframeUrl = da.data;
 					if (da.ret == 'success') {
 						$me.$set($me.resourceUrllist, 0, da.data);
-
+						if (type == 0) {
+							this.iframeUrl = $me.resourceUrllist[type]
+							this.loadResouce(type);
+						}
 					} else {
 						$me.$toast.center(da.message);
 						if (da.code == 401) {
@@ -426,8 +432,10 @@
 				}
 				this.isshowResource = (type + 1);
 				if ((type == 0 && this.iframeUrl == '')) {
-					this.iframeUrl = this.resourceUrllist[type]
-					this.loadResouce(type);
+					// this.iframeUrl = this.resourceUrllist[type]
+					/* 重新加载认证地址 */
+					this.getAuthentication(type)
+
 				} else if (type == 1 && this.iframeUrl2 == '') {
 					this.iframeUrl2 = this.resourceUrllist[type]
 					this.loadResouce(type);
@@ -472,10 +480,10 @@
 					}
 				})
 			},
-			resumeCountDown(type){
+			resumeCountDown(type) {
 				/* 开始截屏后，暂停或者重启倒计时*/
-				if(this.isAnswering)
-				this.$refs.startAnswer.resumeCountDown(type);
+				if (this.isAnswering)
+					this.$refs.startAnswer.resumeCountDown(type);
 			}
 		}
 	};
