@@ -432,7 +432,7 @@
 				}
 				this.isshowResource = (type + 1);
 				if ((type == 0 && this.iframeUrl == '')) {
-					// this.iframeUrl = this.resourceUrllist[type]
+					//this.iframeUrl = this.resourceUrllist[type]
 					/* 重新加载认证地址 */
 					this.getAuthentication(type)
 
@@ -449,7 +449,9 @@
 					this.iframeUrl2 = ''
 				}
 				if ((type == 0 && this.iframeUrl == '')) {
-					this.iframeUrl = this.resourceUrllist[type]
+					// this.iframeUrl = this.resourceUrllist[type]
+					/* 重新加载认证地址 */
+					this.getAuthentication(type)
 				} else if (type == 1 && this.iframeUrl2 == '') {
 					this.iframeUrl2 = this.resourceUrllist[type]
 				}
