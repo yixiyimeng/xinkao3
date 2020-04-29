@@ -28,18 +28,15 @@
 								记住密码
 							</a-checkbox>
 						</div>
-						<!-- <a href="javascript:;" class="loginBtn" @click="saveImgFullScreen">截图</a> -->
 						<a-button type="primary" html-type="submit" class="loginBtn">立即登录</a-button>
 					</a-form>
 				</div>
 
 			</div>
 		</div>
-		<div style="position: absolute; top: 0; left: 0; height: 200px; width: 200px;">
+		<!-- <div style="position: absolute; top: 0; left: 0; height: 200px; width: 200px;">
 			<img :src="imgUrl" alt="">
-		</div>
-		<!-- <iframe :src="iframeUrl" frameborder="0" style="position: fixed; top: 0;left: 0; right: 0; bottom: 0; height: 100%; width: 100%; z-index: -1;"></iframe> -->
-
+		</div> -->
 	</div>
 </template>
 
@@ -58,7 +55,6 @@
 				password: '',
 				loginInfolist: [],
 				isRemeber: true,
-				iframeUrl: 'http://www.baidu.com',
 				imgUrl: ''
 			};
 		},
@@ -92,6 +88,7 @@
 				this.sendLoginInfo();
 			},
 			sendLoginInfo() {
+				const $me = this;
 				if (this.username && this.password) {
 					if (htmlescpe.test(this.username)) {
 						this.$toast.center('账户中包含特殊字符!');
@@ -105,61 +102,64 @@
 						username: this.username,
 						password: this.password,
 					};
-					const $me = this;
+
 
 					this.$loading('正在登陆...');
 					this.$postAction(api.Login, JSON.stringify(param))
 						.then(da => {
-							// if (da && da.ret == 'success') {
-							if ($me.isRemeber) {
-								var useritem = {
-									username: $me.username,
-									password: $me.password
-								}
-								if ($me.loginInfolist && $me.loginInfolist.length > 0) {
-									const index = $me.loginInfolist.findIndex(item => item.username == $me.username);
-									if (index > -1) {
-										$me.loginInfolist[index] = useritem
-									} else {
-										$me.loginInfolist.unshift(useritem)
-										if ($me.loginInfolist.length > 10) {
-											$me.loginInfolist.pop();
-										}
-
+							if (da && da.ret == 'success') {
+								if ($me.isRemeber) {
+									var useritem = {
+										username: $me.username,
+										password: $me.password
 									}
+									if ($me.loginInfolist && $me.loginInfolist.length > 0) {
+										const index = $me.loginInfolist.findIndex(item => item.username == $me.username);
+										if (index > -1) {
+											$me.loginInfolist.splice(index,1)
+											$me.loginInfolist.unshift(useritem)
+										} else {
+											$me.loginInfolist.unshift(useritem)
+											if ($me.loginInfolist.length > 10) {
+												$me.loginInfolist.pop();
+											}
+
+										}
+									} else {
+										$me.loginInfolist = [useritem]
+									}
+
+									localStorage.setItem(
+										'loginStore',
+										JSON.stringify($me.loginInfolist)
+									);
 								} else {
-									$me.loginInfolist = [useritem]
+									localStorage.removeItem('loginStore')
 								}
-
-								localStorage.setItem(
-									'loginStore',
-									JSON.stringify($me.loginInfolist)
+								$me.sendInfo = {
+									schoolCode: da.data.schoolCode,
+									schoolName: da.data.schoolName,
+									teacAssistantCode: da.data.userId,
+									teacAssistantName: da.data.name,
+									teacherCode: da.data.userId,
+									teacherName: da.data.name
+								};
+								sessionStorage.setItem(
+									'loginSendInfo',
+									JSON.stringify($me.sendInfo)
 								);
-							} else {
-								localStorage.removeItem('loginStore')
-							}
-							$me.sendInfo = {
-								schoolCode: da.data.schoolCode,
-								schoolName: da.data.schoolName,
-								teacAssistantCode: da.data.userId,
-								teacAssistantName: da.data.name,
-								teacherCode: da.data.userId,
-								teacherName: da.data.name
-							};
-							sessionStorage.setItem(
-								'loginSendInfo',
-								JSON.stringify($me.sendInfo)
-							);
-							// $me.getAuthentication();
-							$me.$router.push({
-								//页面跳转
-								path: 'class',
-								query: {
-									sendInfo: JSON.stringify($me.sendInfo)
-								}
-							});
+								// $me.getAuthentication();
+								$me.$router.push({
+									//页面跳转
+									path: 'class',
+									query: {
+										sendInfo: JSON.stringify($me.sendInfo)
+									}
+								});
 
-							// }
+							} else {
+								this.$toast.center(da.message);
+							}
 						})
 						.finally(() => {
 							$me.$loading.close();
@@ -183,12 +183,7 @@
 				this.username = userInfo.username;
 				this.password = userInfo.password
 			},
-			getAuthentication() {
-				this.$postAction(api.getAuthentication, {}).then(da => {
-					console.log(da.data)
-					this.iframeUrl = da.data;
-				})
-			},
+
 			saveImgFullScreen() {
 				var param = {
 					x: 0,
@@ -442,7 +437,7 @@
 
 		}
 
-		
+
 
 		.loginBtn {
 			background: #ffd941;
