@@ -215,9 +215,7 @@
 						$me.$toast.center('请上传excel文件');
 						return false;
 					}
-					if (!$me.titleName) {
-						$me.titleName = strFileName;
-					}
+					$me.titleName = strFileName;
 					formData.append('file', file.files[0]);
 					formData.append('titleName', $me.titleName);
 					formData.append('classCode', $me.sendInfo.classCode);
