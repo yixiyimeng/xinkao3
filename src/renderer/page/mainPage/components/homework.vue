@@ -296,6 +296,7 @@
 </script>
 
 <style scoped="scoped" lang="scss">
+	@import '../assets/css/set.scss';
 	.theme1 {
 		.modbox {
 			position: absolute;

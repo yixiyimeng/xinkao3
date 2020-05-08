@@ -85,7 +85,7 @@
 		<!-- 工具栏 -->
 		<toolbar :ifTemporary="isAnswering" ref="toolbar" @resumeCountDown="resumeCountDown"></toolbar>
 		<div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; background: #fff;" v-show="isshowResource != 0"
-		 :style="{zIndex:(isMoveTop&&isshowResource != 0)?9999:-1}">
+		 :style="{zIndex:(isMoveTop&&isshowResource != 0)?9998:-1}">
 			<a-spin tip="正在加载..." :spinning="spinning" style="height: 100%;" size="large">
 				<iframe ref="iframe1" :src="iframeUrl" frameborder="0" style="width: 100%; height: 100%;" v-show="isshowResource == 1"></iframe>
 				<iframe ref="iframe2" :src="iframeUrl2" frameborder="0" style="width: 100%; height: 100%;" v-show="isshowResource == 2"></iframe>

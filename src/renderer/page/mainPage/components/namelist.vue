@@ -274,9 +274,11 @@
 
 <style scoped="scoped" lang="scss">
 	@import '../assets/css/set.scss';
-.bindnamelist{
-	z-index: 9999;
-}
+
+	.bindnamelist {
+		z-index: 9999;
+	}
+
 	.theme1 .bg .setbox {
 		background: rgba(255, 255, 255, .7);
 
