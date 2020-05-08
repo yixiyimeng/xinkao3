@@ -209,7 +209,7 @@
 						$me.$nextTick(() => {
 							setTimeout(() => {
 								$me.saveImgFullScreen();
-							}, 500);
+							}, 100);
 						});
 					}
 				});
