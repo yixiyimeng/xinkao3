@@ -36,7 +36,8 @@
 				</a> -->
 				<router-link :to="'set'" class="more">
 					<i></i>
-					<p>更多</p></router-link>
+					<p>更多</p>
+				</router-link>
 			</div>
 		</div>
 		<div class="printScreenbox" v-show="type==3">
@@ -145,7 +146,6 @@
 							{
 								$me.isShow = false;
 								this.$emit('close');
-
 								break;
 							}
 					}
@@ -156,6 +156,8 @@
 				/* 全屏截图 */
 				const $me = this;
 				$me.isShow = false;
+				/* todo 暂停计时器 */
+				this.$emit('resumeCountDown', 0);
 				this.$nextTick(() => {
 					$me.$postAction(api.saveImgFullScreen).then(da => {
 						if (da.ret == 'success') {
@@ -163,14 +165,17 @@
 							$me.htmlUrl = 'data:image/jpg;base64,' + da.data;
 							// console.log(this.htmlUrl)
 							$me.type = 3;
-							/* todo 暂停计时器 */
-							this.$emit('resumeCountDown', 0);
+
 							this.$nextTick(() => {
 								this.$refs.cropper.startCrop();
 							})
 						} else {
 							$me.$toast.center(da.message);
 						}
+					}).catch(() => {
+						/* 重新开始倒计时 */
+						$me.$toast.center('截图发成错误了');
+						this.$emit('resumeCountDown', 1);
 					})
 
 				})
@@ -185,11 +190,14 @@
 						imgBase64: data.replace(/data:image\/jpeg;base64,/, '')
 					}).then(da => {
 						if (da.ret == 'success') {
-							$me.$emit('resumeCountDown', 1)
+							// $me.$emit('resumeCountDown', 1)
 							$me.$emit('close')
 						} else {
 							$me.$toast.center(da.message);
 						}
+					}).finally(() => {
+						/* 重新开始倒计时 */
+						this.$emit('resumeCountDown', 1);
 					})
 
 
