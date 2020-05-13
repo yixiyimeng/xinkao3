@@ -284,7 +284,7 @@
 				let that = this;
 				this.$confirm({
 					title: '确认重发试卷?',
-					content: '重复试卷后，之前答题记录将清空',
+					content: '重发试卷后，之前答题记录将清空',
 					onOk() {
 						that.assignHomework(record)
 					},
