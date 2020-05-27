@@ -6,7 +6,9 @@
 		<!-- 切换菜单 -->
 		<div class="mainmenu">
 			<div class="setbtnlist">
-				<div v-if="!isAnswering">
+				
+				<div>
+					
 					<i class="refresh" @click="refreshResource(0)" v-if="isshowResource==1" title="刷新"></i>
 					<i class="refresh refresh2" @click="refreshResource(1)" v-if="isshowResource==2" title="刷新"></i>
 					<i class="refresh isMoveTop" :class="{active:isMoveTop}" style="right:-100px" @click="isMoveTop=!isMoveTop" v-if="isshowResource==1"
@@ -21,7 +23,7 @@
 						<i></i>
 						<span>资源课件</span>
 					</a> -->
-					<a href="javascript:;" @click="shownamelist" class="userlist" title="学生名单">
+					<a v-if="!isAnswering" href="javascript:;" @click="shownamelist" class="userlist" title="学生名单">
 						<i></i>
 						<span>学生名单</span>
 					</a>
