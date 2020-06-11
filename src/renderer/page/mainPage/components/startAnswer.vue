@@ -136,13 +136,27 @@
 			startAnswer() {
 				const $me = this;
 				if (this.type == 2) {
-					var titleCode = $me.$refs.classTest.getTitleCode();
-					// if (titleCode == '') {
-					// 	$me.$message.error('请选择一套试卷下发');
-					// 	return false
-					// }
-					if (titleCode) {
-						this.startTest(titleCode);
+					console.log($me.$refs)
+					var titleObj = $me.$refs.classTest.getTitleCode();
+					if (titleObj && titleObj.titleCode) {
+						if (titleObj.isLock == 1) {
+							this.$confirm({
+								title: '重发试卷将覆盖之前的答题记录，是否重发',
+								content: '',
+								okText: '确定',
+								cancelText: '取消',
+								class: 'confirmbox',
+								okType: 'danger',
+								onOk() {
+									$me.startTest(titleObj.titleCode);
+								},
+								onCancel() {
+									console.log('Cancel');
+								},
+							});
+						} else {
+							this.startTest(titleObj.titleCode);
+						}
 					}
 				} else {
 					if (this.type == 0) {
@@ -205,7 +219,7 @@
 						}
 						$me.isAnswering = true;
 						$me.viewState = 1;
-						$me.$emit('startAnswer',$me.questionType, 1);
+						$me.$emit('startAnswer', $me.questionType, 1);
 						$me.$nextTick(() => {
 							setTimeout(() => {
 								$me.saveImgFullScreen();
@@ -222,7 +236,7 @@
 					if (da && da.ret == 'success') {
 						$me.isAnswering = true;
 						$me.viewState = 1;
-						$me.$emit('startAnswer',5, 0);
+						$me.$emit('startAnswer', 5, 0);
 						$me.$refs.startClassTesting.show();
 						$me.answerPercent();
 						/* 开始倒计时 */

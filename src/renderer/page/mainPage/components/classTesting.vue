@@ -20,6 +20,7 @@
 				<span slot="serial" slot-scope="text, record, index">
 					{{ index + 1 }}
 				</span>
+				<a-tag :color="state==0?'#00a095':'#d43030'" slot="isLock" slot-scope="state">{{ state==0?'未发送':'已发送'}}</a-tag>
 			</a-table>
 		</div>
 		<upload class="upload" ref="upload" @close="getlistPaper"></upload>
@@ -48,6 +49,14 @@
 			width: 200
 		},
 		{
+			title: '试卷状态',
+			dataIndex: 'isLock',
+			width: 120,
+			scopedSlots: {
+				customRender: 'isLock'
+			}
+		},
+		{
 			title: '试卷描述',
 			dataIndex: 'remark'
 		},
@@ -69,7 +78,7 @@
 				scrolly: 300,
 				pagination: {},
 				type: 1,
-				tabheight:100
+				tabheight: 100
 			};
 		},
 		components: {
@@ -92,7 +101,7 @@
 			};
 			this.$nextTick(() => {
 				if (this.$refs.modbox) {
-					this.tabheight= this.$refs.modbox.offsetHeight - 150;
+					this.tabheight = this.$refs.modbox.offsetHeight - 150;
 					console.log('高度' + this.scrolly)
 				}
 			})
@@ -149,12 +158,20 @@
 				})
 			},
 			getTitleCode() {
+				let $me = this;
 				if (this.selectedRowKeys.length == 0) {
 					this.$message.error('请至少选择一套试卷');
 					return false;
+				} else {
+					let index = $me.dataSource.findIndex(item => item.titleCode == this.selectedRowKeys[0]);
+					return {
+						titleCode: this.selectedRowKeys,
+						isLock: $me.dataSource[index].isLock
+					}
 				}
-				return this.selectedRowKeys
+
 			},
+
 			changeType(type) {
 				this.type = type;
 				this.getlistPaper()
@@ -242,6 +259,7 @@
 	.subtablink a.active {
 		color: #2459a0;
 	}
+
 	.subtablink a,
 	.subtablink span {
 		vertical-align: middle;
