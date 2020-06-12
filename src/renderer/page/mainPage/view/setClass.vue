@@ -133,10 +133,12 @@
 			},
 			/* 选择课程名 ,需要记录 答题记录, 临时题记录*/
 			setTopicName(topic) {
+				console.log(topic)
 				this.formData.topicName = topic.name;
 				this.formData.topicCode = topic.code;
 				this.formData.questionId = topic.questionId;
 				this.formData.tempQuestionId = topic.tempQuestionId;
+				console.log(this.formData.tempQuestionId)
 			},
 			/* 手动输入课程名称后，需要清空课程code， 答题记录，临时题记录 */
 			changrTopic() {
@@ -146,6 +148,7 @@
 				this.formData.tempQuestionId = '';
 				/* 清除空格 */
 				this.formData.topicName = this.formData.topicName.trim();
+				console.log('hahahaha')
 			},
 			/* 查询班级 */
 			getClasslist() {
@@ -206,7 +209,9 @@
 							$me.TopicTitleList = list.map(item => {
 								return {
 									name: item.topicName,
-									code: item.topicCode
+									code: item.topicCode,
+									tempQuestionId:item.tempQuestionId,
+									questionId:item.questionId
 								};
 							});
 						} else {
@@ -277,7 +282,7 @@
 				$me.$postAction(api.startClass, $me.sendInfo).then(da => {
 					if (da && da.ret == 'success') {
 						$me.gotoPage();
-					}else{
+					} else {
 						$me.$toast.center(da.message);
 					}
 				}).finally(() => {
@@ -318,6 +323,7 @@
 						/* 判断是否清空了之前作答记录*/
 						$me.formData.questionId = $me.isClearquestion ? null : $me.formData.questionId;
 						$me.formData.tempQuestionId = $me.isClearquestion ? null : $me.formData.tempQuestionId;
+						console.log('tempQuestionId', $me.formData)
 					}
 				} else {
 					this.$toast.center(!$me.formData.classCode ? '请选择班级' : (!$me.formData.subjectCode ? '请选择科目' : '请输入或者选择一个主题'));

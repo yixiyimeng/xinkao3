@@ -54,6 +54,7 @@
 			clearDanmu() {
 				$('#danmu').data('danmuList', {});
 				$('#danmu').danmu('danmuStop');
+				this.isShowDanmu = false;
 			},
 			starDanmu(questionType) {
 				let index = this.danmuinfolist.findIndex(item => item.questionType == questionType);
