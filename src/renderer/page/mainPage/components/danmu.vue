@@ -34,7 +34,6 @@
 		},
 		methods: {
 			addDanmu(obj) {
-				console.log('新增弹幕')
 				if (this.isShowDanmu) {
 					var time = $('#danmu').data('nowTime') + 1;
 					/*当渲染弹幕过多的时候,延迟处理弹幕*/
@@ -58,19 +57,17 @@
 			},
 			starDanmu(questionType) {
 				let index = this.danmuinfolist.findIndex(item => item.questionType == questionType);
-				console.log(index,questionType)
+				this.isShowDanmu = false;
 				if (index >= 0) {
-					this.isShowDanmu = true;
 					let danmuinfo = this.danmuinfolist[index];
 					if (danmuinfo.isOpenBarrageflag) {
+						this.isShowDanmu = true;
 						$('#danmu').data('danmuList', {});
 						$('#danmu').danmu('danmuStart');
 						/* 设置弹幕位置和透明度 */
 						$('#danmu').danmu('setOpacity', danmuinfo.diaphaneity / 100);
 						$('#danmu').danmu('setLocation', danmuinfo.location);
 					}
-				} else {
-					this.isShowDanmu = false;
 				}
 			}
 		}
