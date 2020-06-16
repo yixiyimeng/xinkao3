@@ -6,9 +6,9 @@
 		<!-- 切换菜单 -->
 		<div class="mainmenu">
 			<div class="setbtnlist">
-				
+
 				<div>
-					
+
 					<i class="refresh" @click="refreshResource(0)" v-if="isshowResource==1" title="刷新"></i>
 					<i class="refresh refresh2" @click="refreshResource(1)" v-if="isshowResource==2" title="刷新"></i>
 					<i class="refresh isMoveTop" :class="{active:isMoveTop}" style="right:-100px" @click="isMoveTop=!isMoveTop" v-if="isshowResource==1"
@@ -148,7 +148,8 @@
 				resourceUrllist: ['', 'http://zkxl.school.zxxk.com/ThirdParty/CustomJump?_m=http://localhost:8080'],
 				iframeUrl: '', //组卷网
 				iframeUrl2: '', //资源
-				isMoveTop: false
+				isMoveTop: false,
+				oldtitle:''
 			};
 		},
 		computed: {
@@ -202,6 +203,7 @@
 				this.$refs.namelist.shownamelist();
 				this.isShowName = true;
 				//this.isShowClassMenu = false;
+				this.oldtitle=this.title;
 				this.title = '学生名单';
 			},
 			startName() {
@@ -213,7 +215,7 @@
 				this.isAnswering = false;
 				this.isChoice = false;
 				this.rate = 0; //清空进度条数据
-				this.title = this.sendInfo.className.trim();
+				this.title =this.oldtitle;
 				this.isShowName = false;
 				// this.isShowClassMenu = true;
 			},
@@ -310,7 +312,9 @@
 							switch (msg.reqType) {
 								case 0:
 									{
-										$me.$refs.danmu.addDanmu(obj);
+										if ($me.isAnswering) {
+											$me.$refs.danmu.addDanmu(obj);
+										}
 										break;
 									}
 								case 1:

@@ -40,7 +40,7 @@
 					if ($('#danmu .danmaku').length > 500) {
 						time += 200; //2000毫秒。
 					}
-					console.log('新增弹幕')
+					console.log('新增弹幕'+ new Date().getTime())
 					$('#danmu').danmu('addDanmu', [{
 						text: obj.stuName,
 						color: 'white',
