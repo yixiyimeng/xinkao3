@@ -1289,6 +1289,9 @@
 					background: url(assets/img/theme4/txtbg2.png) no-repeat center center;
 					background-size: contain;
 					width: 115px;
+					/deep/ .ant-input{
+						background: none !important;
+						}
 				}
 			
 		}	

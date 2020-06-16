@@ -65,7 +65,8 @@
 				isAnswering: false, //是否开始答题
 				viewState: '0', //0未开始 1开始  2 统计
 				titleName: '', //题目类型
-				timer: null
+				timer: null,
+				isScreening: false,
 			};
 		},
 		destroyed() {
@@ -170,6 +171,10 @@
 			/* 开始选择题 */
 			startChoice() {
 				const $me = this;
+				if ($me.isScreening) {
+					$me.$toast.center('正在保存题干，请稍后');
+					return false;
+				}
 				let answerreg = '';
 				$me.trueAnswer = $me.trueAnswer
 					.toLocaleUpperCase()
@@ -209,6 +214,7 @@
 				if ($me.questionType != 2) {
 					param.range = $me.range;
 				}
+				this.isScreening=true;
 				$me.$postAction(api.startSingleAnswer, param).then(da => {
 					if (da && da.ret == 'success') {
 						/* 开始答题 */
@@ -225,13 +231,16 @@
 								$me.saveImgFullScreen();
 							}, 100);
 						});
+					}else{
+						this.isScreening=false;
 					}
-				});
+				}).catch(()=>{
+					this.isScreening=false;
+				})
 			},
 			/* 开始随堂测验 */
 			startTest(titleCode) {
 				const $me = this;
-
 				$me.$postAction(api.startRandomDetection + titleCode).then(da => {
 					if (da && da.ret == 'success') {
 						$me.isAnswering = true;
@@ -287,6 +296,9 @@
 					if (da && da.ret == 'success') {} else {
 						$me.$toast.center(da.message);
 					}
+				}).finally(() => {
+					/* 提示截屏完成 */
+					this.isScreening = false;
 				});
 			},
 			resumeCountDown(type) {
