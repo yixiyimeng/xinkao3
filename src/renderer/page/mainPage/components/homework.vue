@@ -154,12 +154,12 @@
 			},
 
 			handleTableChange(pagination) {
-				// const pager = { ...this.pagination
-				// };
-				// pager.current = pagination.current;
-				// this.pagination = pager;
-				// let offset = (pager.current - 1) * pagination.pageSize;
-				// this.getlistPaper(offset, pageSize)
+				const pager = { ...this.pagination
+				};
+				pager.current = pagination.current;
+				this.pagination = pager;
+				let offset =pager.current;
+				this.getlistPaper(offset, pagination.pageSize)
 			},
 			getlistPaper(offset = 0, pageSize = 10) {
 				const $me = this;
@@ -168,7 +168,7 @@
 				this.$postAction(url, {
 					teacAssistantCode: this.sendInfo.teacAssistantCode,
 					subjectCode: this.sendInfo.subjectCode,
-					offset: offset,
+					pageNum: offset,
 					pageSize: pageSize
 				}).then(da => {
 					if (da && da.ret == 'success') {
@@ -179,7 +179,7 @@
 								return item
 							});
 						}
-						$me.paginationtotal = da.total;
+						$me.pagination.total = da.data.total;
 					}
 				})
 			},

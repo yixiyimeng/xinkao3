@@ -522,16 +522,17 @@ var cyntax = {
 	Danmu.prototype.danmuStart = function() {
 		this.$timer.timer('start');
 		this.$element.data("paused", 0);
+		this.$element.data("danmuList",{});
 	};
 
 
 	Danmu.prototype.danmuStop = function() {
 		this.$timer.timer('stop');
 		$("#" + this.id + ' .danmaku').remove();
-		// nowTime = 0;
 		this.nowCount = 0;
 		this.$element.data("paused", 1);
 		this.$element.data("nowTime", 0);
+		this.$element.data("danmuList",{});
 	};
 
 

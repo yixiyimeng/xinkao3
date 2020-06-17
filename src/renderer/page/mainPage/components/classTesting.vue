@@ -139,7 +139,7 @@
 				pager.current = pagination.current;
 				this.pagination = pager;
 				let offset = (pager.current - 1) * pagination.pageSize;
-				this.getlistPaper(offset, pageSize)
+				this.getlistPaper(offset, pagination.pageSize)
 			},
 			getlistPaper(offset = 0, pageSize = 10) {
 				const $me = this;

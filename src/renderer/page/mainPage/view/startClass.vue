@@ -356,6 +356,8 @@
 					};
 					$me.ws.onclose = function() {
 						// 关闭 websocket
+						console.log('关闭websock')
+						$me.$refs.danmu.clearDanmu();
 						$me.ws = null;
 					};
 				}

@@ -51,6 +51,7 @@
 				}
 			},
 			clearDanmu() {
+				console.log('清空弹幕')
 				$('#danmu').data('danmuList', {});
 				$('#danmu').danmu('danmuStop');
 				this.isShowDanmu = false;
