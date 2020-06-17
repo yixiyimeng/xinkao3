@@ -149,7 +149,7 @@
 				iframeUrl: '', //组卷网
 				iframeUrl2: '', //资源
 				isMoveTop: false,
-				oldtitle:''
+				oldtitle: ''
 			};
 		},
 		computed: {
@@ -203,7 +203,7 @@
 				this.$refs.namelist.shownamelist();
 				this.isShowName = true;
 				//this.isShowClassMenu = false;
-				this.oldtitle=this.title;
+				this.oldtitle = this.title;
 				this.title = '学生名单';
 			},
 			startName() {
@@ -215,7 +215,7 @@
 				this.isAnswering = false;
 				this.isChoice = false;
 				this.rate = 0; //清空进度条数据
-				this.title =this.oldtitle;
+				this.title = this.oldtitle;
 				this.isShowName = false;
 				// this.isShowClassMenu = true;
 			},
@@ -357,7 +357,6 @@
 					$me.ws.onclose = function() {
 						// 关闭 websocket
 						console.log('关闭websock')
-						$me.$refs.danmu.clearDanmu();
 						$me.ws = null;
 					};
 				}
@@ -371,7 +370,7 @@
 			/* 下课 */
 			endClass() {
 				const $me = this;
-
+				this.$refs.danmu.clearDanmu();
 				var param = {
 					code: this.directBroadcastCode
 				};
