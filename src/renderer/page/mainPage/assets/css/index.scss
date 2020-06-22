@@ -1282,6 +1282,9 @@
 				 .lginput {
 					background: url(assets/img/theme4/txtbg.png);
 					background-size: cover;
+					/deep/ .ant-input{
+						background: none !important;
+						}
 				
 				}
 				
