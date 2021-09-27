@@ -283,7 +283,7 @@
 					if (da && da.ret == 'success') {
 						$me.gotoPage();
 					} else {
-						$me.$toast.center(da.message);
+						$me.$toast.center(da.message||'发生错误了');
 					}
 				}).finally(() => {
 					$me.loading = false;

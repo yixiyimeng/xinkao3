@@ -13,7 +13,12 @@
 					<div class="btnlist">
 						<div class="upload">
 							<span>导入Excel标准答案</span>
-							<input type="file" @change="uploadFile" id="upload" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+							<input
+								type="file"
+								@change="uploadFile"
+								id="upload"
+								accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+							/>
 						</div>
 					</div>
 				</div>
@@ -22,43 +27,33 @@
 						<a-row :gutter="24" class="mb10 flex-1">
 							<a-col :span="5">
 								<a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="大题题号">
-									<a-input-number v-decorator="['maxNum',{rules: [{ required: true, message: '请输入大题题号' }]}]" :min="1" class="w100" />
+									<a-input-number v-decorator="['maxNum', { rules: [{ required: true, message: '请输入大题题号' }] }]" :min="1" class="w100" />
 								</a-form-item>
 							</a-col>
 							<a-col :span="5">
 								<a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="小题总数">
-									<a-input-number v-decorator="['totalnum',{rules: [{ required: true, message: '请输入小题总数' }]}]" :min="1" class="w100" />
+									<a-input-number v-decorator="['totalnum', { rules: [{ required: true, message: '请输入小题总数' }] }]" :min="1" class="w100" />
 								</a-form-item>
 							</a-col>
 							<a-col :span="5">
 								<a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="题目得分">
-									<a-input-number v-decorator="['totalscore',{rules: [{ required: true, message: '请输入题目得分' }]}]" :min="0" class="w100" />
+									<a-input-number v-decorator="['totalscore', { rules: [{ required: true, message: '请输入题目得分' }] }]" :min="0" class="w100" />
 								</a-form-item>
 							</a-col>
 							<a-col :span="5">
 								<a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="题目类型">
-									<a-select v-decorator="['totaltype',{rules: [{ required: true, message: '请选择题目类型' }]}]" @change="changeQuestionType">
-										<a-select-option :value="item.value" v-for="(item,index) in totaltypeList" :key="index">{{item.name}}</a-select-option>
+									<a-select v-decorator="['totaltype', { rules: [{ required: true, message: '请选择题目类型' }] }]" @change="changeQuestionType">
+										<a-select-option :value="item.value" v-for="(item, index) in totaltypeList" :key="index">{{ item.name }}</a-select-option>
 									</a-select>
 								</a-form-item>
 							</a-col>
 							<a-col :span="4">
-								<a-form-item :labelCol="{xs: {
-						span: 24
-					},
-					sm: {
-						span: 8
-					},}" :wrapperCol="{
-						xs: {
-							span: 24
-						},
-						sm: {
-							span: 16
-						},
-					}"
-								 label="答案">
-									<a-input placeholder="题目答案" v-decorator="[ 'totaltrueanswer',{rules: [{pattern:pattern, message: '请输入正确的答案' }]}]"
-									 @change="changetotaltrueanswer" />
+								<a-form-item :labelCol="labelCol2" :wrapperCol="wrapperCol2" label="答案">
+									<a-input
+										placeholder="题目答案"
+										v-decorator="['totaltrueanswer', { rules: [{ pattern: pattern, message: '请输入正确的答案' }] }]"
+										@change="changetotaltrueanswer"
+									/>
 								</a-form-item>
 							</a-col>
 						</a-row>
@@ -68,512 +63,539 @@
 					<a-table :columns="columns" :dataSource="list" bordered class="mt20" bordered size="middle" :pagination="false">
 						<span slot="serial" slot-scope="text, record, index">
 							<!-- {{ index + 1 }} -->
-							{{listmap&&listmap[record.maxNum]&&listmap[record.maxNum].length>1?record.num:record.maxNum}}
+							{{ listmap && listmap[record.maxNum] && listmap[record.maxNum].length > 1 ? record.num : record.maxNum }}
 						</span>
-						<a-select slot="questionType" slot-scope="text,record" v-model="record.questionType" class="w100" @change="changeOneQuestionType(record)">
-							<a-select-option :value="item.value" v-for="(item,index) in totaltypeList" :key="index">{{item.name}}</a-select-option>
+						<a-select slot="questionType" slot-scope="text, record" v-model="record.questionType" class="w100" @change="changeOneQuestionType(record)">
+							<a-select-option :value="item.value" v-for="(item, index) in totaltypeList" :key="index">{{ item.name }}</a-select-option>
 						</a-select>
-						<a-input-number :min="1" class="w100" slot="score" slot-scope="text,record" v-model="record.score" />
-						<a-input placeholder="题目答案" slot="trueAnswer" class="w100" slot-scope="text,record" v-model="record.trueAnswer"
-						 @change="changeOnetrueanswer(record)" />
-						<span slot="operation" slot-scope="text,record,index" class="operation">
-							<a href="javascript:;" title="删除" class="del" @click="showDeleteConfirm(record,index)">删除</a>
+						<a-input-number :min="1" class="w100" slot="score" slot-scope="text, record" v-model="record.score" />
+						<a-input
+							placeholder="题目答案"
+							slot="trueAnswer"
+							class="w100"
+							slot-scope="text, record"
+							v-model="record.trueAnswer"
+							@change="changeOnetrueanswer(record)"
+						/>
+						<span slot="operation" slot-scope="text, record, index" class="operation">
+							<a href="javascript:;" title="删除" class="del" @click="showDeleteConfirm(record, index)">删除</a>
 						</span>
 					</a-table>
 					<!-- totalbar -->
-					<div class="totalbar"><span>总题数{{total}}题，总分{{totalScore}}分</span> <a href="javascript:;" class="btn" @click="batchSave">批量保存</a></div>
+					<div class="totalbar">
+						<span>总题数{{ total }}题，总分{{ totalScore }}分</span>
+						<a href="javascript:;" class="btn" @click="batchSave">批量保存</a>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	</div>
 </template>
 
 <script>
-	const columns = [{
-			title: '题号',
-			scopedSlots: {
-				customRender: 'serial'
-			},
-			width: 100
-		}, {
-			title: '题目类型',
-			dataIndex: 'questionType',
-			key: 'questionType',
-			width: 250,
-			scopedSlots: {
-				customRender: 'questionType'
-			},
+const columns = [
+	{
+		title: '题号',
+		scopedSlots: {
+			customRender: 'serial'
 		},
-		{
-			title: '正确答案',
-			dataIndex: 'trueAnswer',
-			key: 'trueAnswer',
-			width: 250,
-			scopedSlots: {
-				customRender: 'trueAnswer'
-			},
-		},
-		{
-			title: '得分',
-			key: 'score',
-			dataIndex: 'score',
-			scopedSlots: {
-				customRender: 'score'
-			},
-		},
-
-		{
-			title: '操作',
-			key: 'operation',
-			dataIndex: 'operation',
-			scopedSlots: {
-				customRender: 'operation'
-			},
-			align: 'center',
-			width: 100,
-
+		width: 100
+	},
+	{
+		title: '题目类型',
+		dataIndex: 'questionType',
+		key: 'questionType',
+		width: 250,
+		scopedSlots: {
+			customRender: 'questionType'
 		}
-	];
-	import api from '@/page/mainPage/api';
-	import {
-		postActionUpload
-	} from '@/page/mainPage/api';
-	export default {
-		data() {
-			return {
-				labelCol: {
-					xs: {
-						span: 24
-					},
-					sm: {
-						span: 10
-					},
+	},
+	{
+		title: '正确答案',
+		dataIndex: 'trueAnswer',
+		key: 'trueAnswer',
+		width: 250,
+		scopedSlots: {
+			customRender: 'trueAnswer'
+		}
+	},
+	{
+		title: '得分',
+		key: 'score',
+		dataIndex: 'score',
+		scopedSlots: {
+			customRender: 'score'
+		}
+	},
+
+	{
+		title: '操作',
+		key: 'operation',
+		dataIndex: 'operation',
+		scopedSlots: {
+			customRender: 'operation'
+		},
+		align: 'center',
+		width: 100
+	}
+];
+import api from '@/page/mainPage/api';
+import { postActionUpload } from '@/page/mainPage/api';
+export default {
+	data() {
+		return {
+			labelCol: {
+				xs: {
+					span: 24
 				},
-				wrapperCol: {
-					xs: {
-						span: 24
-					},
-					sm: {
-						span: 14
-					},
+				sm: {
+					span: 10
+				}
+			},
+			wrapperCol: {
+				xs: {
+					span: 24
 				},
-				visible: false,
-				confirmLoading: false,
-				totaltypeList: [{
-						value: '1',
-						name: '单选字母'
-					},
-					{
-						value: '2',
-						name: '单题判断'
-					},
-					{
-						value: '3',
-						name: '单选数字'
-					},
-					{
-						value: '4',
-						name: '多选'
-					}
-				],
-				mdl: {},
-				form: this.$form.createForm(this),
-				columns: columns,
-				titleCode: '',
-				list: [],
-				record: {},
-				pattern: /^[E-F]{1}$/,
-				listmap: {},
-				titleName: '',
-				sendInfo: {},
-				type: ''
-			};
+				sm: {
+					span: 14
+				}
+			},
+			labelCol2: {
+				xs: {
+					span: 24
+				},
+				sm: {
+					span: 8
+				}
+			},
+			wrapperCol2: {
+				xs: {
+					span: 24
+				},
+				sm: {
+					span: 16
+				}
+			},
+			visible: false,
+			confirmLoading: false,
+			totaltypeList: [
+				{
+					value: '1',
+					name: '单选字母'
+				},
+				{
+					value: '2',
+					name: '单题判断'
+				},
+				{
+					value: '3',
+					name: '单选数字'
+				},
+				{
+					value: '4',
+					name: '多选'
+				}
+			],
+			mdl: {},
+			form: this.$form.createForm(this),
+			columns: columns,
+			titleCode: '',
+			list: [],
+			record: {},
+			pattern: /^[E-F]{1}$/,
+			listmap: {},
+			titleName: '',
+			sendInfo: {},
+			type: ''
+		};
+	},
+
+	created() {
+		this.sendInfo = sessionStorage.getItem('sendInfo') ? JSON.parse(sessionStorage.getItem('sendInfo')) : null;
+	},
+	computed: {
+		total: function() {
+			return this.list.length;
+		},
+		totalScore: function() {
+			let count = 0;
+			if (this.list.length > 0) {
+				count = this.list.reduce((count, item) => (count += item.score - 0), 0);
+			}
+			return count;
+		}
+	},
+
+	methods: {
+		show(type) {
+			this.visible = true;
+			this.type = type;
 		},
 
-		created() {
-			this.sendInfo = sessionStorage.getItem('sendInfo') ? JSON.parse(sessionStorage.getItem('sendInfo')) : null;
+		renderData(list) {
+			console.log(list);
+			this.listmap = {};
+			if (list && list.length > 0) {
+				list = list.map(item => {
+					let maxNum = 0;
+					if (item.maxNum) {
+						maxNum = item.maxNum;
+					} else {
+						maxNum = item.questionId.split('-')[0];
+					}
+					item.maxNum = maxNum;
+					if (!this.listmap.hasOwnProperty(maxNum)) {
+						this.listmap[maxNum] = [];
+					}
+					this.listmap[maxNum].push(item);
+					item.num = maxNum + '-' + this.listmap[maxNum].length;
+					return item;
+				});
+			}
+			this.list = list.sort(function(a, b) {
+				return a.maxNum - b.maxNum;
+			});
 		},
-		computed: {
-			total: function() {
-				return this.list.length;
-			},
-			totalScore: function() {
-				let count = 0;
-				if (this.list.length > 0) {
-					count = this.list.reduce((count, item) => count += item.score - 0, 0);
+		close() {
+			this.visible = false;
+			this.list = [];
+			this.form.resetFields();
+			this.$emit('close');
+		},
+
+		/* 确认是否删除 */
+		showDeleteConfirm(record, index) {
+			let $me = this;
+			this.$confirm({
+				title: '你确定要删除这条吗?',
+				content: '',
+				okText: '确定',
+				cancelText: '取消',
+				class: 'confirmbox',
+				okType: 'danger',
+				onOk() {
+					$me.list.splice(index, 1);
+					$me.renderData($me.list);
+				},
+				onCancel() {}
+			});
+		},
+		addlist() {
+			this.form.validateFields((err, values) => {
+				// 验证表单没错误
+				if (!err) {
+					// console.log('form values', values)
+					var totalnum = values['totalnum'];
+					for (var i = 0; i < totalnum; i++) {
+						var item = {
+							questionType: values['totaltype'],
+							score: values['totalscore'],
+							trueAnswer: values['totaltrueanswer'],
+							maxNum: values['maxNum']
+						};
+						let list = [...this.list, item];
+						this.renderData(list);
+						// this.list.push(item)
+					}
 				}
-				return count;
+			});
+		},
+		changeQuestionType(value) {
+			if (value == 1) {
+				this.pattern = /^[A-D]{1}$/;
+			} else if (value == 2) {
+				this.pattern = /^[E-F]{1}$/;
+			} else if (value == 3) {
+				this.pattern = /^[0-9]{1}$/;
+			} else {
+				this.pattern = /^(?!.*([A-F]).*\1)[A-F]{2,6}$/;
+			}
+			this.form.setFieldsValue({
+				totaltrueanswer: ''
+			});
+		},
+		changeOneQuestionType(item) {
+			item.trueAnswer = '';
+		},
+		changetotaltrueanswer(e) {
+			console.log(e.target.value);
+			e.target.value = e.target.value
+				.toLocaleUpperCase()
+				.split('')
+				.sort()
+				.join('');
+		},
+		changeOnetrueanswer(record) {
+			var answerreg = null;
+			if (record.questionType == 1) {
+				answerreg = /^[A-D]{1}$/;
+			} else if (record.questionType == 2) {
+				answerreg = /^[E-F]{1}$/;
+			} else if (record.questionType == 3) {
+				answerreg = /^[0-9]{1}$/;
+			} else {
+				answerreg = /^(?!.*([A-F]).*\1)[A-F]{2,6}$/;
+			}
+			if (answerreg && record.trueAnswer) {
+				record.trueAnswer = record.trueAnswer
+					.toLocaleUpperCase()
+					.split('')
+					.sort()
+					.join('');
+				if (!answerreg.test(record.trueAnswer)) {
+					record.trueAnswer = '';
+					this.$message.error('请输入正确的答案');
+				}
 			}
 		},
+		uploadFile() {
+			const $me = this;
+			var file = $('#upload')[0];
 
-		methods: {
-			show(type) {
-				this.visible = true;
-				this.type = type
-			},
-
-			renderData(list) {
-				console.log(list);
-				this.listmap = {};
-				if (list && list.length > 0) {
-					list = list.map(item => {
-						let maxNum = 0;
-						if (item.maxNum) {
-							maxNum = item.maxNum;
-						} else {
-							maxNum = item.questionId.split('-')[0];
-						}
-						item.maxNum = maxNum;
-						if (!this.listmap.hasOwnProperty(maxNum)) {
-							this.listmap[maxNum] = []
-						}
-						this.listmap[maxNum].push(item);
-						item.num = maxNum + '-' + this.listmap[maxNum].length;
-						return item
-					})
+			if (file.files[0] && $me.sendInfo) {
+				var strFileName = $('#upload')
+					.val()
+					.replace(/^.+?\\([^\\]+?)(\.[^\.\\]*?)?$/gi, '$1'); //正则表达式获取文件名，不带后缀
+				var FileExt = $('#upload')
+					.val()
+					.replace(/.+\./, ''); //正则表达式获取后缀
+				var formData = new FormData();
+				if (FileExt != 'xls' && FileExt != 'xlsx') {
+					$me.$toast.center('请上传excel文件');
+					return false;
 				}
-				this.list = list.sort(function(a, b) {
-					return a.maxNum - b.maxNum
-				});
-			},
-			close() {
-				this.visible = false;
-				this.list = [];
-				this.form.resetFields();
-				this.$emit('close');
-			},
-
-			/* 确认是否删除 */
-			showDeleteConfirm(record, index) {
-				let $me = this;
-				this.$confirm({
-					title: '你确定要删除这条吗?',
-					content: '',
-					okText: '确定',
-					cancelText: '取消',
-					class: 'confirmbox',
-					okType: 'danger',
-					onOk() {
-						$me.list.splice(index, 1)
-						$me.renderData($me.list)
-					},
-					onCancel() {},
-				});
-			},
-			addlist() {
-				this.form.validateFields((err, values) => { // 验证表单没错误
-					if (!err) {
-						// console.log('form values', values)
-						var totalnum = values['totalnum'];
-						for (var i = 0; i < totalnum; i++) {
-							var item = {
-								questionType: values['totaltype'],
-								score: values['totalscore'],
-								trueAnswer: values['totaltrueanswer'],
-								maxNum: values['maxNum'],
-							}
-							let list = [...this.list, item];
-							this.renderData(list);
-							// this.list.push(item)
-						}
-					}
-				})
-			},
-			changeQuestionType(value) {
-				if (value == 1) {
-					this.pattern = /^[A-D]{1}$/
-				} else if (value == 2) {
-					this.pattern = /^[E-F]{1}$/
-				} else if (value == 3) {
-					this.pattern = /^[0-9]{1}$/
-				} else {
-					this.pattern = /^(?!.*([A-F]).*\1)[A-F]{2,6}$/
-				}
-				this.form.setFieldsValue({
-					totaltrueanswer: ''
-				})
-			},
-			changeOneQuestionType(item) {
-				item.trueAnswer = ''
-			},
-			changetotaltrueanswer(e) {
-				console.log(e.target.value)
-				e.target.value = e.target.value.toLocaleUpperCase().split('').sort().join('')
-			},
-			changeOnetrueanswer(record) {
-				var answerreg = null;
-				if (record.questionType == 1) {
-					answerreg = /^[A-D]{1}$/;
-				} else if (record.questionType == 2) {
-					answerreg = /^[E-F]{1}$/;
-				} else if (record.questionType == 3) {
-					answerreg = /^[0-9]{1}$/
-				} else {
-					answerreg = /^(?!.*([A-F]).*\1)[A-F]{2,6}$/
-				}
-				if (answerreg && record.trueAnswer) {
-					record.trueAnswer = record.trueAnswer.toLocaleUpperCase().split('').sort().join('')
-					if (!answerreg.test(record.trueAnswer)) {
-						record.trueAnswer = '';
-						this.$message.error('请输入正确的答案')
-
-					}
-				}
-
-			},
-			uploadFile() {
-				const $me = this;
-				var file = $('#upload')[0];
-
-				if (file.files[0] && $me.sendInfo) {
-					var strFileName = $('#upload')
-						.val()
-						.replace(/^.+?\\([^\\]+?)(\.[^\.\\]*?)?$/gi, '$1'); //正则表达式获取文件名，不带后缀
-					var FileExt = $('#upload')
-						.val()
-						.replace(/.+\./, ''); //正则表达式获取后缀
-					var formData = new FormData();
-					if (FileExt != 'xls' && FileExt != 'xlsx') {
-						$me.$toast.center('请上传excel文件');
-						return false;
-					}
-					if (!$me.titleName) {
-						$me.titleName = strFileName;
-					}
-					formData.append('file', file.files[0]);
-					formData.append('titleName', $me.titleName);
-					formData.append('classCode', $me.sendInfo.classCode);
-					formData.append('className', $me.sendInfo.className);
-					formData.append('subjectCode', $me.sendInfo.subjectCode);
-					formData.append('subjectName', $me.sendInfo.subjectName);
-					formData.append('type', $me.type);
-					postActionUpload(api.importQuesrions, formData).then(da => {
-						if (da.ret == 'success') {
-							$me.$toast.center('上传成功');
-							$me.close();
-						} else {
-							$me.$toast.center(da.data.message);
-						}
-					})
-					// this.$http({
-					// 	method: 'post',
-					// 	url: urlPath + '/teacher-client/platform/importQuesrions',
-					// 	data: formData,
-					// 	processData: false, // jQuery不要去处理发送的数据
-					// 	contentType: false
-					// }).then(da => {
-					// 	if (da.ret == 'success') {
-					// 		$me.$toast.center('上传成功');
-					// 		$me.close();
-					// 	} else {
-					// 		$me.$toast.center(da.data.message);
-					// 	}
-					// });
-
-					file.value = '';
-				} else {
-					this.$toast.center('请选择文件');
-				}
-			},
-			/* 批量保存 */
-			batchSave() {
-				const $me = this;
-				$me.isSave = false;
 				if (!$me.titleName) {
-					this.$toast.center('请输入标题');
-					return false;
+					$me.titleName = strFileName;
 				}
-				if (this.list.length == 0) {
-					this.$toast.center('请导入或者手动添加题目');
-					return false;
-				}
-				//console.log(this.dataSource)
-				let questions = [];
-				for (var i = 0; i < this.list.length; i++) {
-					var item = this.list[i];
-					if (!item.questionType || !item.score || !item.trueAnswer) {
-						this.$toast.center('请完善题目信息');
-						return false;
-					}
-					var param = {
-						questionId: this.listmap && this.listmap[item.maxNum] && this.listmap[item.maxNum].length > 1 ? item.num : item.maxNum,
-						questionType: item.questionType,
-						score: item.score,
-						trueAnswer: item.trueAnswer
-
-					};
-
-					questions.push(param);
-				}
-
-				var param = {
-					classCode: $me.sendInfo.classCode,
-					className: $me.sendInfo.className,
-					subjectCode: $me.sendInfo.subjectCode,
-					subjectName: $me.sendInfo.subjectName,
-					titleCode: $me.titleCode,
-					titleName: $me.titleName,
-					questions: questions,
-					type: this.type
-				};
-				this.$postAction(api.uploadTestPaper, param).then(da => {
+				formData.append('file', file.files[0]);
+				formData.append('titleName', $me.titleName);
+				formData.append('classCode', $me.sendInfo.classCode);
+				formData.append('className', $me.sendInfo.className);
+				formData.append('subjectCode', $me.sendInfo.subjectCode);
+				formData.append('subjectName', $me.sendInfo.subjectName);
+				formData.append('type', $me.type);
+				postActionUpload(api.importQuesrions, formData).then(da => {
 					if (da.ret == 'success') {
-						$me.$toast.center('保存成功');
+						$me.$toast.center('上传成功');
 						$me.close();
 					} else {
 						$me.$toast.center(da.data.message);
 					}
 				});
-			},
+				// this.$http({
+				// 	method: 'post',
+				// 	url: urlPath + '/teacher-client/platform/importQuesrions',
+				// 	data: formData,
+				// 	processData: false, // jQuery不要去处理发送的数据
+				// 	contentType: false
+				// }).then(da => {
+				// 	if (da.ret == 'success') {
+				// 		$me.$toast.center('上传成功');
+				// 		$me.close();
+				// 	} else {
+				// 		$me.$toast.center(da.data.message);
+				// 	}
+				// });
 
+				file.value = '';
+			} else {
+				this.$toast.center('请选择文件');
+			}
+		},
+		/* 批量保存 */
+		batchSave() {
+			const $me = this;
+			$me.isSave = false;
+			if (!$me.titleName) {
+				this.$toast.center('请输入标题');
+				return false;
+			}
+			if (this.list.length == 0) {
+				this.$toast.center('请导入或者手动添加题目');
+				return false;
+			}
+			//console.log(this.dataSource)
+			let questions = [];
+			for (var i = 0; i < this.list.length; i++) {
+				var item = this.list[i];
+				if (!item.questionType || !item.score || !item.trueAnswer) {
+					this.$toast.center('请完善题目信息');
+					return false;
+				}
+				var param = {
+					questionId: this.listmap && this.listmap[item.maxNum] && this.listmap[item.maxNum].length > 1 ? item.num : item.maxNum,
+					questionType: item.questionType,
+					score: item.score,
+					trueAnswer: item.trueAnswer
+				};
+
+				questions.push(param);
+			}
+
+			var param = {
+				classCode: $me.sendInfo.classCode,
+				className: $me.sendInfo.className,
+				subjectCode: $me.sendInfo.subjectCode,
+				subjectName: $me.sendInfo.subjectName,
+				titleCode: $me.titleCode,
+				titleName: $me.titleName,
+				questions: questions,
+				type: this.type
+			};
+			this.$postAction(api.uploadTestPaper, param).then(da => {
+				if (da.ret == 'success') {
+					$me.$toast.center('保存成功');
+					$me.close();
+				} else {
+					$me.$toast.center(da.data.message);
+				}
+			});
 		}
-	};
+	}
+};
 </script>
 
 <style scoped="scoped" lang="scss">
-	.ml20 {
-		margin-left: 20px;
-	}
+.ml20 {
+	margin-left: 20px;
+}
 
-	.bg {
-		position: fixed;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		z-index: 999;
-	}
+.bg {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 999;
+}
 
-	.theme4 .bg>.upload-bd /deep/ .ant-form {
-		width: 100%;
-	}
+.theme4 .bg > .upload-bd /deep/ .ant-form {
+	width: 100%;
+}
 
-	
+// .bg .mask {
+// 	background: rgba(0, 0, 0, 0.4);
+// 	height: 100%;
+// 	width: 100%;
+// }
+.bg > .upload-bd {
+	position: absolute;
+	left: 60px;
+	right: 60px;
+	top: 100px;
+	bottom: 40px;
+	background: #fff;
+	border-radius: 10px;
+	padding: 40px 0;
+	box-sizing: border-box;
+	box-shadow: 0 0 10px rgba($color: #2459a0, $alpha: 0.3);
 
-	// .bg .mask {
-	// 	background: rgba(0, 0, 0, 0.4);
-	// 	height: 100%;
-	// 	width: 100%;
-	// }
-	.bg>.upload-bd {
-		position: absolute;
-		left: 60px;
-		right: 60px;
-		top: 100px;
-		bottom: 40px;
-		background: #fff;
-		border-radius: 10px;
-		padding: 40px 0;
-		box-sizing: border-box;
-		box-shadow: 0 0 10px rgba($color: #2459a0, $alpha: .3);
-
-		@media screen and (max-width: 1360px) {
-			left: 40px;
-			right: 40px;
-			top: 80px;
-			bottom: 30px;
-		}
-	}
-
-	.theme1 .bg>.upload-bd {
-		left: 135px;
-		right: 135px;
-		top: 140px;
-		bottom: 120px;
-	}
-
-	.bg>.upload-bd>div {
-		overflow-y: auto;
-		height: 100%;
-		padding: 0 40px;
-	}
-
-	.ant-btn-success,
-	.ant-btn-success:hover,
-	.ant-btn-success:active {
-		background: #3bb1c2;
-		color: #fff;
-		boder: 1px solid #3bb1c2
-	}
-
-	.bg>.upload-bd .upload-title {
-		color: #2459a0;
-		font-size: 16px;
-		line-height: 30px;
-		margin-bottom: 10px;
-		text-align: left;
-		border-bottom: 1px solid #cfdbec;
-	}
-
-	.bg>.upload-bd .upload-btnbar .upload,
-	.totalbar .btn {
-		position: relative;
-		overflow: hidden;
-		color: #fff;
-		font-size: 16px;
-		background: #3bb1c2;
-		border-radius: 6px;
-		padding: 2px 10px;
-		display: inline-block;
-		margin-left: 10px;
-	}
-
-	.bg>.upload-bd .upload-btnbar .upload input[type='file'] {
-		position: absolute;
-		top: 0;
-		right: 0;
-		font-size: 400px;
-		opacity: 0;
-	}
-
-	.w100 {
-		width: 100%;
-	}
-
-	/deep/ .ant-table-wrapper .operation {
-		a {
-			&.del {
-				color: #d43030;
-			}
-
-			&.add {
-				color: #00baad;
-			}
-		}
-	}
-
-	/deep/ .ant-form-item {
-		margin-bottom: 0;
-	}
-
-	.link {
-		color: #1890ff;
-	}
-
-	.close {
-		color: #fff;
-		font-size: 40px;
-		position: absolute;
-		right: 20px;
-		top: 20px;
-		display: block;
-		width: 16px;
-		height: 16px;
-		text-align: center;
-		background: url(../../assets/img/close2.png);
-	}
-
-	.totalbar {
-		position: absolute;
+	@media screen and (max-width: 1360px) {
+		left: 40px;
 		right: 40px;
-		bottom: 5px;
-		line-height: 28px
+		top: 80px;
+		bottom: 30px;
 	}
+}
 
-	.totalbar span,
-	.totalbar .btn {
-		vertical-align: middle;
-		display: inline-block;
+.theme1 .bg > .upload-bd {
+	left: 135px;
+	right: 135px;
+	top: 140px;
+	bottom: 120px;
+}
+
+.bg > .upload-bd > div {
+	overflow-y: auto;
+	height: 100%;
+	padding: 0 40px;
+}
+
+.ant-btn-success,
+.ant-btn-success:hover,
+.ant-btn-success:active {
+	background: #3bb1c2;
+	color: #fff;
+	boder: 1px solid #3bb1c2;
+}
+
+.bg > .upload-bd .upload-title {
+	color: #2459a0;
+	font-size: 16px;
+	line-height: 30px;
+	margin-bottom: 10px;
+	text-align: left;
+	border-bottom: 1px solid #cfdbec;
+}
+
+.bg > .upload-bd .upload-btnbar .upload,
+.totalbar .btn {
+	position: relative;
+	overflow: hidden;
+	color: #fff;
+	font-size: 16px;
+	background: #3bb1c2;
+	border-radius: 6px;
+	padding: 2px 10px;
+	display: inline-block;
+	margin-left: 10px;
+}
+
+.bg > .upload-bd .upload-btnbar .upload input[type='file'] {
+	position: absolute;
+	top: 0;
+	right: 0;
+	font-size: 400px;
+	opacity: 0;
+}
+
+.w100 {
+	width: 100%;
+}
+
+/deep/ .ant-table-wrapper .operation {
+	a {
+		&.del {
+			color: #d43030;
+		}
+
+		&.add {
+			color: #00baad;
+		}
 	}
+}
+
+/deep/ .ant-form-item {
+	margin-bottom: 0;
+}
+
+.link {
+	color: #1890ff;
+}
+
+.close {
+	color: #fff;
+	font-size: 40px;
+	position: absolute;
+	right: 20px;
+	top: 20px;
+	display: block;
+	width: 16px;
+	height: 16px;
+	text-align: center;
+	background: url(../../assets/img/close2.png);
+}
+
+.totalbar {
+	position: absolute;
+	right: 40px;
+	bottom: 5px;
+	line-height: 28px;
+}
+
+.totalbar span,
+.totalbar .btn {
+	vertical-align: middle;
+	display: inline-block;
+}
 </style>

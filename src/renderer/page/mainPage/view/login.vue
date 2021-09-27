@@ -158,7 +158,7 @@
 								});
 
 							} else {
-								this.$toast.center(da.message);
+								this.$toast.center(da.message||'发生错误了');
 							}
 						})
 						.finally(() => {

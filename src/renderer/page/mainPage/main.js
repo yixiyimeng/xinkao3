@@ -6,7 +6,7 @@ import router from './router'
 import store from './store'
 import 'vue2-toast/lib/toast.css';
 import Toast from 'vue2-toast';
-import './components'
+import './Antcomponents'
 Vue.use(Toast);
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 // Vue.http = Vue.prototype.$http = axios

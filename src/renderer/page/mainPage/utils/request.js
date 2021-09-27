@@ -57,12 +57,12 @@ service.interceptors.request.use(config => {
 service.interceptors.response.use((response) => {
 	//console.log(response)
 	removePending(response.config); //在一个ajax响应后再执行一下取消操作，把已经完成的请求从pending中移除
-	// 	if (response.data.ret == 'success') {
-	// 		return response.data;
-	// 	} else {
-	// 		message.error(response.data.message ? response.data.message : '发生错误了！');
-	// 
-	// 	}
+		if (response.data.ret == 'success') {
+			// return response.data;
+		} else {
+			// message.error(response.data.message ? response.data.message : '发生错误了！');
+	
+		}
 	return response.data;
 
 
