@@ -65,7 +65,6 @@ const api = {
 	saveQuestionImgAndSend:'/common/saveQuestionImgAndSend',//保存题干
 	importTestQuestions:'/platform/importTestQuestions',//上传家庭作业试卷
 	getAnswerMsg:'answerMsg/getAnswerMsg',//随堂检测统计
-	// yu
 }
 export default api
 export function postAction(url, parameter, obj = {}) {
