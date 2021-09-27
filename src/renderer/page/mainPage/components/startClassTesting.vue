@@ -150,7 +150,10 @@ let quecolumns = [
 		title: '正确率',
 		dataIndex: 'accuracy',
 		align: 'center',
-		key: 'accuracy'
+		key: 'accuracy',
+		customRender:(text)=>{
+			return text*10000/100+'%'
+		}
 	},
 	{
 		title: '正确人数',
