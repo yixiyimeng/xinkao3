@@ -38,30 +38,36 @@
 						</span>
 					</a-space>
 				</div>
-				<a-table rowKey="stuCode" class="mt10" :columns="countcolumns" :dataSource="stuPersonalMsgList" size="middle" :pagination="false">
+				<a-table rowKey="stuCode" class="mt10" style="background: #fff; " :columns="countcolumns" :dataSource="stuPersonalMsgList" size="middle" :pagination="false">
 					<span slot="serial" slot-scope="text, record, index">{{ index + 1 }}</span>
 					<a href="javascript:;" slot="stuName" slot-scope="text, record, index" @click="showStuDetail(record)">{{ text }}</a>
 				</a-table>
 				<!-- 题目答题详情 -->
-				<a-table class="mt20" rowKey="questionId" :columns="quecolumns" :dataSource="accuracyMsgList" size="middle" :pagination="false">
+				<a-table class="mt20" rowKey="questionId" style="background: #fff;" :columns="quecolumns" :dataSource="accuracyMsgList" size="middle" :pagination="false">
 					<span slot="serial" slot-scope="text, record, index">{{ text }}</span>
 					<span slot="questionType" slot-scope="text, record, index">{{ text | typefilter }}</span>
 					<template slot="answerTrueCount" slot-scope="text, record, index">
 						<strong>
-							<a v-if="text > 0" href="javascript:;" @click="showTrueStuList(record)">{{ text }}</a>
+							<a style="color: #87d068;" v-if="text > 0" href="javascript:;" @click="showTrueStuList(record)">{{ text }}</a>
 							<span v-else>0</span>
 						</strong>
 					</template>
 					<template slot="answerErrCount" slot-scope="text, record, index">
 						<strong>
-							<a v-if="text > 0" href="javascript:;" @click="showErrStuList(record)">{{ text }}</a>
+							<a style="color: #f00;" v-if="text > 0" href="javascript:;" @click="showErrStuList(record)">{{ text }}</a>
 							<span v-else>0</span>
 						</strong>
 					</template>
 					<div slot="chooseAccuracy" slot-scope="text, record, index">
-						<span style="display: inline-block; margin: 0 10px;" v-for="(value, key, index) in text" :key="index">
-							{{ key | Answerfilter(record) }}:
-							<strong style="color: #2459a0;">{{ (value * 10000) / 100 + '%' }}</strong>
+						<span
+							:style="{ color: record.tureAnswer.includes(key) ? 'rgb(0, 160, 149)' : 'color: rgba(0, 0, 0, 0.65);' }"
+							style="display: inline-block; margin: 0 10px;"
+							v-for="(value, key, index) in text"
+							:key="index"
+						>
+							{{ key | Answerfilter(record) }}:{{ (value * 10000) / 100 + '%' }}
+							<!--  style="color: #2459a0;" -->
+							<!-- <strong>{{ (value * 10000) / 100 + '%' }}</strong> -->
 						</span>
 					</div>
 					<span slot="trueAnswer" slot-scope="text, record, index">{{ text | Answerfilter(record) }}</span>
@@ -75,17 +81,19 @@
 				<a-table rowKey="questionId" :columns="columns" :dataSource="dataSource" :scroll="{ y: scrolly }" size="middle" :pagination="false">
 					<span slot="serial" slot-scope="text, record, index">{{ text }}</span>
 					<span slot="questionType" slot-scope="text, record, index">{{ text | typefilter }}</span>
-					<a-tag slot="answer" slot-scope="text, record, index" v-if="text" :color="record.result ? '#87d068' : '#f00'">{{ text | Answerfilter(record) }}</a-tag>
+					<a-tag slot="answer" slot-scope="text, record, index" v-if="text" :color="record.result ? 'rgb(0, 160, 149)' : 'rgb(212, 48, 48)'">
+						{{ text | Answerfilter(record) }}
+					</a-tag>
 					<span slot="answer" v-else style="color: #f00;">--</span>
 					<span slot="trueAnswer" slot-scope="text, record, index">{{ text | Answerfilter(record) }}</span>
 				</a-table>
 			</div>
 			<!-- 答题正确或错误学生名单 -->
-			<ul class="userlist clearfix" v-if="viewState == 3">
+			<!-- <ul class="userlist clearfix" v-if="viewState == 3">
 				<li v-for="(item, index) in stulist" :key="index">
 					<div>{{ item.stuName }}</div>
 				</li>
-			</ul>
+			</ul> -->
 		</div>
 	</div>
 </template>
@@ -151,8 +159,8 @@ let quecolumns = [
 		dataIndex: 'accuracy',
 		align: 'center',
 		key: 'accuracy',
-		customRender:(text)=>{
-			return text*10000/100+'%'
+		customRender: text => {
+			return (text * 10000) / 100 + '%';
 		}
 	},
 	{
@@ -190,6 +198,7 @@ const columns = [
 		title: '题号',
 		dataIndex: 'questionId',
 		width: 100,
+		align: 'center',
 		scopedSlots: {
 			customRender: 'serial'
 		}
@@ -300,12 +309,14 @@ export default {
 			});
 		},
 		showTrueStuList(record) {
-			this.viewState = 3;
-			this.stulist = record.answerTrueStuMsgList;
+			// this.viewState = 3;
+			// this.stulist = record.answerTrueStuMsgList;
+			// this.$refs.selectNamelist.show(1);
+			this.$emit('showNamelist', record.answerTrueStuMsgList);
 		},
 		showErrStuList(record) {
-			this.viewState = 3;
-			this.stulist = record.answerErrStuMsgList;
+			// this.viewState = 3;
+			this.$emit('showNamelist', record.answerErrStuMsgList);
 		}
 	},
 	destroyed() {
@@ -381,6 +392,7 @@ export default {
 	overflow: auto;
 	margin: 10px 0;
 	padding: 0 40px;
+	font-size: 20px;
 }
 .userlist {
 	height: 100%;
@@ -585,5 +597,8 @@ export default {
 
 .subtablink a.active {
 	color: #2459a0;
+}
+/deep/ .ant-table {
+	font-size: 20px;
 }
 </style>

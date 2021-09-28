@@ -242,7 +242,7 @@ export default {
 				formData.append('className', $me.sendInfo.className);
 				formData.append('subjectCode', $me.sendInfo.subjectCode);
 				formData.append('subjectName', $me.sendInfo.subjectName);
-				formData.append('type', $me.type);
+				formData.append('type', $me.type==1?'common':'classify');
 				postActionUpload(api.importTestQuestions, formData).then(da => {
 					if (da.ret == 'success') {
 						$me.$toast.center('上传成功');

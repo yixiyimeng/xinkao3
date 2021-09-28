@@ -23,13 +23,15 @@
 		<!-- 选择题的统计 -->
 		<answer-chart ref="answerChart"></answer-chart>
 		<!-- 随堂检测统计 -->
-		<start-class-testing ref="startClassTesting"></start-class-testing>
+		<start-class-testing ref="startClassTesting" @showNamelist="showNamelist"></start-class-testing>
 		<div class="btnbar">
 			<a href="javascript:;" class="startClass" @click="startAnswer" v-if="viewState == 0">开始答题</a>
 			<a href="javascript:;" class="startClass" @click="stopAnswer" v-if="viewState == 1">{{ type == 2 ? '收取试卷' : '结束答题' }}</a>
 		</div>
 		<!-- 倒计时 -->
 		<count-down v-if="isCountDown == 1" v-show="isAnswering" :setTimer="countDown * 1000" @stopCountDown="stopCountDown" ref="countdown"></count-down>
+		<!-- 学生名单 -->
+		<selectNamelist ref="selectNamelist" :namelist="stulist"></selectNamelist>
 	</div>
 </template>
 
@@ -42,6 +44,7 @@ import CountDown from '@/page/mainPage/components/CountDown';
 import startClassTesting from '@/page/mainPage/components/startClassTesting';
 import api from '@/page/mainPage/api';
 import { mapState } from 'vuex';
+import selectNamelist from './selectNamelist';
 export default {
 	components: {
 		singleChoice,
@@ -49,7 +52,8 @@ export default {
 		classTesting,
 		CountDown,
 		answerChart,
-		startClassTesting
+		startClassTesting,
+		selectNamelist
 	},
 	data() {
 		return {
@@ -63,7 +67,8 @@ export default {
 			viewState: '0', //0未开始 1开始  2 统计
 			titleName: '', //题目类型
 			timer: null,
-			isScreening: false
+			isScreening: false,
+			stulist: []
 		};
 	},
 	destroyed() {
@@ -315,6 +320,10 @@ export default {
 					}
 				}
 			}
+		},
+		showNamelist(stulist) {
+			this.stulist = stulist;
+			this.$refs.selectNamelist.show(1);
 		}
 	}
 };
