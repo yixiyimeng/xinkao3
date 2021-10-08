@@ -56,15 +56,16 @@ const api = {
 	importQuesrions: '/randomDetection/importQuesrions',
 	uploadTestPaper: '/randomDetection/uploadTestPaper',
 	getAuthentication: '/platform/authentication', //获取题库地址
-	saveImgFullScreen:'/common/saveImgFullScreen',//截屏
-	saveImg:'/platform/saveWhiteboardImg',//截图
-	getHomeworkTitleList:'/homework/getHomeworkTitleList/',//查询课后作业试卷
-	assignHomework:'/homework/assignHomework',//发送课后作业
-	gatherHomework:'/homework/gatherHomework',//获取课后作业
-	stopHomework:'/homework/stopHomework',//停止发试卷
-	saveQuestionImgAndSend:'/common/saveQuestionImgAndSend',//保存题干
-	importTestQuestions:'/platform/importTestQuestions',//上传家庭作业试卷
-	getAnswerMsg:'answerMsg/getAnswerMsg',//随堂检测统计
+	saveImgFullScreen: '/common/saveImgFullScreen', //截屏
+	saveImg: '/platform/saveWhiteboardImg', //截图
+	getHomeworkTitleList: '/homework/getHomeworkTitleList/', //查询课后作业试卷
+	assignHomework: '/homework/assignHomework', //发送课后作业
+	gatherHomework: '/homework/gatherHomework', //获取课后作业
+	stopHomework: '/homework/stopHomework', //停止发试卷
+	saveQuestionImgAndSend: '/common/saveQuestionImgAndSend', //保存题干
+	importTestQuestions: '/platform/importTestQuestions', //上传家庭作业试卷
+	getAnswerMsg: 'answerMsg/getAnswerMsg', //随堂检测统计
+	getHomeWorkAnswerMsg: 'answerMsg/getHomeWorkAnswerMsg',
 }
 export default api
 export function postAction(url, parameter, obj = {}) {

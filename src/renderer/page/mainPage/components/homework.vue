@@ -60,7 +60,9 @@
 			</div>
 		</div>
 		<!-- 成绩单 -->
-		<schoolreport ref="schoolreport"></schoolreport>
+		<schoolreport ref="schoolreport" @showNamelist="showNamelist"></schoolreport>
+		<!-- 学生名单 -->
+		<selectNamelist ref="selectNamelist" :namelist="stulist"></selectNamelist>
 	</div>
 </template>
 
@@ -70,6 +72,7 @@ import api from '@/page/mainPage/api';
 import { postActionUpload } from '@/page/mainPage/api';
 import commonupload from '@/page/mainPage/components/homeupload/commonupload';
 import schoolreport from '@/page/mainPage/components/schoolreport';
+import selectNamelist from './selectNamelist';
 const columns = [
 	{
 		title: '序号',
@@ -118,12 +121,14 @@ export default {
 			pagination: {},
 			type: 1,
 			showHomework: false,
-			sendInfo: {}
+			sendInfo: {},
+			stulist:[]
 		};
 	},
 	components: {
 		commonupload,
-		schoolreport
+		schoolreport,
+		selectNamelist
 	},
 	computed: {
 		...mapState(['theme'])
@@ -139,7 +144,6 @@ export default {
 				that.scrolly = that.$refs.modbox.offsetHeight - 150;
 			}
 		};
-		// this.showSchoolreport()
 	},
 	destroyed() {
 		window.onresize = null;
@@ -242,7 +246,7 @@ export default {
 				formData.append('className', $me.sendInfo.className);
 				formData.append('subjectCode', $me.sendInfo.subjectCode);
 				formData.append('subjectName', $me.sendInfo.subjectName);
-				formData.append('type', $me.type==1?'common':'classify');
+				formData.append('type', $me.type == 1 ? 'common' : 'classify');
 				postActionUpload(api.importTestQuestions, formData).then(da => {
 					if (da.ret == 'success') {
 						$me.$toast.center('上传成功');
@@ -294,6 +298,7 @@ export default {
 					record.instructionsStatus = 0;
 					this.getlistPaper();
 					this.$toast.center('收取试卷成功');
+					this.showSchoolreport();
 				}
 			});
 		},
@@ -312,6 +317,10 @@ export default {
 		/* 查看成绩单*/
 		showSchoolreport(record) {
 			this.$refs.schoolreport.show();
+		},
+		showNamelist(stulist) {
+			this.stulist = stulist;
+			this.$refs.selectNamelist.show(1);
 		}
 	}
 };

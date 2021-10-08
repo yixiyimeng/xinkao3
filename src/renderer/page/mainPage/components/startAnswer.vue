@@ -112,7 +112,7 @@ export default {
 						}
 						$me.viewState = 2;
 						$me.$emit('stopAnswer');
-						$me.$refs.startClassTesting.setDetailslist(da.data);
+						$me.$refs.startClassTesting.setDetailslist();
 					}
 				});
 			} else {

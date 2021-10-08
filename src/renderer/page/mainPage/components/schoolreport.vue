@@ -1,95 +1,82 @@
 <template>
 	<div class="setbox" v-if="isShow">
 		<div ref="mainbox">
-			<div v-if="viewState == 0" style="overflow: auto; margin: 10px 0; padding: 0 40px;" ref="chartlebox">
+			<div v-if="viewState == 0" class="tablebox" ref="chartlebox">
 				<div class="flex flex-pack-justify">
-					<span>班级：高中A班</span>
+					<span>班级：{{ classAnswerMsg.className }}</span>
 					<a-space :size="20">
-						<span>试卷:测试A卷</span>
-						<span>测试时间:2020-20-10</span>
+						<span>试卷:{{ classAnswerMsg.classProject }}</span>
+						<span>测试时间:{{ classAnswerMsg.testStartTime }}</span>
 					</a-space>
 				</div>
 				<div class="flex flex-pack-justify mt10">
 					<a-space :size="20">
 						<span>
 							考试人数:
-							<strong style="color: #2459a0;">10人</strong>
+							<strong style="color: #2459a0;">{{ classAnswerMsg.totalStu }}人</strong>
 						</span>
 						<span>
 							平均分:
-							<strong style="color: #ffd941;">10</strong>
+							<strong style="color: #ffd941;">{{ classAnswerMsg.averageStore }}</strong>
 						</span>
 						<span>
 							最高分:
-							<strong style="color: rgb(212, 48, 48);">10</strong>
+							<strong style="color: rgb(212, 48, 48);">{{ classAnswerMsg.maxScore }}</strong>
 						</span>
 						<span>
 							最低分:
-							<strong style="color: #2459a0;">10</strong>
+							<strong style="color: #2459a0;">{{ classAnswerMsg.minScore }}</strong>
 						</span>
 					</a-space>
-					<div class="subtablink">
-						<a href="javascript:;" @click="changeType(1)" :class="{ active: type == 1 }">列表</a>
-						<span>|</span>
-						<a href="javascript:;" @click="changeType(2)" :class="{ active: type == 2 }">图表</a>
-					</div>
 				</div>
-				<template v-if="type == 1">
-					<a-table rowKey="questionId" class="mt10" :columns="countcolumns" :dataSource="countSource" :scroll="{ y: scrolly }" size="middle" :pagination="false">
-						<span slot="serial" slot-scope="text, record, index">{{ index + 1 }}</span>
-						<span
-							:slot="item.key"
-							v-for="(item, index) in titleNames"
-							:key="index"
-							slot-scope="text, record"
-							:style="{ color: text.split('|')[1] == 'true' ? '#00a095' : '#d43030' }"
-						>
-							{{ text.split('|')[0] || '--' }}
-						</span>
-						<a href="javascript:;" slot="stuName" slot-scope="text, record, index" @click="showStuDetail(record)">{{ text }}</a>
-					</a-table>
-					<!-- 题目答题详情 -->
-					<a-table class="mt20" rowKey="questionId" :columns="quecolumns" :dataSource="countSource" :scroll="{ y: scrolly }" size="middle" :pagination="false">
-						<span slot="serial" slot-scope="text, record, index">{{ index + 1 }}</span>
-						<span
-							:slot="item.key"
-							v-for="(item, index) in titleNames"
-							:key="index"
-							slot-scope="text, record"
-							:style="{ color: text.split('|')[1] == 'true' ? '#00a095' : '#d43030' }"
-						>
-							{{ text.split('|')[0] || '--' }}
-						</span>
-						<a href="javascript:;" slot="stuName" slot-scope="text, record, index" @click="showStuDetail(record)">{{ text }}</a>
-					</a-table>
-				</template>
-				<div v-if="type == 2">
-					<v-chart :options="ratepolar" autoresize class="chartbox" style="width: 100%;"></v-chart>
-					<v-chart :options="countpolar" autoresize class="chartbox" style="width: 100%;"></v-chart>
-				</div>
-			</div>
-			<div v-if="viewState == 1" ref="tablebox">
-				<div>
-					姓名：
-					<span>{{ studentInfo.stuName }}</span>
-				</div>
-				<a-table rowKey="questionId" :columns="columns" :dataSource="dataSource" :scroll="{ y: scrolly }" size="middle" :pagination="false">
-					<span slot="serial" slot-scope="text, record, index">
-						<!-- {{ index + 1 }} -->
-						{{ text }}
-					</span>
+				<a-table rowKey="stuCode" class="mt10" style="background: #fff; " :columns="countcolumns" :dataSource="stuPersonalMsgList" size="middle" :pagination="false">
+					<span slot="serial" slot-scope="text, record, index">{{ index + 1 }}</span>
+					<a href="javascript:;" slot="stuName" slot-scope="text, record, index" @click="showStuDetail(record)">{{ text }}</a>
+				</a-table>
+				<!-- 题目答题详情 -->
+				<a-table class="mt20" rowKey="questionId" style="background: #fff;" :columns="quecolumns" :dataSource="accuracyMsgList" size="middle" :pagination="false">
+					<span slot="serial" slot-scope="text, record, index">{{ text }}</span>
 					<span slot="questionType" slot-scope="text, record, index">{{ text | typefilter }}</span>
-					<a-tag slot="answer" slot-scope="text, record, index" v-if="text" :color="record.result ? '#87d068' : '#f00'">{{ text | Answerfilter }}</a-tag>
-					<span slot="answer" v-else style="color: #f00;">--</span>
-					<span slot="trueAnswer" slot-scope="text, record, index">{{ text | Answerfilter }}</span>
+					<div slot="answerTrueCount" slot-scope="text, record, index">
+						<strong>
+							<a style="color: #87d068; display: block;" v-if="text > 0" href="javascript:;" @click="showTrueStuList(record)">{{ text }}</a>
+							<span v-else>0</span>
+						</strong>
+					</div>
+					<div slot="answerErrCount" slot-scope="text, record, index">
+						<strong>
+							<a style="color: #f00; display: block;" v-if="text > 0" href="javascript:;" @click="showErrStuList(record)">{{ text }}</a>
+							<span v-else>0</span>
+						</strong>
+					</div>
+					<div slot="chooseAccuracy" slot-scope="text, record, index">
+						<span
+							:style="{ color: record.tureAnswer.includes(key) ? 'rgb(0, 160, 149)' : 'color: rgba(0, 0, 0, 0.65);' }"
+							style="display: inline-block; margin: 0 10px;"
+							v-for="(value, key, index) in text"
+							:key="index"
+						>
+							{{ key | Answerfilter(record) }}:{{ (value * 10000) / 100 + '%' }}
+						</span>
+					</div>
+					<span slot="trueAnswer" slot-scope="text, record, index">{{ text | Answerfilter(record) }}</span>
 				</a-table>
 			</div>
-			<!-- 学生名单 -->
-			<ul class="userlist clearfix" v-if="viewState == 2">
-				<li v-for="(item, index) in list" :key="index" @click="showDetails(index)">
-					<div>{{ item.studentName }}</div>
-				</li>
-			</ul>
+			<div v-if="viewState == 1" ref="tablebox" class="tablebox">
+				<div>
+					姓名：
+					<span>{{ studentInfo ? studentInfo.stuName : '' }}</span>
+				</div>
+				<a-table rowKey="questionId" :columns="columns" :dataSource="dataSource" :scroll="{ y: scrolly }" size="middle" :pagination="false">
+					<span slot="serial" slot-scope="text, record, index">{{ text }}</span>
+					<span slot="questionType" slot-scope="text, record, index">{{ text | typefilter }}</span>
+					<a-tag slot="answer" slot-scope="text, record, index" v-if="text" :color="record.result ? 'rgb(0, 160, 149)' : 'rgb(212, 48, 48)'">
+						{{ text | Answerfilter(record) }}
+					</a-tag>
+					<span slot="answer" v-else style="color: #f00;">--</span>
+					<span slot="trueAnswer" slot-scope="text, record, index">{{ text | Answerfilter(record) }}</span>
+				</a-table>
+			</div>
 		</div>
 	</div>
 </template>
@@ -101,252 +88,100 @@ let countcolumns = [
 		scopedSlots: {
 			customRender: 'serial'
 		},
-		align: 'center'
+		align: 'center',
+		width: 100
 	},
 	{
 		title: '姓名',
 		dataIndex: 'stuName',
 		key: 'stuName',
-		// fixed: 'left',
-		width: '22%',
 		scopedSlots: {
 			customRender: 'stuName'
 		}
 	},
 	{
 		title: '排名',
-		key: 'ranking',
-		dataIndex: 'ranking',
-		// fixed: 'left',
-		width: '22%'
+		key: 'stuRank',
+		dataIndex: 'stuRank'
 	},
 	{
-		title: '客观题',
-		key: 'score',
-		dataIndex: 'score'
-		// fixed: 'left',
-	},
-	{
-		title: '综合正确率',
-		key: 'compCorrRate',
-		dataIndex: 'compCorrRate',
-		// fixed: 'left',
-		width: '22%'
+		title: '客观题得分',
+		key: 'grossScore',
+		dataIndex: 'grossScore'
 	}
 ];
 let quecolumns = [
 	{
 		title: '题号',
+		dataIndex: 'questionId',
+		align: 'center',
+		width: 100,
 		scopedSlots: {
 			customRender: 'serial'
-		},
-		align: 'center'
+		}
+	},
+	{
+		title: '题目类型',
+		dataIndex: 'questionType',
+		align: 'center',
+		scopedSlots: {
+			customRender: 'questionType'
+		}
+	},
+	{
+		title: '正确答案',
+		dataIndex: 'tureAnswer',
+		align: 'center',
+		key: 'tureAnswer',
+		scopedSlots: {
+			customRender: 'trueAnswer'
+		}
 	},
 	{
 		title: '正确率',
-		dataIndex: 'stuName',
-		key: 'stuName'
+		dataIndex: 'accuracy',
+		align: 'center',
+		key: 'accuracy',
+		customRender: text => {
+			return (text * 10000) / 100 + '%';
+		}
 	},
 	{
 		title: '正确人数',
-		dataIndex: 'stuName',
-		key: 'stuName'
+		dataIndex: 'answerTrueCount',
+		key: 'answerTrueCount',
+		align: 'center',
+		scopedSlots: {
+			customRender: 'answerTrueCount'
+		}
 	},
 	{
-		title: 'A',
-		key: 'ranking',
-		dataIndex: 'ranking'
+		title: '错误人数',
+		dataIndex: 'answerErrCount',
+		key: 'answerErrCount',
+		align: 'center',
+
+		scopedSlots: {
+			customRender: 'answerErrCount'
+		}
 	},
 	{
-		title: 'B',
-		key: 'score',
-		dataIndex: 'score'
-	},
-	{
-		title: 'C',
-		key: 'compCorrRate',
-		dataIndex: 'compCorrRate'
-	},
-	{
-		title: 'D',
-		key: 'compCorrRate',
-		dataIndex: 'compCorrRate'
-	},
-	{
-		title: 'E',
-		key: 'compCorrRate',
-		dataIndex: 'compCorrRate'
+		title: '答题占比',
+		key: 'chooseAccuracy',
+		dataIndex: 'chooseAccuracy',
+		width: '30%',
+		scopedSlots: {
+			customRender: 'chooseAccuracy'
+		}
 	}
 ];
-let rateOption = {
-	title: {
-		text: '班级正确率统计'
-	},
-	tooltip: {
-		trigger: 'axis',
-		formatter: function(value) {
-			//console.log(value)
-			return value[0].value + '%';
-		}
-	},
-
-	grid: {
-		x: 60,
-		x2: 40,
-		y2: 54
-	},
-	calculable: true,
-	xAxis: [
-		{
-			type: 'category',
-			data: [],
-			axisLabel: {
-				interval: 0
-			}
-		}
-	],
-	yAxis: [
-		{
-			type: 'value',
-			max: 100,
-			axisLabel: {
-				formatter: '{value} %'
-			}
-		}
-	],
-	series: [
-		{
-			type: 'bar',
-			data: [],
-			barMaxWidth: 100,
-			label: {
-				normal: {
-					show: true,
-					position: 'top',
-					color: '#000',
-					formatter: function(param) {
-						// return param.value + '%';
-						return param.value > 0 ? param.value + '%' : '';
-					},
-					textStyle: {
-						fontSize: 18
-					}
-				}
-			}
-		}
-	]
-};
-let countOption = {
-	title: {
-		text: '班级答题数统计'
-	},
-	tooltip: {
-		trigger: 'axis'
-	},
-	legend: {
-		x: 'center',
-		y: 'top',
-		textStyle: {
-			fontSize: 20
-		},
-		data: ['答对', '答错', '未答']
-	},
-	grid: {
-		x: 60,
-		x2: 40,
-		y2: 54
-	},
-	calculable: true,
-	xAxis: [
-		{
-			type: 'category',
-			data: [],
-			axisLabel: {
-				interval: 0
-			}
-		}
-	],
-	yAxis: [
-		{
-			type: 'value',
-			axisLabel: {
-				formatter: '{value} 人'
-			},
-			minInterval: 1
-		}
-	],
-	series: [
-		{
-			type: 'bar',
-			name: '答对',
-			data: [],
-			stack: '参与人数',
-			barMaxWidth: 100,
-			label: {
-				normal: {
-					show: true,
-					position: 'inside',
-					color: '#fff',
-					formatter: function(param) {
-						return param.value > 0 ? param.value + '人' : '';
-					},
-					textStyle: {
-						fontSize: 18
-					}
-				}
-			}
-		},
-		{
-			type: 'bar',
-			name: '答错',
-			data: [],
-			stack: '参与人数',
-			barMaxWidth: 100,
-			label: {
-				normal: {
-					show: true,
-					position: 'inside',
-					color: '#fff',
-					formatter: function(param) {
-						return param.value > 0 ? param.value + '人' : '';
-					},
-					textStyle: {
-						fontSize: 18
-					}
-				}
-			}
-		},
-		{
-			type: 'bar',
-			data: [],
-			name: '未答',
-			stack: '参与人数',
-			barMaxWidth: 100,
-			label: {
-				normal: {
-					show: true,
-					position: 'inside',
-					color: '#fff',
-					formatter: function(param) {
-						return param.value > 0 ? param.value + '人' : '';
-					},
-					textStyle: {
-						fontSize: 18
-					}
-				}
-			}
-		}
-	]
-};
-import ECharts from 'vue-echarts/components/ECharts';
-import 'echarts/lib/chart/pie';
-import 'echarts/lib/chart/bar';
 
 const columns = [
 	{
 		title: '题号',
 		dataIndex: 'questionId',
 		width: 100,
+		align: 'center',
 		scopedSlots: {
 			customRender: 'serial'
 		}
@@ -361,7 +196,7 @@ const columns = [
 	},
 	{
 		title: '按键答案',
-		dataIndex: 'answerResult',
+		dataIndex: 'answer',
 		align: 'center',
 		width: '25%',
 		scopedSlots: {
@@ -376,22 +211,14 @@ const columns = [
 		scopedSlots: {
 			customRender: 'trueAnswer'
 		}
-		// width: 300,
 	},
 	{
 		title: '得分',
 		dataIndex: 'score',
 		width: 100
 	}
-	// 	{
-	// 		title: '操作',
-	// 		key: 'operation',
-	// 		fixed: 'right',
-	// 		width: 100,
-	// 		scopedSlots: { customRender: 'action' }
-	// 	}
 ];
-
+import api from '@/page/mainPage/api';
 export default {
 	components: {},
 	data() {
@@ -401,171 +228,39 @@ export default {
 			scrolly: 100,
 			viewState: 0,
 			columns,
+			countcolumns,
 			quecolumns,
-			detailslist: [],
-			dataSource: [],
-			studentInfo: '',
-			countcolumns: countcolumns,
-			countSource: [],
-			ratepolar: rateOption,
-			countpolar: countOption,
-			res: null,
-			titleNames: [],
-			type: 1
+			classAnswerMsg: {}, //班级整体作答情况
+			accuracyMsgList: [], //班级整体作答列表
+			stuPersonalMsgList: [], //学生成绩单统计
+			presonalAnswerMsg: [], //学生作答情况
+			stulist: [], //回答正确或者错误的学生名单
+			dataSource: [], //学生按键详情
+			studentInfo: null
 		};
 	},
 	mounted() {},
-	components: {
-		'v-chart': ECharts
-	},
 	methods: {
 		show() {
 			this.list = [];
 			this.viewState = 0;
-			this.detailslist = [];
+			this.classAnswerMsg = {};
+			this.dataSource = [];
 			this.isShow = true;
+			this.setDetailslist();
 		},
 		hide() {
 			this.isShow = false;
 		},
-		setList(list) {
-			if (list && list.length > 0) {
-				this.list = list.map(item => {
-					item.percent = parseInt(item.percent * 100);
-					return item;
-				});
-			} else {
-				this.list = [];
-			}
-		},
-		setCountlist(res) {
-			this.viewState = 1;
-			let that = this;
-			// this.$nextTick(() => {
-			// 	that.scrolly = that.$refs.chartbox.offsetHeight - 100;
-			// 	window.onresize = function() {
-			// 		that.scrolly = that.$refs.chartbox.offsetHeight - 100;
-			// 	};
-			// })
-			this.res = res;
-			let ratexAxis = [];
-			this.titleNames = [];
-			let rateData = [];
-			let totalTrueStulist = [];
-			let totalFalseStulist = [];
-			let totalNoneStulist = [];
-			if (this.res.ret == 'success') {
-				if (this.res.data.titleNames && this.res.data.titleNames.length > 0) {
-					for (var i = 0; i < this.res.data.titleNames.length; i++) {
-						var item = this.res.data.titleNames[i];
-						var obj = {
-							title: item.titleName + '_' + item.questionId,
-							key: item.questionId,
-							dataIndex: item.questionId,
-							scopedSlots: {
-								customRender: item.questionId
-							}
-						};
-						this.titleNames.push(obj);
-						ratexAxis.push(obj.title);
-					}
-
-					let normalcolumns = JSON.parse(JSON.stringify(countcolumns));
-					this.countcolumns = [
-						...normalcolumns.map(item => {
-							if (item.title == '#') {
-								item.width = 100;
-							} else {
-								item.width = 180;
-							}
-
-							item.fixed = 'left';
-							return item;
-						}),
-						...this.titleNames
-					];
-				} else {
-					this.countcolumns = [...columns];
+		setDetailslist() {
+			this.$postAction(api.getHomeWorkAnswerMsg).then(da => {
+				if (da && da.ret == 'success' && da.data) {
+					this.viewState = 0;
+					this.classAnswerMsg = { ...da.data.classAnswerMsg };
+					this.stuPersonalMsgList = [...da.data.stuRankMsgList];
+					this.presonalAnswerMsg = { ...da.data.presonalAnswerMsg };
+					this.accuracyMsgList = [...da.data.detailMsg];
 				}
-				if (this.res.data.stuDetailDos && this.res.data.stuDetailDos.length > 0) {
-					this.countSource = this.res.data.stuDetailDos.map(item => {
-						let param = {
-							stuName: item.stuName,
-							ranking: item.ranking,
-							compCorrRate: item.compCorrRate,
-							stuCode: item.stuCode,
-							stuAnswerDetails: item.stuAnswerDetails
-						};
-						let stuAnswerDetails = item.stuAnswerDetails;
-						for (var i = 0; i < stuAnswerDetails.length; i++) {
-							param[stuAnswerDetails[i].questionId] = stuAnswerDetails[i].answer + '|' + stuAnswerDetails[i].answerResult;
-						}
-						param.totalTrueForQuNum = item.totalTrueForQue.length;
-						param.totalNum = item.totalFalseForQue.length + item.totalTrueForQue.length;
-						param.totalFlashForQuNum = item.totalFalseForQue.length;
-						return param;
-					});
-					let lastdata = {
-						stuName: '合计'
-					};
-					for (var i = 0; i < this.res.data.queAvCorrRateList.length; i++) {
-						lastdata[this.res.data.queAvCorrRateList[i].questionId] = this.res.data.queAvCorrRateList[i].corrRate;
-						var num = this.res.data.queAvCorrRateList[i].corrRate.slice(0, this.res.data.queAvCorrRateList[i].corrRate.length - 1);
-						rateData.push(num);
-						totalFalseStulist.push(this.res.data.queAvCorrRateList[i].totalFalseStu);
-						totalNoneStulist.push(this.res.data.queAvCorrRateList[i].totalNoneStu);
-						totalTrueStulist.push(this.res.data.queAvCorrRateList[i].totalTrueStu);
-					}
-					console.log(lastdata);
-					this.countSource.push(lastdata);
-				} else {
-					this.countSource = [];
-				}
-				let ratepolar = Object.assign({}, rateOption);
-				ratepolar.xAxis[0].data = ratexAxis;
-				ratepolar.series[0].data = rateData;
-				let countpolar = Object.assign({}, countOption);
-				countpolar.xAxis[0].data = ratexAxis;
-				countpolar.series[0].data = totalTrueStulist;
-				countpolar.series[1].data = totalFalseStulist;
-				countpolar.series[2].data = totalNoneStulist;
-				if (ratexAxis.length > 10) {
-					let dataZoom = [
-						{
-							show: true,
-							start: 70,
-							end: 100
-						},
-						{
-							type: 'inside',
-							start: 70,
-							end: 100
-						}
-					];
-					countpolar.dataZoom = dataZoom;
-					ratepolar.dataZoom = dataZoom;
-				}
-				this.ratepolar = ratepolar;
-				this.countpolar = countOption;
-			}
-		},
-		setDetailslist(list) {
-			this.detailslist = list;
-		},
-		showDetails(index) {
-			if (this.detailslist.length <= 0) {
-				return false;
-			}
-			this.dataSource = this.detailslist[index].recordList;
-			this.studentInfo = this.detailslist[index].studentInfo;
-			this.viewState = 2;
-			let that = this;
-			this.$nextTick(() => {
-				console.log(that.$refs.tablebox.offsetHeight);
-				that.scrolly = that.$refs.tablebox.offsetHeight - 100;
-				window.onresize = function() {
-					that.scrolly = that.$refs.tablebox.offsetHeight - 100;
-				};
 			});
 		},
 		returnback() {
@@ -576,9 +271,9 @@ export default {
 			}
 		},
 		showStuDetail(record) {
-			this.viewState = 2;
-			this.studentInfo = record.stuName;
-			this.dataSource = record.stuAnswerDetails;
+			this.viewState = 1;
+			this.studentInfo = record;
+			this.dataSource = this.presonalAnswerMsg[record.stuCode];
 			let that = this;
 			this.$nextTick(() => {
 				that.scrolly = that.$refs.tablebox.offsetHeight - 100;
@@ -587,8 +282,11 @@ export default {
 				};
 			});
 		},
-		changeType(type) {
-			this.type = type;
+		showTrueStuList(record) {
+			this.$emit('showNamelist', record.answerTrueStuMsgList);
+		},
+		showErrStuList(record) {
+			this.$emit('showNamelist', record.answerErrStuMsgList);
 		}
 	},
 	destroyed() {
@@ -617,19 +315,21 @@ export default {
 			}
 			return str;
 		},
-		Answerfilter(value) {
+		Answerfilter(value, record) {
 			var str = value;
-			console.log('是否', str);
-			switch (value) {
-				case 'true':
-				case 'E': {
-					str = '√';
-					break;
-				}
-				case 'false':
-				case 'F': {
-					str = '×';
-					break;
+			var isJudgment = record && record.questionType == 2;
+			if (isJudgment) {
+				switch (value) {
+					case 'true':
+					case 'E': {
+						str = '√';
+						break;
+					}
+					case 'false':
+					case 'F': {
+						str = '×';
+						break;
+					}
 				}
 			}
 			if (str == '') {
@@ -862,5 +562,11 @@ export default {
 
 .subtablink a.active {
 	color: #2459a0;
+}
+.tablebox {
+	overflow: auto;
+	margin: 10px 0;
+	padding: 0 40px;
+	font-size: 20px;
 }
 </style>

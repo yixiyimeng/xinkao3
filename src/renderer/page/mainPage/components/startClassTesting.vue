@@ -46,18 +46,18 @@
 				<a-table class="mt20" rowKey="questionId" style="background: #fff;" :columns="quecolumns" :dataSource="accuracyMsgList" size="middle" :pagination="false">
 					<span slot="serial" slot-scope="text, record, index">{{ text }}</span>
 					<span slot="questionType" slot-scope="text, record, index">{{ text | typefilter }}</span>
-					<template slot="answerTrueCount" slot-scope="text, record, index">
+					<div slot="answerTrueCount" slot-scope="text, record, index">
 						<strong>
-							<a style="color: #87d068;" v-if="text > 0" href="javascript:;" @click="showTrueStuList(record)">{{ text }}</a>
+							<a style="color: #87d068; display: block;" v-if="text > 0" href="javascript:;" @click="showTrueStuList(record)">{{ text }}</a>
 							<span v-else>0</span>
 						</strong>
-					</template>
-					<template slot="answerErrCount" slot-scope="text, record, index">
+					</div>
+					<div slot="answerErrCount" slot-scope="text, record, index">
 						<strong>
-							<a style="color: #f00;" v-if="text > 0" href="javascript:;" @click="showErrStuList(record)">{{ text }}</a>
+							<a style="color: #f00; display: block;" v-if="text > 0" href="javascript:;" @click="showErrStuList(record)">{{ text }}</a>
 							<span v-else>0</span>
 						</strong>
-					</template>
+					</div>
 					<div slot="chooseAccuracy" slot-scope="text, record, index">
 						<span
 							:style="{ color: record.tureAnswer.includes(key) ? 'rgb(0, 160, 149)' : 'color: rgba(0, 0, 0, 0.65);' }"
@@ -278,7 +278,7 @@ export default {
 			}
 		},
 
-		setDetailslist(list) {
+		setDetailslist() {
 			this.$postAction(api.getAnswerMsg).then(da => {
 				if (da && da.ret == 'success') {
 					this.viewState = 1;
@@ -309,13 +309,9 @@ export default {
 			});
 		},
 		showTrueStuList(record) {
-			// this.viewState = 3;
-			// this.stulist = record.answerTrueStuMsgList;
-			// this.$refs.selectNamelist.show(1);
 			this.$emit('showNamelist', record.answerTrueStuMsgList);
 		},
 		showErrStuList(record) {
-			// this.viewState = 3;
 			this.$emit('showNamelist', record.answerErrStuMsgList);
 		}
 	},
