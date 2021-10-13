@@ -48,14 +48,14 @@
 					<span slot="questionType" slot-scope="text, record, index">{{ text | typefilter }}</span>
 					<div slot="answerTrueCount" slot-scope="text, record, index">
 						<strong>
-							<a style="color: #87d068; display: block;" v-if="text > 0" href="javascript:;" @click="showTrueStuList(record)">{{ text }}</a>
+							<a style="color:rgb(0, 160, 149); display: block;" v-if="text > 0" href="javascript:;" @click="showTrueStuList(record)">{{ text }}</a>
 							<span v-else>0</span>
 						</strong>
 					</div>
 					<div slot="answerErrCount" slot-scope="text, record, index">
 						<strong>
 							<a style="color: #f00; display: block;" v-if="text > 0" href="javascript:;" @click="showErrStuList(record)">{{ text }}</a>
-							<span v-else>0</span>
+							<span v-else>{{ text === null ? totalStu : 0 }}</span>
 						</strong>
 					</div>
 					<div slot="chooseAccuracy" slot-scope="text, record, index">
@@ -235,7 +235,7 @@ const columns = [
 		width: 100
 	}
 ];
-import api from '@/page/mainPage/api';
+import api, { reportExport } from '@/page/mainPage/api';
 export default {
 	data() {
 		return {
@@ -252,7 +252,8 @@ export default {
 			presonalAnswerMsg: [], //学生作答情况
 			stulist: [], //回答正确或者错误的学生名单
 			dataSource: [], //学生按键详情
-			studentInfo: null
+			studentInfo: null,
+			fileName: ''
 		};
 	},
 	mounted() {},
@@ -286,6 +287,7 @@ export default {
 					this.stuPersonalMsgList = [...da.data.stuPersonalMsgList];
 					this.presonalAnswerMsg = { ...da.data.presonalAnswerMsg };
 					this.accuracyMsgList = [...da.data.accuracyMsgList];
+					this.fileName = da.data.fileName;
 				}
 			});
 		},
@@ -313,6 +315,24 @@ export default {
 		},
 		showErrStuList(record) {
 			this.$emit('showNamelist', record.answerErrStuMsgList);
+		},
+		reportExportAnswer() {
+			// let fileName = this.classAnswerMsg.className + this.classAnswerMsg.classProject + this.classAnswerMsg.testStartTime + '.xlsx';
+			// fileName='宏志班测试部分得分211013204614.xlsx';
+			reportExport(api.reportExport + '?fileName=' + encodeURI(this.fileName)).then(res => {
+				const link = document.createElement('a');
+				console.log('res.data', res);
+				let blob = new Blob([res], {
+					type: 'application/vnd.ms-excel; charset=UTF-8'
+				});
+				link.style.display = 'none';
+				link.href = URL.createObjectURL(blob);
+				// link.download = res.headers['content-disposition'];
+				link.setAttribute('download', this.fileName);
+				document.body.appendChild(link);
+				link.click();
+				document.body.removeChild(link);
+			});
 		}
 	},
 	destroyed() {
@@ -386,7 +406,7 @@ export default {
 }
 .tablebox {
 	overflow: auto;
-	margin: 10px 0;
+	margin: 10px 0 !important;
 	padding: 0 40px;
 	font-size: 20px;
 }

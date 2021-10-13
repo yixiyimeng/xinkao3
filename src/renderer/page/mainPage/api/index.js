@@ -66,6 +66,7 @@ const api = {
 	importTestQuestions: '/platform/importTestQuestions', //上传家庭作业试卷
 	getAnswerMsg: 'answerMsg/getAnswerMsg', //随堂检测统计
 	getHomeWorkAnswerMsg: 'answerMsg/getHomeWorkAnswerMsg',
+	reportExport:'reportExport/classAnswer'
 }
 export default api
 export function postAction(url, parameter, obj = {}) {
@@ -86,6 +87,17 @@ export function postActionUpload(url, parameter) {
 			"Content-Type": "multipart/form-data"
 		},
 		processData: false,
+		data: parameter
+	})
+}
+export function reportExport(url, parameter) {
+	return axios({
+		url: url,
+		method: 'post',
+		responseType: "blob",
+		headers: {
+			'Content-Type': 'application/json;charset=UTF-8'
+		},
 		data: parameter
 	})
 }

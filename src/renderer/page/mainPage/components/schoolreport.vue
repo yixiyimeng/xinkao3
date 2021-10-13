@@ -39,14 +39,14 @@
 					<span slot="questionType" slot-scope="text, record, index">{{ text | typefilter }}</span>
 					<div slot="answerTrueCount" slot-scope="text, record, index">
 						<strong>
-							<a style="color: #87d068; display: block;" v-if="text > 0" href="javascript:;" @click="showTrueStuList(record)">{{ text }}</a>
+							<a style="color: rgb(0, 160, 149); display: block;" v-if="text > 0" href="javascript:;" @click="showTrueStuList(record)">{{ text }}</a>
 							<span v-else>0</span>
 						</strong>
 					</div>
 					<div slot="answerErrCount" slot-scope="text, record, index">
 						<strong>
 							<a style="color: #f00; display: block;" v-if="text > 0" href="javascript:;" @click="showErrStuList(record)">{{ text }}</a>
-							<span v-else>0</span>
+							<span v-else>{{ text === null ? totalStu : 0 }}</span>
 						</strong>
 					</div>
 					<div slot="chooseAccuracy" slot-scope="text, record, index">
@@ -70,7 +70,7 @@
 				<a-table rowKey="questionId" :columns="columns" :dataSource="dataSource" :scroll="{ y: scrolly }" size="middle" :pagination="false">
 					<span slot="serial" slot-scope="text, record, index">{{ text }}</span>
 					<span slot="questionType" slot-scope="text, record, index">{{ text | typefilter }}</span>
-					<a-tag slot="answer" slot-scope="text, record, index" v-if="text" :color="record.result ? 'rgb(0, 160, 149)' : 'rgb(212, 48, 48)'">
+					<a-tag slot="answer" slot-scope="text, record, index" v-if="text" :color="record.answerResult == 'true' ? 'rgb(0, 160, 149)' : 'rgb(212, 48, 48)'">
 						{{ text | Answerfilter(record) }}
 					</a-tag>
 					<span slot="answer" v-else style="color: #f00;">--</span>
@@ -236,7 +236,8 @@ export default {
 			presonalAnswerMsg: [], //学生作答情况
 			stulist: [], //回答正确或者错误的学生名单
 			dataSource: [], //学生按键详情
-			studentInfo: null
+			studentInfo: null,
+			totalStu: 0
 		};
 	},
 	mounted() {},
@@ -254,12 +255,21 @@ export default {
 		},
 		setDetailslist() {
 			this.$postAction(api.getHomeWorkAnswerMsg).then(da => {
-				if (da && da.ret == 'success' && da.data) {
+				if (da && da.ret == 'success') {
 					this.viewState = 0;
-					this.classAnswerMsg = { ...da.data.classAnswerMsg };
-					this.stuPersonalMsgList = [...da.data.stuRankMsgList];
-					this.presonalAnswerMsg = { ...da.data.presonalAnswerMsg };
-					this.accuracyMsgList = [...da.data.detailMsg];
+					if (da.data && JSON.stringify(da.data) != '{}') {
+						this.totalStu = da.data.classAnswerMsg.totalStu;
+						this.classAnswerMsg = { ...da.data.classAnswerMsg };
+						this.stuPersonalMsgList = [...da.data.stuRankMsgList];
+						this.presonalAnswerMsg = { ...da.data.presonalAnswerMsg };
+						this.accuracyMsgList = [...da.data.detailMsg];
+					} else {
+						this.totalStu = 0;
+						this.classAnswerMsg = {};
+						this.stuPersonalMsgList = [];
+						this.presonalAnswerMsg = {};
+						this.accuracyMsgList = [];
+					}
 				}
 			});
 		},
@@ -288,6 +298,7 @@ export default {
 		showErrStuList(record) {
 			this.$emit('showNamelist', record.answerErrStuMsgList);
 		}
+		
 	},
 	destroyed() {
 		window.onresize = null;
@@ -565,8 +576,11 @@ export default {
 }
 .tablebox {
 	overflow: auto;
-	margin: 10px 0;
+	margin: 10px 0 !important;
 	padding: 0 40px;
+	font-size: 20px;
+}
+/deep/ .ant-table {
 	font-size: 20px;
 }
 </style>
