@@ -66,7 +66,8 @@ const api = {
 	importTestQuestions: '/platform/importTestQuestions', //上传家庭作业试卷
 	getAnswerMsg: 'answerMsg/getAnswerMsg', //随堂检测统计
 	getHomeWorkAnswerMsg: 'answerMsg/getHomeWorkAnswerMsg',
-	reportExport:'reportExport/classAnswer'
+	reportExport: 'reportExport/classAnswer',
+	reporthomeWorkReport: 'reportExport/homeWorkReport', //导出课后作业
 }
 export default api
 export function postAction(url, parameter, obj = {}) {

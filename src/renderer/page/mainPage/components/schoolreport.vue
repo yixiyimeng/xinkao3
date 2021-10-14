@@ -218,7 +218,7 @@ const columns = [
 		width: 100
 	}
 ];
-import api from '@/page/mainPage/api';
+import api, { reportExport } from '@/page/mainPage/api';
 export default {
 	components: {},
 	data() {
@@ -237,7 +237,8 @@ export default {
 			stulist: [], //回答正确或者错误的学生名单
 			dataSource: [], //学生按键详情
 			studentInfo: null,
-			totalStu: 0
+			totalStu: 0,
+			fileName: ''
 		};
 	},
 	mounted() {},
@@ -263,6 +264,7 @@ export default {
 						this.stuPersonalMsgList = [...da.data.stuRankMsgList];
 						this.presonalAnswerMsg = { ...da.data.presonalAnswerMsg };
 						this.accuracyMsgList = [...da.data.detailMsg];
+						this.fileName = da.data.fileName;
 					} else {
 						this.totalStu = 0;
 						this.classAnswerMsg = {};
@@ -297,8 +299,23 @@ export default {
 		},
 		showErrStuList(record) {
 			this.$emit('showNamelist', record.answerErrStuMsgList);
+		},
+		reportExportAnswer() {
+			reportExport(api.reporthomeWorkReport + '?fileName=' + this.fileName).then(res => {
+				const link = document.createElement('a');
+				console.log('res.data', res);
+				let blob = new Blob([res], {
+					type: 'application/vnd.ms-excel; charset=UTF-8'
+				});
+				link.style.display = 'none';
+				link.href = URL.createObjectURL(blob);
+				// link.download = res.headers['content-disposition'];
+				link.setAttribute('download', this.fileName);
+				document.body.appendChild(link);
+				link.click();
+				document.body.removeChild(link);
+			});
 		}
-		
 	},
 	destroyed() {
 		window.onresize = null;

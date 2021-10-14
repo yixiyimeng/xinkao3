@@ -63,6 +63,9 @@
 		<schoolreport ref="schoolreport" @showNamelist="showNamelist"></schoolreport>
 		<!-- 学生名单 -->
 		<selectNamelist ref="selectNamelist" :namelist="stulist"></selectNamelist>
+		<div class="btnbar" v-if="showschoolreport" style="margin: 0;">
+			<a href="javascript:;" class="startClass" @click="exportAnswer">{{ '导出结果' }}</a>
+		</div>
 	</div>
 </template>
 
@@ -122,7 +125,8 @@ export default {
 			type: 1,
 			showHomework: false,
 			sendInfo: {},
-			stulist:[]
+			stulist: [],
+			showschoolreport: false
 		};
 	},
 	components: {
@@ -163,6 +167,7 @@ export default {
 		returnback() {
 			if (this.$refs.schoolreport && this.$refs.schoolreport.isShow) {
 				this.$refs.schoolreport.returnback();
+				this.showschoolreport = false;
 			} else {
 				this.showHomework = false;
 				this.$emit('returnback');
@@ -316,11 +321,15 @@ export default {
 		},
 		/* 查看成绩单*/
 		showSchoolreport(record) {
+			this.showschoolreport = true;
 			this.$refs.schoolreport.show();
 		},
 		showNamelist(stulist) {
 			this.stulist = stulist;
 			this.$refs.selectNamelist.show(1);
+		},
+		exportAnswer(){
+			this.$refs.schoolreport.reportExportAnswer();
 		}
 	}
 };
