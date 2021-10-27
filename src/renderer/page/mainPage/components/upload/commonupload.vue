@@ -266,13 +266,13 @@ export default {
 		},
 		changeQuestionType(value) {
 			if (value == 1) {
-				this.pattern = /^[A-D]{1}$/;
+				this.pattern = /^[A-G]{1}$/;
 			} else if (value == 2) {
 				this.pattern = /^[E-F]{1}$/;
 			} else if (value == 3) {
 				this.pattern = /^[0-9]{1}$/;
 			} else {
-				this.pattern = /^(?!.*([A-F]).*\1)[A-F]{2,6}$/;
+				this.pattern = /^(?!.*([A-G]).*\1)[A-G]{2,6}$/;
 			}
 			this.form.setFieldsValue({
 				totaltrueanswer: ''
@@ -292,13 +292,13 @@ export default {
 		changeOnetrueanswer(record) {
 			var answerreg = null;
 			if (record.questionType == 1) {
-				answerreg = /^[A-D]{1}$/;
+				answerreg = /^[A-G]{1}$/;
 			} else if (record.questionType == 2) {
 				answerreg = /^[E-F]{1}$/;
 			} else if (record.questionType == 3) {
 				answerreg = /^[0-9]{1}$/;
 			} else {
-				answerreg = /^(?!.*([A-F]).*\1)[A-F]{2,6}$/;
+				answerreg = /^(?!.*([A-G]).*\1)[A-G]{2,6}$/;
 			}
 			if (answerreg && record.trueAnswer) {
 				record.trueAnswer = record.trueAnswer

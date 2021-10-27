@@ -167,7 +167,11 @@ export default {
 		returnback() {
 			if (this.$refs.schoolreport && this.$refs.schoolreport.isShow) {
 				this.$refs.schoolreport.returnback();
-				this.showschoolreport = false;
+				this.$nextTick(() => {
+					if (!this.$refs.schoolreport.isShow) {
+						this.showschoolreport = false;
+					}
+				});
 			} else {
 				this.showHomework = false;
 				this.$emit('returnback');
@@ -328,7 +332,7 @@ export default {
 			this.stulist = stulist;
 			this.$refs.selectNamelist.show(1);
 		},
-		exportAnswer(){
+		exportAnswer() {
 			this.$refs.schoolreport.reportExportAnswer();
 		}
 	}

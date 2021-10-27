@@ -14,6 +14,7 @@
 				<a-select-option value="D">D</a-select-option>
 				<a-select-option value="E">E</a-select-option>
 				<a-select-option value="F">F</a-select-option>
+				<a-select-option value="G">G</a-select-option>
 			</a-select>
 		</div>
 		<div class="c-red">请输入A-{{range}}多位字母</div>

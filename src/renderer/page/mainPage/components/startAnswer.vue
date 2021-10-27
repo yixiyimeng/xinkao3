@@ -182,7 +182,7 @@ export default {
 				.sort()
 				.join('');
 			if ($me.questionType == 1) {
-				answerreg = /^[A-D]{1}$/;
+				answerreg = /^[A-G]{1}$/;
 				$me.range = 'A-D';
 				$me.titleName = '单题单选-字母题';
 			} else if ($me.questionType == 2) {
@@ -195,12 +195,11 @@ export default {
 			} else if ($me.questionType == 4) {
 				$me.range = this.$refs.multileChoice.getRange();
 				var str = '/^(?!.*([' + $me.range + ']).*\\1)[' + $me.range + ']{2,6}$/';
-
 				answerreg = eval(str);
 				//answerreg=/^(?!.*([A-D]).*\1)[A-D]{2,4}$/;
 				$me.titleName = '单题多选';
 			}
-			if ($me.trueAnswer && !answerreg.test($me.trueAnswer)) {
+			if (!$me.trueAnswer || ($me.trueAnswer && !answerreg.test($me.trueAnswer))) {
 				$me.$message.error('请输入正确答案');
 				$me.trueAnswer = '';
 				return false;
