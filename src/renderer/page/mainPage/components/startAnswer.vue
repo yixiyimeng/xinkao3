@@ -27,7 +27,7 @@
 		<div class="btnbar">
 			<a href="javascript:;" class="startClass" @click="startAnswer" v-if="viewState == 0">开始答题</a>
 			<a href="javascript:;" class="startClass" @click="stopAnswer" v-if="viewState == 1">{{ type == 2 ? '收取试卷' : '结束答题' }}</a>
-			<a href="javascript:;" class="startClass" @click="exportAnswer" v-if="viewState == 2">{{ '导出结果' }}</a>
+			<a href="javascript:;" class="startClass" @click="exportAnswer" v-if="viewState == 2 && type == 2">{{ '导出结果' }}</a>
 		</div>
 		<!-- 倒计时 -->
 		<count-down v-if="isCountDown == 1" v-show="isAnswering" :setTimer="countDown * 1000" @stopCountDown="stopCountDown" ref="countdown"></count-down>
@@ -326,7 +326,7 @@ export default {
 			this.stulist = stulist;
 			this.$refs.selectNamelist.show(1);
 		},
-		exportAnswer(){
+		exportAnswer() {
 			this.$refs.startClassTesting.reportExportAnswer();
 		}
 	}

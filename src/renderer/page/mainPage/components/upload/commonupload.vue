@@ -73,7 +73,7 @@
 							class="w100"
 							slot-scope="text, record"
 							v-model="record.trueAnswer"
-							@change="changeOnetrueanswer(record)"
+							@blur="changeOnetrueanswer(record)"
 						/>
 						<span slot="operation" slot-scope="text, record, index" class="operation">
 							<a href="javascript:;" title="删除" class="del" @click="showDeleteConfirm(record, index)">删除</a>
