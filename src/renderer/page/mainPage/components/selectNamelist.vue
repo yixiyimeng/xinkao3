@@ -8,60 +8,65 @@
 					<li v-for="(item, index) in namelist" :key="index">
 						<span>{{ item.stuName }}</span>
 						<template v-if="isShowAnswer">
-							<span v-if="item.answer">({{item.answer|filterAnswer}})</span>
-							<span v-if="!item.answer">(未作答)</span>
+							<span v-if="item.answer">({{ item.answer | filterAnswer(questiontype) }})</span>
+							<span v-else>(未作答)</span>
 						</template>
 					</li>
 				</ul>
-
 			</div>
 		</div>
 	</transition>
 </template>
 <script>
-	export default {
-		data() {
-			return {
-				isshowNamelist: false,
-				isShowAnswer: true
-			};
+export default {
+	data() {
+		return {
+			isshowNamelist: false,
+			isShowAnswer: true
+		};
+	},
+	props: {
+		namelist: {
+			type: Array,
+			default: []
 		},
-		props: {
-			namelist: {
-				type: Array,
-				default: []
-			}
-		},
+		questiontype: {
+			type: [String, Number],
+			default: ''
+		}
+	},
 
-		created() {
-
-		},
-		methods: {
-			show(type) {
-				if (type && type == 1) {
-					this.isShowAnswer = false
-				} else {
-					this.isShowAnswer = true
-				}
-				this.isshowNamelist = true
-			},
-			closeNamelist() {
-				this.isshowNamelist = false
+	created() {},
+	methods: {
+		show(type) {
+			if (type && type == 1) {
+				this.isShowAnswer = false;
+			} else {
+				this.isShowAnswer = true;
 			}
+			this.isshowNamelist = true;
 		},
-		filters: {
-			filterAnswer(value) {
+		closeNamelist() {
+			this.isshowNamelist = false;
+		}
+	},
+	filters: {
+		filterAnswer(value, questionType) {
+			console.log('questionType', questionType);
+			if (questionType == 2) {
 				if (value == 'F') {
-					return '×'
+					return '×';
 				} else if (value == 'E') {
-					return '√'
+					return '√';
 				} else {
-					return value
+					return value;
 				}
+			} else {
+				return value;
 			}
 		}
-	};
+	}
+};
 </script>
 
-<style>
-</style>
+<style></style>

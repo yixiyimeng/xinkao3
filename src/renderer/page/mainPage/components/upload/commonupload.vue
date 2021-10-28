@@ -31,22 +31,23 @@
 								</a-form-item>
 							</a-col>
 							<a-col :span="8">
-								<a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="题目得分">
-									<a-input-number v-decorator="['totalscore', { rules: [{ required: true, message: '请输入题目得分' }] }]" :min="0.5" class="w100" />
-								</a-form-item>
-							</a-col>
-							<a-col :span="8">
-								<a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="部分得分">
-									<a-input-number v-decorator="['scorePart', { rules: [{ required: true, message: '请输入题目得分' }] }]" :min="0.5" class="w100" />
-								</a-form-item>
-							</a-col>
-							<a-col :span="8">
 								<a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="题目类型">
 									<a-select v-decorator="['totaltype', { rules: [{ required: true, message: '请选择题目类型' }] }]" @change="changeQuestionType">
 										<a-select-option :value="item.value" v-for="(item, index) in totaltypeList" :key="index">{{ item.name }}</a-select-option>
 									</a-select>
 								</a-form-item>
 							</a-col>
+							<a-col :span="8">
+								<a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="题目得分">
+									<a-input-number v-decorator="['totalscore', { rules: [{ required: true, message: '请输入题目得分' }] }]" :min="0.5" class="w100" />
+								</a-form-item>
+							</a-col>
+							<a-col :span="8">
+								<a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="部分得分">
+									<a-input-number v-decorator="['scorePart']" :min="0.5" class="w100" />
+								</a-form-item>
+							</a-col>
+
 							<a-col :span="8">
 								<a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="答案">
 									<a-input
@@ -67,14 +68,7 @@
 						</a-select>
 						<a-input-number :min="0.5" class="w100" slot="score" slot-scope="text, record" v-model="record.score" />
 						<a-input-number :min="0.5" class="w100" slot="scorePart" slot-scope="text, record" v-model="record.scorePart" />
-						<a-input
-							placeholder="题目答案"
-							slot="trueAnswer"
-							class="w100"
-							slot-scope="text, record"
-							v-model="record.trueAnswer"
-							@blur="changeOnetrueanswer(record)"
-						/>
+						<a-input placeholder="题目答案" slot="trueAnswer" class="w100" slot-scope="text, record" v-model="record.trueAnswer" @blur="changeOnetrueanswer(record)" />
 						<span slot="operation" slot-scope="text, record, index" class="operation">
 							<a href="javascript:;" title="删除" class="del" @click="showDeleteConfirm(record, index)">删除</a>
 						</span>
@@ -249,18 +243,23 @@ export default {
 				// 验证表单没错误
 				if (!err) {
 					// console.log('form values', values)
+					let list = [...this.list];
 					var totalnum = values['totalnum'];
 					for (var i = 0; i < totalnum; i++) {
 						var item = {
 							questionType: values['totaltype'],
 							score: values['totalscore'],
 							scorePart: values['scorePart'],
-							trueAnswer: values['totaltrueanswer'],
-							maxNum: values['maxNum']
+							trueAnswer: values['totaltrueanswer']
+							// maxNum: values['maxNum']
 						};
-						let list = [...this.list, item];
-						this.list.push(item);
+						list.push(item);
 					}
+					if (list && list.length > 200) {
+						list = list.slice(0, 200);
+						this.$message.error('最多只能输入200道题');
+					}
+					this.list = [...list];
 				}
 			});
 		},
@@ -272,7 +271,7 @@ export default {
 			} else if (value == 3) {
 				this.pattern = /^[0-9]{1}$/;
 			} else {
-				this.pattern = /^(?!.*([A-G]).*\1)[A-G]{2,6}$/;
+				this.pattern = /^(?!.*([A-G]).*\1)[A-G]{2,7}$/;
 			}
 			this.form.setFieldsValue({
 				totaltrueanswer: ''
@@ -298,7 +297,7 @@ export default {
 			} else if (record.questionType == 3) {
 				answerreg = /^[0-9]{1}$/;
 			} else {
-				answerreg = /^(?!.*([A-G]).*\1)[A-G]{2,6}$/;
+				answerreg = /^(?!.*([A-G]).*\1)[A-G]{2,7}$/;
 			}
 			if (answerreg && record.trueAnswer) {
 				record.trueAnswer = record.trueAnswer

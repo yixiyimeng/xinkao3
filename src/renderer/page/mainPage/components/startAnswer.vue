@@ -32,7 +32,7 @@
 		<!-- 倒计时 -->
 		<count-down v-if="isCountDown == 1" v-show="isAnswering" :setTimer="countDown * 1000" @stopCountDown="stopCountDown" ref="countdown"></count-down>
 		<!-- 学生名单 -->
-		<selectNamelist ref="selectNamelist" :namelist="stulist"></selectNamelist>
+		<selectNamelist ref="selectNamelist" :namelist="stulist" :questiontype="questionType"></selectNamelist>
 	</div>
 </template>
 
@@ -183,7 +183,7 @@ export default {
 				.join('');
 			if ($me.questionType == 1) {
 				answerreg = /^[A-G]{1}$/;
-				$me.range = 'A-D';
+				$me.range = 'A-G';
 				$me.titleName = '单题单选-字母题';
 			} else if ($me.questionType == 2) {
 				answerreg = /^[E-F]{1}$/;
@@ -194,12 +194,12 @@ export default {
 				$me.titleName = '单题单选-数字题';
 			} else if ($me.questionType == 4) {
 				$me.range = this.$refs.multileChoice.getRange();
-				var str = '/^(?!.*([' + $me.range + ']).*\\1)[' + $me.range + ']{2,6}$/';
+				var str = '/^(?!.*([' + $me.range + ']).*\\1)[' + $me.range + ']{2,7}$/';
 				answerreg = eval(str);
 				//answerreg=/^(?!.*([A-D]).*\1)[A-D]{2,4}$/;
 				$me.titleName = '单题多选';
 			}
-			if (!$me.trueAnswer || ($me.trueAnswer && !answerreg.test($me.trueAnswer))) {
+			if ($me.trueAnswer && !answerreg.test($me.trueAnswer)) {
 				$me.$message.error('请输入正确答案');
 				$me.trueAnswer = '';
 				return false;

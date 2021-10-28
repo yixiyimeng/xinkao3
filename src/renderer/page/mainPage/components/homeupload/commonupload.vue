@@ -258,7 +258,7 @@ export default {
 			} else if (value == 3) {
 				this.pattern = /^[0-9]{1}$/;
 			} else {
-				this.pattern = /^(?!.*([A-F]).*\1)[A-F]{2,6}$/;
+				this.pattern = /^(?!.*([A-G]).*\1)[A-G]{2,7}$/;
 			}
 			this.form.setFieldsValue({
 				totaltrueanswer: ''
@@ -284,7 +284,7 @@ export default {
 			} else if (record.questionType == 3) {
 				answerreg = /^[0-9]{1}$/;
 			} else {
-				answerreg = /^(?!.*([A-F]).*\1)[A-F]{2,6}$/;
+				answerreg = /^(?!.*([A-G]).*\1)[A-G]{2,7}$/;
 			}
 			if (answerreg && record.trueAnswer) {
 				record.trueAnswer = record.trueAnswer

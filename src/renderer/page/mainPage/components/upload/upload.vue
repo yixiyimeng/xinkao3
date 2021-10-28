@@ -327,7 +327,7 @@ export default {
 			} else if (record.questionType == 3) {
 				answerreg = /^[0-9]{1}$/;
 			} else {
-				answerreg = /^(?!.*([A-G]).*\1)[A-G]{2,6}$/;
+				answerreg = /^(?!.*([A-G]).*\1)[A-G]{2,7}$/;
 			}
 			if (answerreg && record.trueAnswer) {
 				record.trueAnswer = record.trueAnswer

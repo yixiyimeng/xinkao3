@@ -310,7 +310,7 @@ export default {
 			} else if (value == 3) {
 				this.pattern = /^[0-9]{1}$/;
 			} else {
-				this.pattern = /^(?!.*([A-F]).*\1)[A-F]{2,6}$/;
+				this.pattern = /^(?!.*([A-G]).*\1)[A-G]{2,7}$/;
 			}
 			this.form.setFieldsValue({
 				totaltrueanswer: ''
