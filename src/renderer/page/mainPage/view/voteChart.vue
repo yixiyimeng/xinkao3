@@ -45,7 +45,7 @@
 						left: 'right',
 						itemWidth: 14,
 						orient:'vertical',
-						data: ['监控数量', '监控数量12','12监控数量']
+						data: ['']
 					},
 					grid: {
 						left: '3%',

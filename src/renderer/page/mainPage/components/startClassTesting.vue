@@ -65,7 +65,7 @@
 							v-for="(value, key, index) in text"
 							:key="index"
 						>
-							{{ key | Answerfilter(record) }}:{{ (value * 10000) / 100 + '%' }}
+							{{ key | Answerfilter(record) }}:{{ toFixed(value * 100, 2) + '%' }}
 							<!--  style="color: #2459a0;" -->
 							<!-- <strong>{{ (value * 10000) / 100 + '%' }}</strong> -->
 						</span>
@@ -99,6 +99,12 @@
 </template>
 
 <script>
+function toFixed(num, s) {
+	var times = Math.pow(10, s);
+	var des = num * times + 0.5;
+	des = parseInt(des, 10) / times;
+	return des + '';
+}
 let countcolumns = [
 	{
 		title: '#',
@@ -160,7 +166,7 @@ let quecolumns = [
 		align: 'center',
 		key: 'accuracy',
 		customRender: text => {
-			return (text * 10000) / 100 + '%';
+			return toFixed(text * 100, 2) + '%';
 		}
 	},
 	{
@@ -258,6 +264,12 @@ export default {
 	},
 	mounted() {},
 	methods: {
+		toFixed(num, s) {
+			var times = Math.pow(10, s);
+			var des = num * times + 0.5;
+			des = parseInt(des, 10) / times;
+			return des + '';
+		},
 		show() {
 			this.list = [];
 			this.viewState = 0;

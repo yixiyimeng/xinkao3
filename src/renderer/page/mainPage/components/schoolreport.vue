@@ -56,7 +56,7 @@
 							v-for="(value, key, index) in text"
 							:key="index"
 						>
-							{{ key | Answerfilter(record) }}:{{ (value * 10000) / 100 + '%' }}
+							{{ key | Answerfilter(record) }}:{{ toFixed(value * 100, 2) + '%' }}
 						</span>
 					</div>
 					<span slot="trueAnswer" slot-scope="text, record, index">{{ text | Answerfilter(record) }}</span>
@@ -82,6 +82,12 @@
 </template>
 
 <script>
+function toFixed(num, s) {
+	var times = Math.pow(10, s);
+	var des = num * times + 0.5;
+	des = parseInt(des, 10) / times;
+	return des + '';
+}
 let countcolumns = [
 	{
 		title: '#',
@@ -143,7 +149,7 @@ let quecolumns = [
 		align: 'center',
 		key: 'accuracy',
 		customRender: text => {
-			return (text * 10000) / 100 + '%';
+			return toFixed(text * 100, 2) + '%';
 		}
 	},
 	{
@@ -219,6 +225,7 @@ const columns = [
 	}
 ];
 import api, { reportExport } from '@/page/mainPage/api';
+
 export default {
 	components: {},
 	data() {
@@ -243,6 +250,7 @@ export default {
 	},
 	mounted() {},
 	methods: {
+		toFixed,
 		show() {
 			this.list = [];
 			this.viewState = 0;

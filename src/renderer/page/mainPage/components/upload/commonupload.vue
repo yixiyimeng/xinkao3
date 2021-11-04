@@ -255,9 +255,9 @@ export default {
 						};
 						list.push(item);
 					}
-					if (list && list.length > 200) {
-						list = list.slice(0, 200);
-						this.$message.error('最多只能输入200道题');
+					if (list && list.length > 120) {
+						list = list.slice(0, 120);
+						this.$message.error('最多只能输入120道题');
 					}
 					this.list = [...list];
 				}

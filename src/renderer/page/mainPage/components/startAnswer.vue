@@ -182,8 +182,11 @@ export default {
 				.sort()
 				.join('');
 			if ($me.questionType == 1) {
-				answerreg = /^[A-G]{1}$/;
-				$me.range = 'A-G';
+				$me.range = this.$refs.singleChoice.getQuestionRange();
+				// answerreg = /^[A-G]{1}$/;
+				var str = '/^[A-' + $me.range + ']{1}$/;';
+				$me.range = 'A-' + $me.range;
+				answerreg = eval(str);
 				$me.titleName = '单题单选-字母题';
 			} else if ($me.questionType == 2) {
 				answerreg = /^[E-F]{1}$/;

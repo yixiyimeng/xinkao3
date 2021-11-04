@@ -1,9 +1,9 @@
 <template>
 	<div class="bg" v-if="showHomework">
 		<a href="javascript:;" class="reback" @click="returnback"></a>
-		<div class="setbox">
+		<div class="setbox" v-show="!showschoolreport">
 			<div style="padding-bottom: 0;">
-				<div class="modbox flex flex-v" ref="modbox" style="margin: 0 20px; height: 100%;">
+				<div class="modbox flex flex-v" ref="modbox" style="margin: 0 20px; height: 100%;top:0;position: relative;">
 					<div class="subtitle flex flex-pack-justify flex-align-center">
 						<div>
 							<img src="../assets/img/gou.png" alt="" v-if="theme != 'theme4'" />

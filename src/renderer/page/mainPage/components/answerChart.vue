@@ -421,7 +421,7 @@ export default {
 		},
 		show(param) {
 			this.questionType = param.questionType;
-			this.trueAnswer = param.trueAnswer == 'E' ? 'true' : param.trueAnswer == 'F' ? 'false' : param.trueAnswer;
+			this.trueAnswer = param.questionType == 2?(param.trueAnswer == 'E' ? 'true' : param.trueAnswer == 'F' ? 'false' : param.trueAnswer): param.trueAnswer;
 			this.trueAnswertxt = param.questionType == 2 ? (param.trueAnswer == 'E' ? '√' : param.trueAnswer == 'F' ? '×' : '') : param.trueAnswer;
 			this.checkedList = [];
 			this.getEveryAnswerNum();
@@ -475,6 +475,7 @@ export default {
 
 			if (title && title.length > 0) {
 				colorList = title.map((item, i) => {
+					console.log('$me.trueAnswer',$me.trueAnswer,item)
 					if (title[i] == ($me.trueAnswer == 'false' ? '×' : $me.trueAnswer == 'true' ? '√' : $me.trueAnswer)) {
 						return defaultcolor[1];
 					} else if (title[i] == 'N') {
