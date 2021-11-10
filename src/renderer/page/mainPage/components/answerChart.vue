@@ -11,18 +11,18 @@
 			</div>
 		</div>
 		<div class="thememodbox setbox" :style="{ top: ranklist.length > 0 ? '230px' : '170px', bottom: '120px' }">
-			<div style="height: 100%;">
+			<div style="height: 100%;padding-top: 50px;" class="flex flex-v">
 				<div class="resultbox" v-if="questionType == 4">
 					<a-checkbox-group @change="handchange" :options="titleOptions" v-model="checkedList" style="vertical-align: middle;" />
 					<a href="javascript:;" style="position: relative; z-index: 99;" @click="getEveryAnswerName({ answer: checkedList.join('') })">查看详情</a>
 				</div>
-				<div class="flex" style="height: 100%;">
+				<div class="flex flex-1">
 					<v-chart :options="pieOptions" autoresize class="chartbox" style="width: 30%;" @click="handpie" v-if="trueAnswer"></v-chart>
 					<v-chart :options="barOptions" autoresize class="chartbox flex-1" @click="handbar" ref="barChart"></v-chart>
 				</div>
 			</div>
 		</div>
-		<select-namelist :namelist="selectNamelist" ref="selectname" :questiontype="questionType" ></select-namelist>
+		<select-namelist :namelist="selectNamelist" ref="selectname" :questiontype="questionType"></select-namelist>
 	</div>
 </template>
 
@@ -37,21 +37,21 @@ function getDpr() {
 	var windowWidth = document.body.clientWidth;
 	if (windowWidth < 920) {
 		return 14;
-	}
-	if (windowWidth >= 920 && windowWidth <= 1200) {
+	} else if (windowWidth >= 920 && windowWidth <= 1280) {
 		return 20;
-	}
-	if (windowWidth > 1200 && windowWidth <= 1920) {
-		return 40;
+	} else if (windowWidth > 1200 && windowWidth <= 1680) {
+		return 25;
+	} else {
+		return 30;
 	}
 }
 var theme = 'theme1';
 var barParam = {
 	grid: {
-		left: '20%',
+		left: '15%',
 		right: '5%',
-		top: '25%',
-		bottom: '19%'
+		top: '15%',
+		bottom: '15%'
 	},
 	title: {
 		show: false
@@ -275,132 +275,7 @@ export default {
 					}
 				]
 			},
-			barOptions: {},
-			barOptions2: {
-				grid: {
-					left: '9%',
-					right: '5%',
-					top: '25%',
-					bottom: '19%'
-				},
-				title: {
-					show: false
-				},
-				tooltip: {
-					trigger: 'axis',
-					axisPointer: {
-						// 坐标轴指示器，坐标轴触发有效
-						type: '' // 默认为直线，可选为：'line' | 'shadow'
-					}
-				},
-				toolbox: {
-					show: false
-				},
-				xAxis: {
-					type: 'category',
-					boundaryGap: true,
-					show: true,
-					axisTick: {
-						show: false
-					},
-					axisLine: {
-						show: false
-					},
-					axisLabel: {
-						fontSize: 16,
-						color: '#e8e8e8',
-						margin: 8,
-						interval: 0,
-						formatter: function(val) {
-							return val.split('').join('\n');
-						}
-					},
-					data: ['A', 'B', 'C', 'D', 'E']
-				},
-				yAxis: [
-					{
-						type: 'value',
-						scale: true,
-						name: '',
-						axisTick: {
-							show: false
-						},
-						axisLine: {
-							show: false
-						},
-						splitLine: {
-							lineStyle: {
-								color: '#06b0be',
-								width: 3,
-								type: 'dotted'
-							}
-						},
-						axisLabel: {
-							fontSize: 16,
-							color: '#fff',
-							margin: 12
-						},
-
-						max: 1000,
-						min: 0
-					},
-					{
-						type: 'value',
-						gridIndex: 0,
-						min: 0,
-						max: 1000,
-						splitNumber: 12,
-						splitLine: {
-							show: false
-						},
-						axisLine: {
-							show: false
-						},
-						axisTick: {
-							show: false
-						},
-						axisLabel: {
-							show: false
-						}
-					}
-				],
-				series: [
-					{
-						name: '监控数量',
-						type: 'bar',
-						label: {
-							normal: {
-								show: true,
-								position: 'top',
-								textStyle: {
-									color: '#e8e8e8'
-								},
-								fontSize: 16
-							}
-						},
-						itemStyle: {
-							color: '#07f8ff'
-						},
-						barWidth: '40%',
-						data: [107, 397, 298, 183, 212]
-					},
-					{
-						name: '背景',
-						type: 'bar',
-						barWidth: '40%',
-						xAxisIndex: 0,
-						yAxisIndex: 1,
-						barGap: '-100%',
-						data: [1000, 1000, 1000, 1000, 1000],
-						itemStyle: {
-							normal: {
-								color: 'rgba(255,255,255,0.1)'
-							}
-						},
-						zlevel: 9
-					}
-				]
-			}
+			barOptions: {}
 		};
 	},
 	created() {},
@@ -421,7 +296,7 @@ export default {
 		},
 		show(param) {
 			this.questionType = param.questionType;
-			this.trueAnswer = param.questionType == 2?(param.trueAnswer == 'E' ? 'true' : param.trueAnswer == 'F' ? 'false' : param.trueAnswer): param.trueAnswer;
+			this.trueAnswer = param.questionType == 2 ? (param.trueAnswer == 'E' ? 'true' : param.trueAnswer == 'F' ? 'false' : param.trueAnswer) : param.trueAnswer;
 			this.trueAnswertxt = param.questionType == 2 ? (param.trueAnswer == 'E' ? '√' : param.trueAnswer == 'F' ? '×' : '') : param.trueAnswer;
 			this.checkedList = [];
 			this.getEveryAnswerNum();
@@ -475,7 +350,7 @@ export default {
 
 			if (title && title.length > 0) {
 				colorList = title.map((item, i) => {
-					console.log('$me.trueAnswer',$me.trueAnswer,item)
+					console.log('$me.trueAnswer', $me.trueAnswer, item);
 					if (title[i] == ($me.trueAnswer == 'false' ? '×' : $me.trueAnswer == 'true' ? '√' : $me.trueAnswer)) {
 						return defaultcolor[1];
 					} else if (title[i] == 'N') {
@@ -659,7 +534,6 @@ export default {
 		line-height: 40px;
 		position: absolute;
 		right: 35px;
-
 		p {
 			margin-bottom: 0;
 		}

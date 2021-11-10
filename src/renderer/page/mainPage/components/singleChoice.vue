@@ -20,7 +20,7 @@
 				</a>
 			</li>
 		</ul>
-		<div class="range">
+		<div class="range" v-if="questionType == 1">
 			<span>字母A</span>
 			<span class="line"></span>
 			<a-select class="select flex-1" size="large" v-model="range">

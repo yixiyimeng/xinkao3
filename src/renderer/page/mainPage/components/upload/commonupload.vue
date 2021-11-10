@@ -38,6 +38,20 @@
 								</a-form-item>
 							</a-col>
 							<a-col :span="8">
+								<a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="答案范围">
+									<a-select
+										placeholder="答案范围"
+										v-if="totaltype == 1 || totaltype == 4"
+										v-decorator="['totalrange']"
+										class="w100"
+										@change="changeQuestionRange"
+									>
+										<a-select-option :value="item" v-for="(item, index) in ['A-B', 'A-C', 'A-D', 'A-E', 'A-F', 'A-G']" :key="index">{{ item }}</a-select-option>
+									</a-select>
+									<a-input disabled v-else placeholder="答案范围" v-decorator="['totalrange']" @change="changetotaltrueanswer" />
+								</a-form-item>
+							</a-col>
+							<a-col :span="8">
 								<a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="题目得分">
 									<a-input-number v-decorator="['totalscore', { rules: [{ required: true, message: '请输入题目得分' }] }]" :min="0.5" class="w100" />
 								</a-form-item>
@@ -66,6 +80,17 @@
 						<a-select slot="questionType" slot-scope="text, record" v-model="record.questionType" class="w100" @change="changeOneQuestionType(record)">
 							<a-select-option :value="item.value" v-for="(item, index) in totaltypeList" :key="index">{{ item.name }}</a-select-option>
 						</a-select>
+						<template slot="questionRange" slot-scope="text, record">
+							<a-select
+								v-if="record.questionType == 1 || record.questionType == 4"
+								v-model="record.answerRange"
+								style="width: 100px;"
+								@change="changeOneQuestionRange(record)"
+							>
+								<a-select-option :value="item" v-for="(item, index) in ['A-B', 'A-C', 'A-D', 'A-E', 'A-F', 'A-G']" :key="index">{{ item }}</a-select-option>
+							</a-select>
+							<span v-else>{{ !!text ? text : questionRangeList[record.questionType - 1] }}</span>
+						</template>
 						<a-input-number :min="0.5" class="w100" slot="score" slot-scope="text, record" v-model="record.score" />
 						<a-input-number :min="0.5" class="w100" slot="scorePart" slot-scope="text, record" v-model="record.scorePart" />
 						<a-input placeholder="题目答案" slot="trueAnswer" class="w100" slot-scope="text, record" v-model="record.trueAnswer" @blur="changeOnetrueanswer(record)" />
@@ -100,6 +125,14 @@ const columns = [
 		width: 250,
 		scopedSlots: {
 			customRender: 'questionType'
+		}
+	},
+	{
+		title: '答案范围',
+		dataIndex: 'questionRange',
+		key: 'questionRange',
+		scopedSlots: {
+			customRender: 'questionRange'
 		}
 	},
 	{
@@ -138,6 +171,7 @@ const columns = [
 		width: 100
 	}
 ];
+let questionRangeList = ['A-D', 'E-F', '0-9', 'A-G'];
 import api from '@/page/mainPage/api';
 import { postActionUpload } from '@/page/mainPage/api';
 export default {
@@ -179,6 +213,7 @@ export default {
 					name: '多选'
 				}
 			],
+			totaltype: '',
 			mdl: {},
 			form: this.$form.createForm(this),
 			columns: columns,
@@ -189,7 +224,8 @@ export default {
 			listmap: {},
 			titleName: '',
 			sendInfo: {},
-			type: ''
+			type: '',
+			questionRangeList
 		};
 	},
 
@@ -250,8 +286,8 @@ export default {
 							questionType: values['totaltype'],
 							score: values['totalscore'],
 							scorePart: values['scorePart'],
-							trueAnswer: values['totaltrueanswer']
-							// maxNum: values['maxNum']
+							trueAnswer: values['totaltrueanswer'],
+							answerRange: values['totalrange']
 						};
 						list.push(item);
 					}
@@ -264,8 +300,9 @@ export default {
 			});
 		},
 		changeQuestionType(value) {
+			this.totaltype = value;
 			if (value == 1) {
-				this.pattern = /^[A-G]{1}$/;
+				this.pattern = /^[A-D]{1}$/;
 			} else if (value == 2) {
 				this.pattern = /^[E-F]{1}$/;
 			} else if (value == 3) {
@@ -274,10 +311,28 @@ export default {
 				this.pattern = /^(?!.*([A-G]).*\1)[A-G]{2,7}$/;
 			}
 			this.form.setFieldsValue({
-				totaltrueanswer: ''
+				totaltrueanswer: '',
+				totalrange: questionRangeList[value - 1]
+			});
+		},
+		/* 切换答案范围 */
+		changeQuestionRange(value) {
+			console.log('value', value);
+			if (this.totaltype == 1) {
+				var str = '/^[' + value + ']{1}$/';
+				this.pattern = eval(str);
+			} else if (this.totaltype == 4) {
+				var str = `/^(?!.*([${value}]).*\\1)[${value}]{2,7}$/`;
+				this.pattern = eval(str);
+			}
+			this.$nextTick(() => {
+				this.form.validateFields();
 			});
 		},
 		changeOneQuestionType(item) {
+			item.trueAnswer = '';
+		},
+		changeOneQuestionRange(item) {
 			item.trueAnswer = '';
 		},
 		changetotaltrueanswer(e) {
@@ -290,14 +345,19 @@ export default {
 		},
 		changeOnetrueanswer(record) {
 			var answerreg = null;
+			var range = record.answerRange || 'A-G';
 			if (record.questionType == 1) {
-				answerreg = /^[A-G]{1}$/;
+				// answerreg = /^[A-G]{1}$/;
+				var str = '/^[' + range + ']{1}$/';
+				answerreg = eval(str);
 			} else if (record.questionType == 2) {
 				answerreg = /^[E-F]{1}$/;
 			} else if (record.questionType == 3) {
 				answerreg = /^[0-9]{1}$/;
 			} else {
-				answerreg = /^(?!.*([A-G]).*\1)[A-G]{2,7}$/;
+				// answerreg = /^(?!.*([A-G]).*\1)[A-G]{2,7}$/;
+				var str = `/^(?!.*([${range}]).*\\1)[${range}]{2,7}$/`;
+				answerreg = eval(str);
 			}
 			if (answerreg && record.trueAnswer) {
 				record.trueAnswer = record.trueAnswer
@@ -376,7 +436,8 @@ export default {
 					questionType: item.questionType,
 					score: item.score,
 					scorePart: item.scorePart,
-					trueAnswer: item.trueAnswer
+					trueAnswer: item.trueAnswer,
+					answerRange:item.answerRange
 				};
 
 				questions.push(param);
