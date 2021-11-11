@@ -53,12 +53,12 @@
 							</a-col>
 							<a-col :span="8">
 								<a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="题目得分">
-									<a-input-number v-decorator="['totalscore', { rules: [{ required: true, message: '请输入题目得分' }] }]" :min="0.5" class="w100" />
+									<a-input-number v-decorator="['totalscore', { rules: [{ required: true, message: '请输入题目得分' }] }]" :min="0.5" :step="0.5" class="w100" />
 								</a-form-item>
 							</a-col>
 							<a-col :span="8">
 								<a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="部分得分">
-									<a-input-number v-decorator="['scorePart']" :min="0.5" class="w100" />
+									<a-input-number v-decorator="['scorePart']" :min="0" :step="0.5" class="w100" />
 								</a-form-item>
 							</a-col>
 
@@ -66,7 +66,10 @@
 								<a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="答案">
 									<a-input
 										placeholder="题目答案"
-										v-decorator="['totaltrueanswer', { rules: [{ pattern: pattern, message: '请输入正确的答案' }] }]"
+										v-decorator="[
+											'totaltrueanswer',
+											{ rules: [{ required: true, message: '请输入题目总数' }, { pattern: pattern, message: '请输入正确的答案' }] }
+										]"
 										@change="changetotaltrueanswer"
 									/>
 								</a-form-item>
@@ -91,8 +94,8 @@
 							</a-select>
 							<span v-else>{{ !!text ? text : questionRangeList[record.questionType - 1] }}</span>
 						</template>
-						<a-input-number :min="0.5" class="w100" slot="score" slot-scope="text, record" v-model="record.score" />
-						<a-input-number :min="0.5" class="w100" slot="scorePart" slot-scope="text, record" v-model="record.scorePart" />
+						<a-input-number :min="0.5" :step="0.5" class="w100" slot="score" slot-scope="text, record" v-model="record.score" />
+						<a-input-number :min="0" :step="0.5" class="w100" slot="scorePart" slot-scope="text, record" v-model="record.scorePart" />
 						<a-input placeholder="题目答案" slot="trueAnswer" class="w100" slot-scope="text, record" v-model="record.trueAnswer" @blur="changeOnetrueanswer(record)" />
 						<span slot="operation" slot-scope="text, record, index" class="operation">
 							<a href="javascript:;" title="删除" class="del" @click="showDeleteConfirm(record, index)">删除</a>
@@ -427,7 +430,7 @@ export default {
 			let questions = [];
 			for (var i = 0; i < this.list.length; i++) {
 				var item = this.list[i];
-				if (!item.questionType || !item.score || !item.trueAnswer) {
+				if (!item.questionType ||!item.score|| !item.trueAnswer) {
 					this.$toast.center('请完善题目信息');
 					return false;
 				}
@@ -437,7 +440,7 @@ export default {
 					score: item.score,
 					scorePart: item.scorePart,
 					trueAnswer: item.trueAnswer,
-					answerRange:item.answerRange
+					answerRange: item.answerRange
 				};
 
 				questions.push(param);
